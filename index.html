@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lật Thẻ Tiên Đế</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at top,#40146b,#150a2d 45%,#06030d)}
+.wrap{max-width:1050px;margin:auto;padding:20px 15px 45px}.hero{text-align:center;padding:20px 5px}
+.badge{display:inline-block;padding:7px 14px;border:1px solid #e8c866;border-radius:30px;color:#ffe08a}
+h1{font-size:clamp(35px,8vw,65px);margin:14px 0 6px;color:#ffd86b;text-shadow:0 0 18px #9b4dff}.sub{color:#d8cdec}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.box,.panel{background:rgba(10,5,24,.78);border:1px solid #62418c;border-radius:18px}.box{text-align:center;padding:13px}.box b{display:block;color:#ffd86b;font-size:25px;margin-top:5px}
+.panel{padding:20px}.login{display:grid;grid-template-columns:1fr 1fr auto;gap:10px}input{padding:14px;border-radius:11px;border:1px solid #725694;background:#120a25;color:white}button{cursor:pointer;border:0;border-radius:11px;font-weight:700}.login button{padding:14px 20px;background:#ffd15c;color:#241000}.status{text-align:center;color:#cfc1e7;margin:13px}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px}.card{height:185px;background:none;padding:0;perspective:900px}.inner{width:100%;height:100%;position:relative;transition:.65s;transform-style:preserve-3d}.card.flipped .inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:17px;border:2px solid #a96cff;display:flex;align-items:center;justify-content:center;flex-direction:column}.front{background:linear-gradient(145deg,#2c1048,#12071f);box-shadow:inset 0 0 30px #8d42c522}.symbol{font-size:60px;color:#ffd86b;text-shadow:0 0 16px #a44cff}.front small{color:#cbb9e6}.back{transform:rotateY(180deg);background:linear-gradient(145deg,#64248f,#24103f)}.result{font-size:28px;color:#ffd86b}.note{font-size:13px;margin-top:5px}.leader{margin-top:22px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ffffff18;text-align:left}th{color:#ffd86b}.footer{text-align:center;color:#897aa4;margin-top:20px;font-size:13px}
+@media(max-width:700px){.info{grid-template-columns:1fr 1fr}.login{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.card{height:165px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<div class="badge">⚜️ EVENT TIÊN ĐẾ 2026 ⚜️</div>
+<h1>🃏 LẬT THẺ TIÊN ĐẾ</h1>
+<div class="sub">05/10/2026 00:00 → 10/10/2026 23:59:59 • Việt Nam</div>
+</header>
+<section class="info">
+<div class="box">🎴 Lượt hôm nay<b id="plays">50</b></div>
+<div class="box">⭐ Điểm của bạn<b id="points">0</b></div>
+<div class="box">🏆 Tỷ lệ có điểm<b>40%</b></div>
+</section>
+<section class="panel">
+<div class="login">
+<input id="email" type="email" placeholder="Email đăng nhập">
+<input id="password" type="password" placeholder="Mật khẩu">
+<button onclick="login()">ĐĂNG NHẬP</button>
+</div>
+<div class="status" id="status">Hãy đăng nhập để bắt đầu lật thẻ.</div>
+<div class="cards" id="cards"></div>
+</section>
+<section class="panel leader">
+<h2>🏆 BẢNG XẾP HẠNG TOP 10</h2>
+<table><thead><tr><th>Hạng</th><th>Nhân vật</th><th>Điểm</th></tr></thead><tbody id="leaderboard"><tr><td colspan="3">Chưa có dữ liệu</td></tr></tbody></table>
+</section>
+<div class="footer">Top 1: 100k • Top 2: 70k • Top 3: 50k • Top 4–10: 10k tinh thạch</div>
+</div>
+<script>
+const SUPABASE_URL="";
+const SUPABASE_PUBLISHABLE_KEY="";
+let loggedIn=false;
+const cards=document.getElementById("cards");
+for(let i=0;i<10;i++)cards.insertAdjacentHTML("beforeend",'<button class="card" onclick="flip(this)"><div class="inner"><div class="face front"><div class="symbol">✦</div><small>LẬT THẺ</small></div><div class="face back"><div class="result">?</div><div class="note">Kết quả</div></div></div></button>');
+function login(){const e=document.getElementById("email").value.trim(),p=document.getElementById("password").value;if(!e||!p){status.textContent="Vui lòng nhập Email và mật khẩu.";return}status.textContent="Giao diện đã sẵn sàng. Chúng ta sẽ kết nối Supabase ở bước tiếp theo."}
+function flip(c){if(!loggedIn){status.textContent="Bạn cần đăng nhập trước khi lật thẻ.";return}c.classList.add("flipped")}
+</script>
+</body>
+</html>
