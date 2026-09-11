@@ -42,14 +42,7 @@ h1{font-size:clamp(35px,8vw,65px);margin:14px 0 6px;color:#ffd86b;text-shadow:0 
 </section>
 <div class="footer">Top 1: 100k • Top 2: 70k • Top 3: 50k • Top 4–10: 10k tinh thạch</div>
 </div>
-<script>
-const SUPABASE_URL="";
-const SUPABASE_PUBLISHABLE_KEY="";
-let loggedIn=false;
-const cards=document.getElementById("cards");
-for(let i=0;i<10;i++)cards.insertAdjacentHTML("beforeend",'<button class="card" onclick="flip(this)"><div class="inner"><div class="face front"><div class="symbol">✦</div><small>LẬT THẺ</small></div><div class="face back"><div class="result">?</div><div class="note">Kết quả</div></div></div></button>');
-function login(){const e=document.getElementById("email").value.trim(),p=document.getElementById("password").value;if(!e||!p){status.textContent="Vui lòng nhập Email và mật khẩu.";return}status.textContent="Giao diện đã sẵn sàng. Chúng ta sẽ kết nối Supabase ở bước tiếp theo."}
-function flip(c){if(!loggedIn){status.textContent="Bạn cần đăng nhập trước khi lật thẻ.";return}c.classList.add("flipped")}
+<
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://rftnjeozezxgemtrvkce.supabase.co";
