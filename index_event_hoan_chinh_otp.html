@@ -4,356 +4,1326 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lật Thẻ Tiên Đế</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at top,#40146b,#150a2d 45%,#06030d)}
-.wrap{max-width:1050px;margin:auto;padding:18px 14px 45px}
-.hero{text-align:center;padding:18px 4px}
-.badge{display:inline-block;padding:7px 14px;border:1px solid #e8c866;border-radius:30px;color:#ffe08a}
-h1{font-size:clamp(34px,8vw,64px);margin:14px 0 6px;color:#ffd86b;text-shadow:0 0 18px #9b4dff}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  color:#fff;
+  background:radial-gradient(circle at top,#40146b,#150a2d 45%,#06030d)
+}
+
+.wrap{
+  max-width:1050px;
+  margin:auto;
+  padding:18px 14px 45px
+}
+
+.hero{
+  text-align:center;
+  padding:18px 4px
+}
+
+.badge{
+  display:inline-block;
+  padding:7px 14px;
+  border:1px solid #e8c866;
+  border-radius:30px;
+  color:#ffe08a
+}
+
+h1{
+  font-size:clamp(34px,8vw,64px);
+  margin:14px 0 6px;
+  color:#ffd86b;
+  text-shadow:0 0 18px #9b4dff
+}
+
 .sub{color:#d8cdec}
-.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
-.box,.panel{background:rgba(10,5,24,.82);border:1px solid #62418c;border-radius:18px}
-.box{text-align:center;padding:13px}.box b{display:block;color:#ffd86b;font-size:25px;margin-top:5px}
-.panel{padding:20px}.login{display:grid;grid-template-columns:1fr auto;gap:10px}
-input{width:100%;padding:14px;border-radius:11px;border:1px solid #725694;background:#120a25;color:white;font-size:16px;outline:none}
+
+.info{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:18px 0
+}
+
+.box,.panel{
+  background:rgba(10,5,24,.82);
+  border:1px solid #62418c;
+  border-radius:18px
+}
+
+.box{
+  text-align:center;
+  padding:13px
+}
+
+.box b{
+  display:block;
+  color:#ffd86b;
+  font-size:25px;
+  margin-top:5px
+}
+
+.panel{padding:20px}
+
+.login{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:11px;
+  border:1px solid #725694;
+  background:#120a25;
+  color:white;
+  font-size:16px;
+  outline:none
+}
+
 input:focus{border-color:#c08cff}
-button{cursor:pointer;border:0;border-radius:11px;font-weight:700}
-.login button{padding:14px 20px;background:#ffd15c;color:#241000;min-width:150px}
-.login button:disabled{opacity:.55;cursor:not-allowed}
-.otp-row{display:none;grid-column:1/-1}.otp-row input{text-align:center;letter-spacing:8px;font-size:22px;font-weight:700}
-.status{text-align:center;color:#cfc1e7;margin:13px 0;min-height:22px}
-.event-closed{color:#ffb4b4;font-weight:700}
-.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px}
-.card{height:185px;background:none;padding:0;perspective:900px}
-.card-inner{width:100%;height:100%;position:relative;transition:.65s;transform-style:preserve-3d}
-.card.flipped .card-inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:17px;border:2px solid #a96cff;display:flex;align-items:center;justify-content:center;flex-direction:column}
-.front{background:linear-gradient(145deg,#2c1048,#12071f);box-shadow:inset 0 0 30px #8d42c522}
-.symbol{font-size:60px;color:#ffd86b;text-shadow:0 0 16px #a44cff}.front small{color:#cbb9e6}
-.back{transform:rotateY(180deg);background:linear-gradient(145deg,#64248f,#24103f)}
-.result{font-size:28px;color:#ffd86b}.note{font-size:13px;margin-top:5px}
-.leader{margin-top:22px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ffffff18;text-align:left}th{color:#ffd86b}
-.me{font-weight:700}.footer{text-align:center;color:#897aa4;margin-top:20px;font-size:13px}
-@media(max-width:700px){.info{grid-template-columns:1fr 1fr}.login{grid-template-columns:1fr}.login button{width:100%}.otp-row{grid-column:auto}.cards{grid-template-columns:repeat(2,1fr)}.card{height:165px}}
+
+button{
+  cursor:pointer;
+  border:0;
+  border-radius:11px;
+  font-weight:700
+}
+
+.login button{
+  padding:14px 20px;
+  background:#ffd15c;
+  color:#241000;
+  min-width:150px
+}
+
+.login button:disabled{
+  opacity:.55;
+  cursor:not-allowed
+}
+
+.otp-row{
+  display:none;
+  grid-column:1/-1
+}
+
+.otp-row input{
+  text-align:center;
+  letter-spacing:8px;
+  font-size:22px;
+  font-weight:700
+}
+
+.status{
+  text-align:center;
+  color:#cfc1e7;
+  margin:13px 0;
+  min-height:22px
+}
+
+.event-closed{
+  color:#ffb4b4;
+  font-weight:700
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:14px;
+  margin-top:20px
+}
+
+.card{
+  height:185px;
+  background:none;
+  padding:0;
+  perspective:900px
+}
+
+.card-inner{
+  width:100%;
+  height:100%;
+  position:relative;
+  transition:.65s;
+  transform-style:preserve-3d
+}
+
+.card.flipped .card-inner{
+  transform:rotateY(180deg)
+}
+
+.face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:17px;
+  border:2px solid #a96cff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column
+}
+
+.front{
+  background:linear-gradient(145deg,#2c1048,#12071f);
+  box-shadow:inset 0 0 30px #8d42c522
+}
+
+.symbol{
+  font-size:60px;
+  color:#ffd86b;
+  text-shadow:0 0 16px #a44cff
+}
+
+.front small{color:#cbb9e6}
+
+.back{
+  transform:rotateY(180deg);
+  background:linear-gradient(145deg,#64248f,#24103f)
+}
+
+.result{
+  font-size:28px;
+  color:#ffd86b
+}
+
+.note{
+  font-size:13px;
+  margin-top:5px
+}
+
+.leader{margin-top:22px}
+
+table{
+  width:100%;
+  border-collapse:collapse
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid #ffffff18;
+  text-align:left
+}
+
+th{color:#ffd86b}
+
+.footer{
+  text-align:center;
+  color:#897aa4;
+  margin-top:20px;
+  font-size:13px
+}
+
+@media(max-width:700px){
+  .info{
+    grid-template-columns:1fr 1fr
+  }
+
+  .login{
+    grid-template-columns:1fr
+  }
+
+  .login button{
+    width:100%
+  }
+
+  .otp-row{
+    grid-column:auto
+  }
+
+  .cards{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .card{
+    height:165px
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
+
 <header class="hero">
-<div class="badge">⚜️ EVENT TIÊN ĐẾ 2026 ⚜️</div>
-<h1>🃏 LẬT THẺ TIÊN ĐẾ</h1>
-<div class="sub">05/10/2026 00:00 → 10/10/2026 23:59:59 • Việt Nam</div>
+  <div class="badge">⚜️ EVENT TIÊN ĐẾ 2026 ⚜️</div>
+
+  <h1>🃏 LẬT THẺ TIÊN ĐẾ</h1>
+
+  <div class="sub">
+    05/10/2026 00:00 → 10/10/2026 23:59:59 • Việt Nam
+  </div>
 </header>
 
+
 <section class="info">
-<div class="box">🎴 Lượt hôm nay<b id="plays">—</b></div>
-<div class="box">⭐ Điểm của bạn<b id="points">0</b></div>
-<div class="box">🏆 Tỷ lệ có điểm<b>40%</b></div>
+
+  <div class="box">
+    🎴 Lượt hôm nay
+    <b id="plays">—</b>
+  </div>
+
+  <div class="box">
+    ⭐ Điểm của bạn
+    <b id="points">0</b>
+  </div>
+
+  <div class="box">
+    🏆 Tỷ lệ có điểm
+    <b>40%</b>
+  </div>
+
 </section>
+
 
 <section class="panel">
-<div class="login">
-<input id="email" type="email" autocomplete="email" placeholder="Nhập email của bạn">
-<button id="loginBtn" onclick="login()">GỬI MÃ OTP</button>
-<div class="otp-row" id="otpRow">
-<input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="MÃ OTP 6 SỐ">
-</div>
-</div>
-const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
 
-if(!isAdmin && !isEventOpen()){
-  setEventState();
-  return;
-}
-<section class="panel leader">
-<h2>🏆 BẢNG XẾP HẠNG TOP 10</h2>
-<table>
-<thead><tr><th>Hạng</th><th>Người chơi</th><th>Điểm</th></tr></thead>
-<tbody id="leaderboard"><tr><td colspan="3">Đang tải...</td></tr></tbody>
-</table>
+  <div class="login">
+
+    <input
+      id="email"
+      type="email"
+      autocomplete="email"
+      placeholder="Nhập email của bạn"
+    >
+
+    <button
+      id="loginBtn"
+      onclick="login()"
+    >
+      GỬI MÃ OTP
+    </button>
+
+    <div
+      class="otp-row"
+      id="otpRow"
+    >
+      <input
+        id="otp"
+        type="text"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        placeholder="MÃ OTP 6 SỐ"
+      >
+    </div>
+
+  </div>
+
+  <div
+    class="status"
+    id="status"
+  >
+    Nhập email để nhận mã OTP đăng nhập.
+  </div>
+
+  <div
+    class="cards"
+    id="cards"
+  ></div>
+
 </section>
 
-<div class="footer">Top 1: 100k • Top 2: 70k • Top 3: 50k • Top 4–10: 10k tinh thạch</div>
+
+<section class="panel leader">
+
+  <h2>🏆 BẢNG XẾP HẠNG TOP 10</h2>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Hạng</th>
+        <th>Người chơi</th>
+        <th>Điểm</th>
+      </tr>
+    </thead>
+
+    <tbody id="leaderboard">
+      <tr>
+        <td colspan="3">
+          Đang tải...
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</section>
+
+
+<div class="footer">
+  Top 1: 100k • Top 2: 70k • Top 3: 50k • Top 4–10: 10k tinh thạch
 </div>
 
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const SUPABASE_URL="https://rftnjeozezxgemtrvkce.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_SQS8AB9rBORo8KUSL0KtPw_mydlG5aw";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 
-const status=document.getElementById("status");
-const cards=document.getElementById("cards");
-const emailInput=document.getElementById("email");
-const otpInput=document.getElementById("otp");
-const otpRow=document.getElementById("otpRow");
-const loginBtn=document.getElementById("loginBtn");
-const playsEl=document.getElementById("plays");
-const pointsEl=document.getElementById("points");
-const leaderboardEl=document.getElementById("leaderboard");
+const SUPABASE_URL =
+  "https://rftnjeozezxgemtrvkce.supabase.co";
 
-let loggedIn=false;
-let otpSent=false;
-let busy=false;
-let eventOpen=false;
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_SQS8AB9rBORo8KUSL0KtPw_mydlG5aw";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* =========================
+   ADMIN
+========================= */
+
+const ADMIN_EMAIL =
+  "namtruong3333@gmail.com";
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const status =
+  document.getElementById("status");
+
+const cards =
+  document.getElementById("cards");
+
+const emailInput =
+  document.getElementById("email");
+
+const otpInput =
+  document.getElementById("otp");
+
+const otpRow =
+  document.getElementById("otpRow");
+
+const loginBtn =
+  document.getElementById("loginBtn");
+
+const playsEl =
+  document.getElementById("plays");
+
+const pointsEl =
+  document.getElementById("points");
+
+const leaderboardEl =
+  document.getElementById("leaderboard");
+
+
+/* =========================
+   STATE
+========================= */
+
+let loggedIn = false;
+
+let otpSent = false;
+
+let busy = false;
+
+let eventOpen = false;
+
+
+/* =========================
+   CREATE CARDS
+========================= */
 
 for(let i=0;i<10;i++){
-  cards.insertAdjacentHTML("beforeend",`
-  <button class="card" onclick="flip(this)" disabled>
-    <div class="card-inner">
-      <div class="face front"><div class="symbol">🃏</div><small>LẬT THẺ</small></div>
-      <div class="face back"><div class="result">?</div><div class="note">Kết quả</div></div>
-    </div>
-  </button>`);
+
+  cards.insertAdjacentHTML(
+    "beforeend",
+
+    `
+    <button
+      class="card"
+      onclick="flip(this)"
+      disabled
+    >
+
+      <div class="card-inner">
+
+        <div class="face front">
+
+          <div class="symbol">
+            🃏
+          </div>
+
+          <small>
+            LẬT THẺ
+          </small>
+
+        </div>
+
+
+        <div class="face back">
+
+          <div class="result">
+            ?
+          </div>
+
+          <div class="note">
+            Kết quả
+          </div>
+
+        </div>
+
+      </div>
+
+    </button>
+    `
+  );
+
 }
+
+
+/* =========================
+   VIETNAM TIME
+========================= */
 
 function vietnamNow(){
-  return new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Ho_Chi_Minh"}));
+
+  return new Date(
+
+    new Date().toLocaleString(
+      "en-US",
+      {
+        timeZone:"Asia/Ho_Chi_Minh"
+      }
+    )
+
+  );
+
 }
+
+
+/* =========================
+   EVENT TIME
+========================= */
 
 function isEventOpen(){
-  const now=vietnamNow();
-  const start=new Date(2026,9,5,0,0,0);
-  const end=new Date(2026,9,10,23,59,59);
-  return now>=start && now<=end;
+
+  const now =
+    vietnamNow();
+
+  const start =
+    new Date(
+      2026,
+      9,
+      5,
+      0,
+      0,
+      0
+    );
+
+  const end =
+    new Date(
+      2026,
+      9,
+      10,
+      23,
+      59,
+      59
+    );
+
+  return (
+    now >= start &&
+    now <= end
+  );
+
 }
+
+
+/* =========================
+   EVENT STATE
+========================= */
 
 function setEventState(){
-  eventOpen=isEventOpen();
+
+  eventOpen =
+    isEventOpen();
+
   if(!eventOpen){
-    playsEl.textContent="0";
-    document.querySelectorAll(".card").forEach(c=>c.disabled=true);
-    status.classList.add("event-closed");
-    status.textContent="⛔ Sự kiện hiện đang đóng.";
+
+    playsEl.textContent =
+      "0";
+
+    document
+      .querySelectorAll(".card")
+      .forEach(
+        c => c.disabled = true
+      );
+
+    status.classList.add(
+      "event-closed"
+    );
+
+    status.textContent =
+      "⛔ Sự kiện hiện đang đóng.";
+
   }else{
-    status.classList.remove("event-closed");
+
+    status.classList.remove(
+      "event-closed"
+    );
+
   }
+
 }
+
+
+/* =========================
+   LOGIN
+========================= */
 
 async function login(){
-  if(busy)return;
-  const email=emailInput.value.trim();
-  const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
-const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
 
-if(!isAdmin && !isEventOpen()){
-  setEventState();
-  return;
-}
-const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
+  if(busy)
+    return;
 
-if(!isAdmin && !isEventOpen()){
-  setEventState();
-  return;}
-  busy=true;
+
+  const email =
+    emailInput.value.trim();
+
+
+  if(!email){
+
+    status.textContent =
+      "⚠️ Vui lòng nhập email.";
+
+    emailInput.focus();
+
+    return;
+
+  }
+
+
+  const isAdmin =
+    email.toLowerCase() ===
+    ADMIN_EMAIL;
+
+
+  /*
+    ADMIN:
+    Có thể đăng nhập trước ngày event.
+
+    NGƯỜI CHƠI:
+    Chỉ đăng nhập khi event mở.
+  */
+
+  if(
+    !isAdmin &&
+    !isEventOpen()
+  ){
+
+    setEventState();
+
+    return;
+
+  }
+
+
+  busy = true;
+
+
+  /* =========================
+     SEND OTP
+  ========================= */
 
   if(!otpSent){
-    status.textContent="⏳ Đang gửi mã OTP...";
-    loginBtn.disabled=true;
 
-    const {error}=await supabaseClient.auth.signInWithOtp({
-      email,
-      options:{shouldCreateUser:true}
-    });
+    status.textContent =
+      "⏳ Đang gửi mã OTP...";
 
-    loginBtn.disabled=false;
-    busy=false;
+    loginBtn.disabled =
+      true;
+
+
+    const { error } =
+      await supabaseClient.auth.signInWithOtp({
+
+        email,
+
+        options:{
+          shouldCreateUser:true
+        }
+
+      });
+
+
+    loginBtn.disabled =
+      false;
+
+    busy = false;
+
 
     if(error){
-      status.textContent="❌ Không gửi được mã OTP: "+error.message;
+
+      status.textContent =
+        "❌ Không gửi được mã OTP: "
+        + error.message;
+
       return;
+
     }
 
-    otpSent=true;
-    otpRow.style.display="block";
-    loginBtn.textContent="XÁC NHẬN OTP";
-    status.textContent="✅ Mã OTP 6 số đã được gửi. Kiểm tra email.";
+
+    otpSent = true;
+
+    otpRow.style.display =
+      "block";
+
+    loginBtn.textContent =
+      "XÁC NHẬN OTP";
+
+    status.textContent =
+      "✅ Mã OTP 6 số đã được gửi. Kiểm tra email.";
+
     otpInput.focus();
+
     return;
+
   }
 
-  const token=otpInput.value.trim();
+
+  /* =========================
+     VERIFY OTP
+  ========================= */
+
+  const token =
+    otpInput.value.trim();
+
+
   if(!/^\d{6}$/.test(token)){
-    busy=false;
-    status.textContent="⚠️ Vui lòng nhập đúng OTP 6 số.";
+
+    busy = false;
+
+    status.textContent =
+      "⚠️ Vui lòng nhập đúng OTP 6 số.";
+
     otpInput.focus();
+
     return;
+
   }
 
-  status.textContent="⏳ Đang xác nhận OTP...";
-  loginBtn.disabled=true;
 
-  const {data,error}=await supabaseClient.auth.verifyOtp({
-    email,token,type:"email"
-  });
+  status.textContent =
+    "⏳ Đang xác nhận OTP...";
+
+  loginBtn.disabled =
+    true;
+
+
+  const {data,error} =
+    await supabaseClient.auth.verifyOtp({
+
+      email,
+      token,
+      type:"email"
+
+    });
+
 
   if(error){
-    loginBtn.disabled=false;
-    busy=false;
-    status.textContent="❌ Mã OTP không đúng hoặc đã hết hạn.";
+
+    loginBtn.disabled =
+      false;
+
+    busy = false;
+
+    status.textContent =
+      "❌ Mã OTP không đúng hoặc đã hết hạn.";
+
     return;
+
   }
 
-  loggedIn=true;
-  emailInput.disabled=true;
-  otpInput.disabled=true;
-  loginBtn.disabled=true;
-  loginBtn.textContent="ĐÃ ĐĂNG NHẬP";
-  busy=false;
 
-  status.textContent="✅ Đăng nhập thành công.";
+  /* =========================
+     LOGIN SUCCESS
+  ========================= */
+
+  loggedIn = true;
+
+  emailInput.disabled =
+    true;
+
+  otpInput.disabled =
+    true;
+
+  loginBtn.disabled =
+    true;
+
+  loginBtn.textContent =
+    "ĐÃ ĐĂNG NHẬP";
+
+  busy = false;
+
+
   await loadPlayer();
+
   await loadLeaderboard();
-  enableCards();
+
+
+  /*
+    ADMIN trước event:
+    đăng nhập được nhưng
+    chưa được lật thẻ.
+  */
+
+  if(
+    isAdmin &&
+    !isEventOpen()
+  ){
+
+    status.classList.remove(
+      "event-closed"
+    );
+
+    status.textContent =
+      "👑 Admin đăng nhập thành công. Event chưa mở nên chưa thể lật thẻ.";
+
+  }else{
+
+    status.classList.remove(
+      "event-closed"
+    );
+
+    status.textContent =
+      "✅ Đăng nhập thành công. Bạn có thể lật thẻ.";
+
+    enableCards();
+
+  }
+
 }
+
+
+/* =========================
+   LOAD PLAYER
+========================= */
 
 async function loadPlayer(){
-  const {data,error}=await supabaseClient.rpc("get_player_state");
+
+  const {data,error} =
+    await supabaseClient.rpc(
+      "get_player_state"
+    );
+
 
   if(error){
-    status.textContent="❌ Không tải được dữ liệu người chơi: "+error.message;
+
+    status.textContent =
+      "❌ Không tải được dữ liệu người chơi: "
+      + error.message;
+
     return;
+
   }
 
-  if(Array.isArray(data)) data=data[0];
+
+  if(Array.isArray(data))
+    data = data[0];
+
 
   if(data){
-    playsEl.textContent=data.plays_remaining ?? 50;
-    pointsEl.textContent=data.points ?? 0;
+
+    playsEl.textContent =
+      data.plays_remaining ?? 50;
+
+    pointsEl.textContent =
+      data.points ?? 0;
+
   }
+
 }
+
+
+/* =========================
+   LEADERBOARD
+========================= */
 
 async function loadLeaderboard(){
-  const {data,error}=await supabaseClient.rpc("get_leaderboard");
+
+  const {data,error} =
+    await supabaseClient.rpc(
+      "get_leaderboard"
+    );
+
 
   if(error){
-    leaderboardEl.innerHTML='<tr><td colspan="3">Chưa có dữ liệu</td></tr>';
+
+    leaderboardEl.innerHTML =
+      `
+      <tr>
+        <td colspan="3">
+          Chưa có dữ liệu
+        </td>
+      </tr>
+      `;
+
     return;
+
   }
 
-  if(!data || !data.length){
-    leaderboardEl.innerHTML='<tr><td colspan="3">Chưa có dữ liệu</td></tr>';
+
+  if(
+    !data ||
+    !data.length
+  ){
+
+    leaderboardEl.innerHTML =
+      `
+      <tr>
+        <td colspan="3">
+          Chưa có dữ liệu
+        </td>
+      </tr>
+      `;
+
     return;
+
   }
 
-  leaderboardEl.innerHTML=data.slice(0,10).map((p,i)=>`
-    <tr>
-      <td>${i+1}</td>
-      <td>${escapeHtml(p.display_name || p.email || "Người chơi")}</td>
-      <td>${Number(p.points||0)}</td>
-    </tr>
-  `).join("");
+
+  leaderboardEl.innerHTML =
+
+    data
+      .slice(0,10)
+      .map(
+        (p,i) => `
+
+        <tr>
+
+          <td>
+            ${i+1}
+          </td>
+
+          <td>
+            ${
+              escapeHtml(
+                p.display_name ||
+                p.email ||
+                "Người chơi"
+              )
+            }
+          </td>
+
+          <td>
+            ${Number(p.points || 0)}
+          </td>
+
+        </tr>
+
+        `
+      )
+      .join("");
+
 }
+
+
+/* =========================
+   ENABLE CARDS
+========================= */
 
 function enableCards(){
-  if(!loggedIn || !eventOpen)return;
-  document.querySelectorAll(".card:not(.flipped)").forEach(c=>{
-    c.disabled=false;
-  });
+
+  if(
+    !loggedIn ||
+    !eventOpen
+  )
+    return;
+
+
+  document
+    .querySelectorAll(
+      ".card:not(.flipped)"
+    )
+    .forEach(
+      c => c.disabled = false
+    );
+
 }
 
+
+/* =========================
+   FLIP CARD
+========================= */
+
 async function flip(card){
+
   if(!loggedIn){
-    status.textContent="⚠️ Bạn phải đăng nhập trước khi lật thẻ.";
+
+    status.textContent =
+      "⚠️ Bạn phải đăng nhập trước khi lật thẻ.";
+
     return;
+
   }
 
-  if(busy || card.classList.contains("flipped"))return;
+
+  if(
+    busy ||
+    card.classList.contains(
+      "flipped"
+    )
+  )
+    return;
+
 
   if(!isEventOpen()){
+
     setEventState();
+
     return;
+
   }
 
-  const remaining=Number(playsEl.textContent);
-  if(remaining<=0){
-    status.textContent="⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
+
+  const remaining =
+    Number(
+      playsEl.textContent
+    );
+
+
+  if(remaining <= 0){
+
+    status.textContent =
+      "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
+
     return;
+
   }
 
-  busy=true;
-  document.querySelectorAll(".card").forEach(c=>c.disabled=true);
-  status.textContent="⏳ Đang lật thẻ...";
 
-  const {data,error}=await supabaseClient.rpc("flip_card");
+  busy = true;
+
+
+  document
+    .querySelectorAll(".card")
+    .forEach(
+      c => c.disabled = true
+    );
+
+
+  status.textContent =
+    "⏳ Đang lật thẻ...";
+
+
+  const {data,error} =
+    await supabaseClient.rpc(
+      "flip_card"
+    );
+
 
   if(error){
-    busy=false;
+
+    busy = false;
+
     enableCards();
-    status.textContent="❌ Không thực hiện được lượt lật: "+error.message;
+
+    status.textContent =
+      "❌ Không thực hiện được lượt lật: "
+      + error.message;
+
     await loadPlayer();
+
     return;
+
   }
 
-  let result=Array.isArray(data)?data[0]:data;
-  if(!result)result={};
 
-  card.classList.add("flipped");
+  let result =
+    Array.isArray(data)
+      ? data[0]
+      : data;
 
-  const won=Boolean(result.has_point);
-  card.querySelector(".result").textContent=won?"⭐ +1":"0";
-  card.querySelector(".note").textContent=won?"Có điểm!":"Không có điểm";
 
-  playsEl.textContent=result.plays_remaining ?? Math.max(0,remaining-1);
-  pointsEl.textContent=result.points ?? pointsEl.textContent;
+  if(!result)
+    result = {};
+
+
+  card.classList.add(
+    "flipped"
+  );
+
+
+  const won =
+    Boolean(
+      result.has_point
+    );
+
+
+  card.querySelector(
+    ".result"
+  ).textContent =
+    won
+      ? "⭐ +1"
+      : "0";
+
+
+  card.querySelector(
+    ".note"
+  ).textContent =
+    won
+      ? "Có điểm!"
+      : "Không có điểm";
+
+
+  playsEl.textContent =
+    result.plays_remaining ??
+    Math.max(
+      0,
+      remaining - 1
+    );
+
+
+  pointsEl.textContent =
+    result.points ??
+    pointsEl.textContent;
+
 
   if(won){
-    status.textContent="🎉 Chúc mừng! Bạn nhận được +1 điểm.";
+
+    status.textContent =
+      "🎉 Chúc mừng! Bạn nhận được +1 điểm.";
+
   }else{
-    status.textContent="😢 Lần này không có điểm.";
+
+    status.textContent =
+      "😢 Lần này không có điểm.";
+
   }
+
 
   await loadLeaderboard();
 
-  busy=false;
-  if(Number(playsEl.textContent)>0)enableCards();
-  else{
-    status.textContent="⏳ Bạn đã dùng hết lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
+
+  busy = false;
+
+
+  if(
+    Number(
+      playsEl.textContent
+    ) > 0
+  ){
+
+    enableCards();
+
+  }else{
+
+    status.textContent =
+      "⏳ Bạn đã dùng hết lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
+
   }
+
 }
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g,m=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
+
+  return String(value)
+    .replace(
+      /[&<>"']/g,
+      m => ({
+
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+
+      }[m])
+    );
+
 }
 
-otpInput.addEventListener("input",function(){
-  this.value=this.value.replace(/\D/g,"").slice(0,6);
-  if(this.value.length===6 && otpSent && !loggedIn)login();
-});
+
+/* =========================
+   OTP INPUT
+========================= */
+
+otpInput.addEventListener(
+  "input",
+  function(){
+
+    this.value =
+      this.value
+        .replace(/\D/g,"")
+        .slice(0,6);
+
+
+    if(
+      this.value.length === 6 &&
+      otpSent &&
+      !loggedIn
+    ){
+
+      login();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   INITIAL EVENT STATE
+========================= */
 
 setEventState();
 
-supabaseClient.auth.getSession().then(async({data})=>{
-  if(data.session){
-    loggedIn=true;
-    emailInput.value=data.session.user.email||"";
-    emailInput.disabled=true;
-    loginBtn.disabled=true;
-    loginBtn.textContent="ĐÃ ĐĂNG NHẬP";
-    status.textContent="✅ Đã đăng nhập.";
-    await loadPlayer();
-    await loadLeaderboard();
-    enableCards();
-  }
-});
+
+/* =========================
+   EXISTING SESSION
+========================= */
+
+supabaseClient.auth
+  .getSession()
+  .then(
+    async ({data}) => {
+
+      if(!data.session)
+        return;
+
+
+      loggedIn = true;
+
+
+      const sessionEmail =
+        (
+          data.session.user.email ||
+          ""
+        ).toLowerCase();
+
+
+      const sessionIsAdmin =
+        sessionEmail ===
+        ADMIN_EMAIL;
+
+
+      emailInput.value =
+        data.session.user.email ||
+        "";
+
+
+      emailInput.disabled =
+        true;
+
+      otpInput.disabled =
+        true;
+
+      loginBtn.disabled =
+        true;
+
+      loginBtn.textContent =
+        "ĐÃ ĐĂNG NHẬP";
+
+
+      await loadPlayer();
+
+      await loadLeaderboard();
+
+
+      if(
+        sessionIsAdmin &&
+        !isEventOpen()
+      ){
+
+        status.classList.remove(
+          "event-closed"
+        );
+
+        status.textContent =
+          "👑 Admin đã đăng nhập. Event chưa mở nên chưa thể lật thẻ.";
+
+      }else{
+
+        status.classList.remove(
+          "event-closed"
+        );
+
+        status.textContent =
+          "✅ Đã đăng nhập.";
+
+        enableCards();
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   INITIAL LEADERBOARD
+========================= */
 
 loadLeaderboard();
-setInterval(async()=>{
-  const open=isEventOpen();
-  if(open!==eventOpen){
-    eventOpen=open;
-    setEventState();
-    if(eventOpen && loggedIn){
-      await loadPlayer();
-      await loadLeaderboard();
-      enableCards();
+
+
+/* =========================
+   AUTO CHECK EVENT
+========================= */
+
+setInterval(
+  async () => {
+
+    const open =
+      isEventOpen();
+
+
+    if(
+      open !== eventOpen
+    ){
+
+      eventOpen =
+        open;
+
+
+      setEventState();
+
+
+      if(
+        eventOpen &&
+        loggedIn
+      ){
+
+        await loadPlayer();
+
+        await loadLeaderboard();
+
+        enableCards();
+
+      }
+
     }
-  }
-  if(open)await loadLeaderboard();
-},15000);
+
+
+    if(open)
+      await loadLeaderboard();
+
+  },
+  15000
+);
+
 </script>
+
 </body>
 </html>
