@@ -60,10 +60,12 @@ button{cursor:pointer;border:0;border-radius:11px;font-weight:700}
 <input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="MÃ OTP 6 SỐ">
 </div>
 </div>
-<div class="status" id="status">Nhập email để nhận mã OTP đăng nhập.</div>
-<div class="cards" id="cards"></div>
-</section>
+const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
 
+if(!isAdmin && !isEventOpen()){
+  setEventState();
+  return;
+}
 <section class="panel leader">
 <h2>🏆 BẢNG XẾP HẠNG TOP 10</h2>
 <table>
