@@ -415,12 +415,11 @@ th{
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
 
-/* =========================
+/* =====================================================
    SUPABASE
-========================= */
+===================================================== */
 
 const SUPABASE_URL =
   "https://rftnjeozezxgemtrvkce.supabase.co";
@@ -435,17 +434,17 @@ const supabaseClient =
   );
 
 
-/* =========================
+/* =====================================================
    ADMIN
-========================= */
+===================================================== */
 
 const ADMIN_EMAIL =
   "namtruong3333@gmail.com";
 
 
-/* =========================
+/* =====================================================
    EVENT
-========================= */
+===================================================== */
 
 const EVENT_START =
   new Date(
@@ -458,9 +457,9 @@ const EVENT_END =
   );
 
 
-/* =========================
-   EVENT RULES
-========================= */
+/* =====================================================
+   RULES
+===================================================== */
 
 const DAILY_PLAYS = 50;
 
@@ -474,9 +473,9 @@ const POINT_VALUES = [
 ];
 
 
-/* =========================
+/* =====================================================
    ELEMENTS
-========================= */
+===================================================== */
 
 const status =
   document.getElementById("status");
@@ -509,9 +508,9 @@ const adminBadge =
   document.getElementById("adminBadge");
 
 
-/* =========================
+/* =====================================================
    STATE
-========================= */
+===================================================== */
 
 let loggedIn = false;
 
@@ -523,26 +522,21 @@ let eventOpen = false;
 
 let isAdmin = false;
 
-
-/* =========================
-   ADMIN TEST STATE
-========================= */
-
-let adminTestDate = "";
-
-let adminTestPlays =
-  DAILY_PLAYS;
-
-let adminTestPoints = 0;
+let currentLoginEmail = "";
 
 
-/* =========================
+/* =====================================================
    CREATE 10 CARDS
-========================= */
+===================================================== */
 
-for(let i = 0; i < 10; i++){
+for(
+  let i = 0;
+  i < 10;
+  i++
+){
 
   cards.insertAdjacentHTML(
+
     "beforeend",
 
     `
@@ -566,7 +560,6 @@ for(let i = 0; i < 10; i++){
 
         </div>
 
-
         <div class="face back">
 
           <div class="result">
@@ -583,20 +576,21 @@ for(let i = 0; i < 10; i++){
 
     </button>
     `
+
   );
 
 }
 
 
-/* =========================
+/* =====================================================
    VIỆT NAM DATE
-========================= */
+===================================================== */
 
-function vietnamNow(){
+function vietnamDateKey(){
 
   const parts =
     new Intl.DateTimeFormat(
-      "en-US",
+      "en-CA",
       {
         timeZone:
           "Asia/Ho_Chi_Minh",
@@ -610,55 +604,36 @@ function vietnamNow(){
     );
 
 
-  const get =
-    type =>
-      parts.find(
-        x => x.type === type
-      )?.value;
+  const year =
+    parts.find(
+      p => p.type === "year"
+    ).value;
 
+  const month =
+    parts.find(
+      p => p.type === "month"
+    ).value;
 
-  return {
-
-    year:
-      Number(get("year")),
-
-    month:
-      Number(get("month")),
-
-    day:
-      Number(get("day"))
-
-  };
-
-}
-
-
-/* =========================
-   DATE KEY
-========================= */
-
-function vietnamDateKey(){
-
-  const d =
-    vietnamNow();
+  const day =
+    parts.find(
+      p => p.type === "day"
+    ).value;
 
 
   return (
-
-    d.year +
+    year +
     "-" +
-    String(d.month).padStart(2,"0") +
+    month +
     "-" +
-    String(d.day).padStart(2,"0")
-
+    day
   );
 
 }
 
 
-/* =========================
+/* =====================================================
    EVENT OPEN
-========================= */
+===================================================== */
 
 function isEventOpen(){
 
@@ -673,64 +648,305 @@ function isEventOpen(){
 }
 
 
-/* =========================
-   EVENT STATE
-========================= */
+/* =====================================================
+   DAILY OTP STORAGE
+===================================================== */
 
-function setEventState(){
+/*
+  Mỗi ngày sau khi OTP được xác nhận,
+  lưu ngày đã xác thực.
 
-  eventOpen =
-    isEventOpen();
+  Sang ngày mới:
+  dữ liệu ngày cũ không được dùng.
+*/
 
+function otpStorageKey(
+  email
+){
 
-  if(!eventOpen){
-
-    document
-      .querySelectorAll(
-        ".card"
-      )
-      .forEach(
-        c =>
-          c.disabled = true
-      );
-
-
-    status.classList.add(
-      "event-closed"
-    );
-
-
-    if(
-      new Date() <
-      EVENT_START
-    ){
-
-      status.textContent =
-        "⏳ Sự kiện chưa bắt đầu. Người chơi chỉ có thể chơi từ 05/10/2026.";
-
-    }else{
-
-      status.textContent =
-        "⛔ Sự kiện đã kết thúc. BXH đã được chốt.";
-
-    }
-
-  }else{
-
-    status.classList.remove(
-      "event-closed"
-    );
-
-  }
+  return (
+    "tien_de_otp_verified_" +
+    String(email)
+      .trim()
+      .toLowerCase()
+  );
 
 }
 
 
-/* =========================
-   ADMIN STORAGE
-========================= */
+function markOtpVerified(
+  email
+){
 
-function getAdminStorageKey(){
+  localStorage.setItem(
+
+    otpStorageKey(
+      email
+    ),
+
+    vietnamDateKey()
+
+  );
+
+}
+
+
+function hasOtpVerifiedToday(
+  email
+){
+
+  return (
+    localStorage.getItem(
+      otpStorageKey(
+        email
+      )
+    ) ===
+    vietnamDateKey()
+  );
+
+}
+
+
+function clearOtpVerified(
+  email
+){
+
+  localStorage.removeItem(
+
+    otpStorageKey(
+      email
+    )
+
+  );
+
+}
+
+
+/* =====================================================
+   RESET UI LOGIN
+===================================================== */
+
+function resetLoginUI(){
+
+  loggedIn =
+    false;
+
+  otpSent =
+    false;
+
+  busy =
+    false;
+
+  isAdmin =
+    false;
+
+  currentLoginEmail =
+    "";
+
+
+  emailInput.disabled =
+    false;
+
+  otpInput.disabled =
+    false;
+
+  loginBtn.disabled =
+    false;
+
+  loginBtn.textContent =
+    "GỬI MÃ OTP";
+
+
+  otpInput.value =
+    "";
+
+  otpRow.style.display =
+    "none";
+
+
+  adminBadge.style.display =
+    "none";
+
+
+  playsEl.textContent =
+    "—";
+
+  pointsEl.textContent =
+    "0";
+
+
+  resetCards();
+
+}
+
+
+/* =====================================================
+   RESET CARDS
+===================================================== */
+
+function resetCards(){
+
+  document
+    .querySelectorAll(
+      ".card"
+    )
+    .forEach(
+
+      card => {
+
+        card.classList.remove(
+          "flipped"
+        );
+
+        card.disabled =
+          true;
+
+        card.querySelector(
+          ".result"
+        ).textContent =
+          "?";
+
+        card.querySelector(
+          ".note"
+        ).textContent =
+          "Kết quả";
+
+      }
+
+    );
+
+}
+
+
+/* =====================================================
+   ALL 10 CARDS FLIPPED
+===================================================== */
+
+function allCardsFlipped(){
+
+  const all =
+    Array.from(
+      document.querySelectorAll(
+        ".card"
+      )
+    );
+
+
+  return (
+    all.length === 10 &&
+    all.every(
+      card =>
+        card.classList.contains(
+          "flipped"
+        )
+    )
+  );
+
+}
+
+
+/* =====================================================
+   NEXT ROUND
+===================================================== */
+
+function startNextRound(
+  adminMode
+){
+
+  if(
+    busy
+  )
+    return;
+
+
+  if(
+    !allCardsFlipped()
+  )
+    return;
+
+
+  setTimeout(
+
+    () => {
+
+      if(
+        !loggedIn
+      )
+        return;
+
+
+      if(
+        adminMode
+      ){
+
+        if(
+          adminTestPlays <= 0
+        )
+          return;
+
+
+        resetCards();
+
+        enableCards(
+          true
+        );
+
+
+        status.textContent =
+          "🃏 10 thẻ mới đã sẵn sàng. Tiếp tục TEST.";
+
+      }else{
+
+        if(
+          !isEventOpen()
+        )
+          return;
+
+
+        if(
+          Number(
+            playsEl.textContent
+          ) <= 0
+        )
+          return;
+
+
+        resetCards();
+
+        enableCards(
+          false
+        );
+
+
+        status.textContent =
+          "🃏 10 thẻ mới đã sẵn sàng. Tiếp tục chơi.";
+
+      }
+
+    },
+
+    800
+
+  );
+
+}
+
+
+/* =====================================================
+   ADMIN TEST STORAGE
+===================================================== */
+
+let adminTestDate =
+  "";
+
+let adminTestPlays =
+  DAILY_PLAYS;
+
+let adminTestPoints =
+  0;
+
+
+function adminStorageKey(){
 
   return (
     "tien_de_admin_test_" +
@@ -743,7 +959,7 @@ function getAdminStorageKey(){
 function loadAdminTest(){
 
   const key =
-    getAdminStorageKey();
+    adminStorageKey();
 
 
   try{
@@ -754,7 +970,9 @@ function loadAdminTest(){
       );
 
 
-    if(saved){
+    if(
+      saved
+    ){
 
       const data =
         JSON.parse(
@@ -782,18 +1000,24 @@ function loadAdminTest(){
         !Number.isFinite(
           adminTestPlays
         )
-      )
+      ){
+
         adminTestPlays =
           DAILY_PLAYS;
+
+      }
 
 
       if(
         !Number.isFinite(
           adminTestPoints
         )
-      )
+      ){
+
         adminTestPoints =
           0;
+
+      }
 
 
       return;
@@ -822,7 +1046,7 @@ function saveAdminTest(){
 
   localStorage.setItem(
 
-    getAdminStorageKey(),
+    adminStorageKey(),
 
     JSON.stringify({
 
@@ -838,10 +1062,6 @@ function saveAdminTest(){
 
 }
 
-
-/* =========================
-   RESET ADMIN NEW DAY
-========================= */
 
 function resetAdminTestIfNewDay(){
 
@@ -866,155 +1086,59 @@ function resetAdminTestIfNewDay(){
 
     resetCards();
 
-  }else if(
-    adminTestDate === ""
-  ){
-
-    loadAdminTest();
-
   }
 
 }
 
 
-/* =========================
-   RESET CARDS
-========================= */
+/* =====================================================
+   EVENT STATE
+===================================================== */
 
-function resetCards(){
+function setEventState(){
 
-  document
-    .querySelectorAll(
-      ".card"
-    )
-    .forEach(
-      card => {
-
-        card.classList.remove(
-          "flipped"
-        );
+  eventOpen =
+    isEventOpen();
 
 
-        card.disabled =
-          true;
+  if(
+    !eventOpen
+  ){
 
-
-        card.querySelector(
-          ".result"
-        ).textContent =
-          "?";
-
-
-        card.querySelector(
-          ".note"
-        ).textContent =
-          "Kết quả";
-
-      }
-    );
-
-}
-
-
-/* =========================
-   ALL CARDS FLIPPED
-========================= */
-
-function allCardsFlipped(){
-
-  const all =
-    Array.from(
-      document.querySelectorAll(
+    document
+      .querySelectorAll(
         ".card"
       )
+      .forEach(
+        c =>
+          c.disabled = true
+      );
+
+
+    status.classList.add(
+      "event-closed"
     );
 
 
-  return (
-    all.length === 10 &&
-    all.every(
-      card =>
-        card.classList.contains(
-          "flipped"
-        )
-    )
-  );
+    if(
+      new Date() <
+      EVENT_START
+    ){
 
-}
+      status.textContent =
+        "⏳ Sự kiện chưa bắt đầu. Người chơi chỉ có thể tham gia từ 05/10/2026.";
 
+    }else{
 
-/* =========================
-   NEXT ROUND
-========================= */
+      status.textContent =
+        "⛔ Sự kiện đã kết thúc. BXH đã được chốt.";
 
-function startNextRound(
-  adminMode
-){
+    }
 
-  if(
-    busy
-  )
-    return;
+  }else{
 
-
-  if(
-    allCardsFlipped()
-  ){
-
-    setTimeout(
-
-      () => {
-
-        if(
-          !loggedIn
-        )
-          return;
-
-
-        if(
-          adminMode
-        ){
-
-          if(
-            adminTestPlays <= 0
-          )
-            return;
-
-
-          resetCards();
-
-          enableCards(
-            true
-          );
-
-        }else{
-
-          if(
-            !isEventOpen()
-          )
-            return;
-
-
-          if(
-            Number(
-              playsEl.textContent
-            ) <= 0
-          )
-            return;
-
-
-          resetCards();
-
-          enableCards(
-            false
-          );
-
-        }
-
-      },
-
-      700
-
+    status.classList.remove(
+      "event-closed"
     );
 
   }
@@ -1022,9 +1146,9 @@ function startNextRound(
 }
 
 
-/* =========================
+/* =====================================================
    LOGIN
-========================= */
+===================================================== */
 
 async function login(){
 
@@ -1059,12 +1183,15 @@ async function login(){
     ADMIN_EMAIL;
 
 
-  /*
-   ADMIN:
-   được đăng nhập trước event.
+  currentLoginEmail =
+    email;
 
-   NGƯỜI CHƠI:
-   chỉ đăng nhập khi event mở.
+
+  /*
+    ADMIN được test trước event.
+
+    NGƯỜI CHƠI thật chỉ được
+    bắt đầu đăng nhập khi event mở.
   */
 
   if(
@@ -1083,9 +1210,9 @@ async function login(){
     true;
 
 
-  /* =========================
-     SEND OTP
-  ========================= */
+  /* =================================================
+     GỬI OTP
+  ================================================= */
 
   if(
     !otpSent
@@ -1117,7 +1244,6 @@ async function login(){
     loginBtn.disabled =
       false;
 
-
     busy =
       false;
 
@@ -1127,7 +1253,7 @@ async function login(){
     ){
 
       status.textContent =
-        "❌ Không gửi được mã OTP: " +
+        "❌ Không gửi được OTP: " +
         error.message;
 
       return;
@@ -1148,7 +1274,7 @@ async function login(){
 
 
     status.textContent =
-      "✅ Mã OTP 6 số đã được gửi. Kiểm tra email.";
+      "✅ OTP đã được gửi vào email. Nhập mã 6 số để vào event.";
 
 
     otpInput.focus();
@@ -1158,9 +1284,9 @@ async function login(){
   }
 
 
-  /* =========================
-     VERIFY OTP
-  ========================= */
+  /* =================================================
+     XÁC NHẬN OTP
+  ================================================= */
 
   const token =
     otpInput.value.trim();
@@ -1195,7 +1321,6 @@ async function login(){
 
 
   const {
-    data,
     error
   } =
     await supabaseClient.auth
@@ -1220,45 +1345,49 @@ async function login(){
     busy =
       false;
 
+
     status.textContent =
-      "❌ Mã OTP không đúng hoặc đã hết hạn.";
+      "❌ OTP không đúng hoặc đã hết hạn.";
 
     return;
 
   }
 
 
-  /* =========================
-     LOGIN SUCCESS
-  ========================= */
+  /*
+    OTP đã được xác nhận
+    cho ngày Việt Nam hiện tại.
+  */
+
+  markOtpVerified(
+    email
+  );
+
 
   loggedIn =
     true;
-
-
-  emailInput.disabled =
-    true;
-
-
-  otpInput.disabled =
-    true;
-
-
-  loginBtn.disabled =
-    true;
-
-
-  loginBtn.textContent =
-    "ĐÃ ĐĂNG NHẬP";
 
 
   busy =
     false;
 
 
-  /* =========================
+  emailInput.disabled =
+    true;
+
+  otpInput.disabled =
+    true;
+
+  loginBtn.disabled =
+    true;
+
+  loginBtn.textContent =
+    "ĐÃ ĐĂNG NHẬP";
+
+
+  /* =================================================
      ADMIN
-  ========================= */
+  ================================================= */
 
   if(
     isAdmin
@@ -1288,13 +1417,8 @@ async function login(){
 
 
     status.textContent =
-      "👑 Admin đăng nhập thành công. CHẾ ĐỘ TEST — không ảnh hưởng BXH thật.";
+      "👑 Admin đã đăng nhập. CHẾ ĐỘ TEST — không ảnh hưởng BXH thật.";
 
-
-    /*
-     Admin luôn được test,
-     trước và trong event.
-    */
 
     enableCards(
       true
@@ -1306,9 +1430,9 @@ async function login(){
   }
 
 
-  /* =========================
-     REAL PLAYER
-  ========================= */
+  /* =================================================
+     PLAYER
+  ================================================= */
 
   await loadPlayer();
 
@@ -1325,7 +1449,7 @@ async function login(){
 
 
     status.textContent =
-      "✅ Đăng nhập thành công. Bạn có thể lật thẻ.";
+      "✅ Đăng nhập thành công. Bạn có 50 lượt hôm nay.";
 
 
     enableCards(
@@ -1341,16 +1465,11 @@ async function login(){
 }
 
 
-/* =========================
+/* =====================================================
    LOAD PLAYER
-========================= */
+===================================================== */
 
 async function loadPlayer(){
-
-  /*
-   Admin không bao giờ
-   lấy điểm test từ BXH thật.
-  */
 
   if(
     isAdmin
@@ -1386,7 +1505,7 @@ async function loadPlayer(){
   ){
 
     status.textContent =
-      "❌ Không tải được dữ liệu người chơi: " +
+      "❌ Không tải được dữ liệu: " +
       error.message;
 
     return;
@@ -1418,9 +1537,9 @@ async function loadPlayer(){
 }
 
 
-/* =========================
+/* =====================================================
    LEADERBOARD
-========================= */
+===================================================== */
 
 async function loadLeaderboard(){
 
@@ -1461,6 +1580,7 @@ async function loadLeaderboard(){
         10
       )
       .map(
+
         (p,i) => `
 
         <tr>
@@ -1488,18 +1608,19 @@ async function loadLeaderboard(){
         </tr>
 
         `
+
       )
       .join("");
 
 }
 
 
-/* =========================
+/* =====================================================
    ENABLE CARDS
-========================= */
+===================================================== */
 
 function enableCards(
-  adminTest = false
+  adminMode = false
 ){
 
   if(
@@ -1508,19 +1629,26 @@ function enableCards(
     return;
 
 
-  /*
-   Admin test:
-   không phụ thuộc event.
-  */
-
   if(
-    adminTest
+    adminMode
   ){
 
     if(
       adminTestPlays <= 0
-    )
+    ){
+
+      document
+        .querySelectorAll(
+          ".card"
+        )
+        .forEach(
+          c =>
+            c.disabled = true
+        );
+
       return;
+
+    }
 
 
     document
@@ -1537,10 +1665,6 @@ function enableCards(
 
   }
 
-
-  /*
-   Player thật.
-  */
 
   if(
     !eventOpen
@@ -1568,9 +1692,9 @@ function enableCards(
 }
 
 
-/* =========================
+/* =====================================================
    RANDOM POINT
-========================= */
+===================================================== */
 
 function randomPoint(){
 
@@ -1584,9 +1708,9 @@ function randomPoint(){
 }
 
 
-/* =========================
+/* =====================================================
    ADMIN TEST FLIP
-========================= */
+===================================================== */
 
 function adminTestFlip(
   card
@@ -1604,8 +1728,7 @@ function adminTestFlip(
 
 
     status.textContent =
-      "⏳ Admin đã dùng hết 50 lượt test hôm nay. Ngày mai sẽ được cấp lại 50 lượt.";
-
+      "⏳ Admin đã dùng hết 50 lượt test hôm nay. Ngày mai sẽ có 50 lượt mới.";
 
     return;
 
@@ -1616,11 +1739,12 @@ function adminTestFlip(
 
 
   /*
-   50% có điểm.
+    50% có điểm.
   */
 
   const won =
-    Math.random() < 0.50;
+    Math.random() <
+    0.50;
 
 
   const value =
@@ -1672,9 +1796,9 @@ function adminTestFlip(
 
 
     status.textContent =
-      "🎉 TEST ADMIN: Bạn nhận được +" +
+      "🎉 TEST ADMIN: +" +
       value +
-      " điểm.";
+      " điểm. Không vào BXH thật.";
 
   }else{
 
@@ -1704,10 +1828,6 @@ function adminTestFlip(
     adminTestPlays <= 0
   ){
 
-    status.textContent =
-      "⏳ Admin đã dùng hết 50 lượt test hôm nay. Ngày mai sẽ được cấp lại 50 lượt.";
-
-
     document
       .querySelectorAll(
         ".card"
@@ -1718,24 +1838,23 @@ function adminTestFlip(
       );
 
 
+    status.textContent =
+      "⏳ Admin đã dùng hết 50 lượt test hôm nay. Ngày mai sẽ có 50 lượt mới.";
+
     return;
 
   }
 
 
-  /*
-   Nếu đã lật đủ 10 lá,
-   tự tạo vòng mới.
-  */
-
-  startNextRound(
-    true
-  );
-
-
   if(
-    !allCardsFlipped()
+    allCardsFlipped()
   ){
+
+    startNextRound(
+      true
+    );
+
+  }else{
 
     enableCards(
       true
@@ -1746,9 +1865,9 @@ function adminTestFlip(
 }
 
 
-/* =========================
-   FLIP CARD
-========================= */
+/* =====================================================
+   REAL PLAYER FLIP
+===================================================== */
 
 async function flip(
   card
@@ -1759,7 +1878,7 @@ async function flip(
   ){
 
     status.textContent =
-      "⚠️ Bạn phải đăng nhập trước khi lật thẻ.";
+      "⚠️ Bạn phải đăng nhập và xác nhận OTP trước.";
 
     return;
 
@@ -1775,9 +1894,9 @@ async function flip(
     return;
 
 
-  /* =========================
-     ADMIN TEST
-  ========================= */
+  /* =================================================
+     ADMIN
+  ================================================= */
 
   if(
     isAdmin
@@ -1807,15 +1926,40 @@ async function flip(
   }
 
 
-  /* =========================
-     EVENT CLOSED
-  ========================= */
+  /* =================================================
+     EVENT
+  ================================================= */
 
   if(
     !isEventOpen()
   ){
 
     setEventState();
+
+    return;
+
+  }
+
+
+  /*
+    Kiểm tra OTP của ngày hiện tại.
+  */
+
+  if(
+    !hasOtpVerifiedToday(
+      currentLoginEmail
+    )
+  ){
+
+    await supabaseClient.auth
+      .signOut();
+
+
+    resetLoginUI();
+
+
+    status.textContent =
+      "🔐 Sang ngày mới. Bạn cần nhận và xác nhận OTP mới để tiếp tục.";
 
     return;
 
@@ -1833,7 +1977,7 @@ async function flip(
   ){
 
     status.textContent =
-      "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
+      "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ có 50 lượt mới.";
 
     return;
 
@@ -1858,9 +2002,9 @@ async function flip(
     "⏳ Đang lật thẻ...";
 
 
-  /* =========================
-     REAL BACKEND FLIP
-  ========================= */
+  /* =================================================
+     BACKEND
+  ================================================= */
 
   const {
     data,
@@ -1902,22 +2046,11 @@ async function flip(
       : data || {};
 
 
-  card.classList.add(
-    "flipped"
-  );
-
-
   const won =
     Boolean(
       result.has_point
     );
 
-
-  /*
-   Hỗ trợ cả 2 tên:
-   awarded_points
-   hoặc points_awarded
-  */
 
   const value =
     Number(
@@ -1927,9 +2060,10 @@ async function flip(
     );
 
 
-  /* =========================
-     HIỂN THỊ KẾT QUẢ
-  ========================= */
+  card.classList.add(
+    "flipped"
+  );
+
 
   card.querySelector(
     ".result"
@@ -1947,9 +2081,9 @@ async function flip(
       : "Không có điểm";
 
 
-  /* =========================
-     CẬP NHẬT LƯỢT
-  ========================= */
+  /*
+    Lượt còn lại lấy từ SERVER.
+  */
 
   playsEl.textContent =
     result.plays_remaining ??
@@ -1959,18 +2093,16 @@ async function flip(
     );
 
 
-  /* =========================
-     CẬP NHẬT ĐIỂM
-  ========================= */
+  /*
+    Điểm tổng lấy từ SERVER.
+    Đây chính là điểm dùng cho BXH.
+  */
 
   pointsEl.textContent =
     result.points ??
+    result.total_points ??
     pointsEl.textContent;
 
-
-  /* =========================
-     THÔNG BÁO
-  ========================= */
 
   if(
     won
@@ -1989,9 +2121,9 @@ async function flip(
   }
 
 
-  /* =========================
-     BXH
-  ========================= */
+  /*
+    BXH cập nhật ngay sau lượt lật.
+  */
 
   await loadLeaderboard();
 
@@ -2000,18 +2132,15 @@ async function flip(
     false;
 
 
-  /* =========================
-     HẾT 50 LƯỢT
-  ========================= */
+  /*
+    HẾT 50 LƯỢT.
+  */
 
   if(
     Number(
       playsEl.textContent
     ) <= 0
   ){
-
-    status.textContent =
-      "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
 
     document
       .querySelectorAll(
@@ -2023,24 +2152,28 @@ async function flip(
       );
 
 
+    status.textContent =
+      "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ có 50 lượt mới.";
+
     return;
 
   }
 
 
   /*
-   Nếu đã lật đủ 10 lá,
-   tự reset sang vòng tiếp theo.
+    ĐỦ 10 THẺ:
+    tự động tạo 10 thẻ mới.
   */
 
-  startNextRound(
-    false
-  );
-
-
   if(
-    !allCardsFlipped()
+    allCardsFlipped()
   ){
+
+    startNextRound(
+      false
+    );
+
+  }else{
 
     enableCards(
       false
@@ -2051,9 +2184,9 @@ async function flip(
 }
 
 
-/* =========================
+/* =====================================================
    ESCAPE HTML
-========================= */
+===================================================== */
 
 function escapeHtml(
   value
@@ -2062,6 +2195,7 @@ function escapeHtml(
   return String(
     value
   ).replace(
+
     /[&<>"']/g,
 
     m => ({
@@ -2079,12 +2213,14 @@ function escapeHtml(
 }
 
 
-/* =========================
+/* =====================================================
    OTP INPUT
-========================= */
+===================================================== */
 
 otpInput.addEventListener(
+
   "input",
+
   function(){
 
     this.value =
@@ -2110,23 +2246,25 @@ otpInput.addEventListener(
     }
 
   }
+
 );
 
 
-/* =========================
-   INITIAL EVENT STATE
-========================= */
+/* =====================================================
+   INITIAL
+===================================================== */
 
 setEventState();
 
 
-/* =========================
+/* =====================================================
    EXISTING SESSION
-========================= */
+===================================================== */
 
 supabaseClient.auth
   .getSession()
   .then(
+
     async ({
       data
     }) => {
@@ -2150,59 +2288,102 @@ supabaseClient.auth
 
 
       /*
-       Người chơi bình thường
-       không được giữ session
-       trước event.
+        ADMIN:
+        cho phép giữ session.
+
+        PLAYER:
+        bắt buộc phải có OTP
+        của ngày hiện tại.
       */
 
       if(
-        !sessionIsAdmin &&
-        !isEventOpen()
+        !sessionIsAdmin
       ){
 
-        await supabaseClient.auth
-          .signOut();
+        if(
+          !isEventOpen()
+        ){
+
+          await supabaseClient.auth
+            .signOut();
+
+          resetLoginUI();
+
+          setEventState();
+
+          return;
+
+        }
 
 
-        setEventState();
+        if(
+          !hasOtpVerifiedToday(
+            sessionEmail
+          )
+        ){
 
-        return;
+          /*
+            Session cũ nhưng chưa
+            xác nhận OTP ngày hôm nay.
+
+            Bắt đăng nhập OTP mới.
+          */
+
+          await supabaseClient.auth
+            .signOut();
+
+          resetLoginUI();
+
+
+          status.classList.remove(
+            "event-closed"
+          );
+
+
+          status.textContent =
+            "🔐 Vui lòng nhập email và nhận OTP mới cho ngày hôm nay.";
+
+          return;
+
+        }
 
       }
 
 
+      /* =================================================
+         RESTORE LOGIN
+      ================================================= */
+
       loggedIn =
         true;
-
 
       isAdmin =
         sessionIsAdmin;
 
+      currentLoginEmail =
+        sessionEmail;
+
 
       emailInput.value =
-        data.session.user.email ||
-        "";
+        sessionEmail;
 
 
       emailInput.disabled =
         true;
 
-
       otpInput.disabled =
         true;
 
-
       loginBtn.disabled =
         true;
-
 
       loginBtn.textContent =
         "ĐÃ ĐĂNG NHẬP";
 
 
-      /* =========================
-         ADMIN EXISTING SESSION
-      ========================= */
+      /* =================================================
+         ADMIN
+      ================================================= */
 
       if(
         isAdmin
@@ -2245,9 +2426,9 @@ supabaseClient.auth
       }
 
 
-      /* =========================
-         REAL PLAYER
-      ========================= */
+      /* =================================================
+         PLAYER
+      ================================================= */
 
       await loadPlayer();
 
@@ -2264,7 +2445,7 @@ supabaseClient.auth
 
 
         status.textContent =
-          "✅ Đã đăng nhập.";
+          "✅ Đã xác nhận OTP hôm nay. Bạn có thể chơi.";
 
 
         enableCards(
@@ -2278,34 +2459,103 @@ supabaseClient.auth
       }
 
     }
+
   );
 
 
-/* =========================
-   INITIAL LEADERBOARD
-========================= */
+/* =====================================================
+   LOAD BXH BAN ĐẦU
+===================================================== */
 
 loadLeaderboard();
 
 
-/* =========================
-   AUTO CHECK EVENT
-========================= */
+/* =====================================================
+   AUTO CHECK
+===================================================== */
+
+let lastKnownVietnamDate =
+  vietnamDateKey();
+
 
 setInterval(
+
   async () => {
+
+    const today =
+      vietnamDateKey();
+
+
+    /*
+      Sang ngày mới:
+      player phải OTP lại.
+    */
+
+    if(
+      today !==
+      lastKnownVietnamDate
+    ){
+
+      lastKnownVietnamDate =
+        today;
+
+
+      if(
+        loggedIn &&
+        !isAdmin
+      ){
+
+        await supabaseClient.auth
+          .signOut();
+
+
+        resetLoginUI();
+
+
+        status.classList.remove(
+          "event-closed"
+        );
+
+
+        status.textContent =
+          "🌅 Ngày mới đã bắt đầu. Vui lòng nhập email và nhận OTP mới để nhận 50 lượt hôm nay.";
+
+      }
+
+
+      if(
+        isAdmin
+      ){
+
+        resetAdminTestIfNewDay();
+
+        playsEl.textContent =
+          adminTestPlays;
+
+        pointsEl.textContent =
+          adminTestPoints;
+
+        resetCards();
+
+        enableCards(
+          true
+        );
+
+      }
+
+    }
+
+
+    /* =================================================
+       EVENT STATUS
+    ================================================= */
 
     const oldOpen =
       eventOpen;
 
-
     const open =
       isEventOpen();
 
-
-    /*
-     Cập nhật trạng thái event.
-    */
 
     if(
       open !== oldOpen
@@ -2317,35 +2567,12 @@ setInterval(
 
       setEventState();
 
-
-      /*
-       Player thật:
-       khi event mở thì
-       tải dữ liệu và cho chơi.
-      */
-
-      if(
-        eventOpen &&
-        loggedIn &&
-        !isAdmin
-      ){
-
-        await loadPlayer();
-
-        await loadLeaderboard();
-
-        enableCards(
-          false
-        );
-
-      }
-
     }
 
 
-    /*
-     BXH cập nhật liên tục.
-    */
+    /* =================================================
+       BXH
+    ================================================= */
 
     if(
       open
@@ -2356,10 +2583,9 @@ setInterval(
     }
 
 
-    /*
-     ADMIN TEST
-     Không phụ thuộc event.
-    */
+    /* =================================================
+       ADMIN
+    ================================================= */
 
     if(
       isAdmin &&
