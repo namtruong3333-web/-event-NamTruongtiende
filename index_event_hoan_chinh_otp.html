@@ -135,14 +135,17 @@ async function login(){
   if(busy)return;
   const email=emailInput.value.trim();
   const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
+const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
 
 if(!isAdmin && !isEventOpen()){
   setEventState();
   return;
 }
-    return;
-  }
+const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
 
+if(!isAdmin && !isEventOpen()){
+  setEventState();
+  return;}
   busy=true;
 
   if(!otpSent){
