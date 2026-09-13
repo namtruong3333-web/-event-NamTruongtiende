@@ -134,10 +134,12 @@ function setEventState(){
 async function login(){
   if(busy)return;
   const email=emailInput.value.trim();
-  if(!email){status.textContent="⚠️ Vui lòng nhập email.";emailInput.focus();return;}
+  const isAdmin = email.toLowerCase() === "namtruong3333@gmail.com";
 
-  if(!isEventOpen()){
-    setEventState();
+if(!isAdmin && !isEventOpen()){
+  setEventState();
+  return;
+}
     return;
   }
 
