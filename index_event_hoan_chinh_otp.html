@@ -1,1784 +1,5 @@
-[functions.flip-event-2026]
-verify_jwt = true
-
-[functions.verify-event-otp-2026]
-verify_jwt = true
--- ============================================================
--- LẬT THẺ TIÊN ĐẾ 2026
--- FINAL VERSION
--- ============================================================
-
-create extension if not exists pgcrypto;
-
-
--- ============================================================
--- CONFIG
--- ============================================================
-
-create table if not exists public.event_config_2026 (
-    id boolean primary key default true,
-
-    start_at timestamptz not null
-        default '2026-10-04 17:00:00+00',
-
-    end_at timestamptz not null
-        default '2026-10-10 16:59:59+00',
-
-    daily_plays integer not null default 50,
-
-    point_chance numeric(5,4) not null default 0.5000,
-
-    point_values integer[] not null
-        default array[10,20,30,40,50,100]
-);
-
-
-insert into public.event_config_2026 (
-    id,
-    start_at,
-    end_at,
-    daily_plays,
-    point_chance,
-    point_values
-)
-values (
-    true,
-    '2026-10-04 17:00:00+00',
-    '2026-10-10 16:59:59+00',
-    50,
-    0.5000,
-    array[10,20,30,40,50,100]
-)
-on conflict (id) do update
-set
-    start_at = excluded.start_at,
-    end_at = excluded.end_at,
-    daily_plays = excluded.daily_plays,
-    point_chance = excluded.point_chance,
-    point_values = excluded.point_values;
-
-
--- ============================================================
--- PLAYERS
--- ============================================================
-
-create table if not exists public.event_players_2026 (
-    user_id uuid primary key
-        references auth.users(id)
-        on delete cascade,
-
-    email text not null,
-
-    points integer not null default 0
-        check (points >= 0),
-
-    created_at timestamptz not null default now(),
-
-    updated_at timestamptz not null default now()
-);
-
-
--- ============================================================
--- DAILY PLAYS
--- ============================================================
-
-create table if not exists public.event_daily_plays_2026 (
-    user_id uuid not null
-        references auth.users(id)
-        on delete cascade,
-
-    play_date date not null,
-
-    plays_used integer not null default 0
-        check (plays_used >= 0 and plays_used <= 50),
-
-    primary key (user_id, play_date)
-);
-
-
--- ============================================================
--- PLAY LOG
--- ============================================================
-
-create table if not exists public.event_plays_2026 (
-    id bigint generated always as identity primary key,
-
-    user_id uuid not null
-        references auth.users(id)
-        on delete cascade,
-
-    played_at timestamptz not null default now(),
-
-    play_date date not null,
-
-    has_point boolean not null,
-
-    points_awarded integer not null default 0
-        check (points_awarded >= 0)
-);
-
-
--- ============================================================
--- DAILY OTP
--- ============================================================
-
-create table if not exists public.event_daily_otp_2026 (
-    user_id uuid not null
-        references auth.users(id)
-        on delete cascade,
-
-    otp_date date not null,
-
-    email text not null,
-
-    verified_at timestamptz not null default now(),
-
-    primary key (user_id, otp_date)
-);
-
-
--- ============================================================
--- IP BINDING
--- 1 PUBLIC IP = 1 ACCOUNT
--- ============================================================
-
-create table if not exists public.event_ip_binding_2026 (
-    ip text primary key,
-
-    user_id uuid not null
-        references auth.users(id)
-        on delete cascade,
-
-    email text not null,
-
-    bound_at timestamptz not null default now()
-);
-
-
--- ============================================================
--- INDEX
--- ============================================================
-
-create index if not exists event_players_2026_points_idx
-on public.event_players_2026 (
-    points desc,
-    updated_at asc,
-    user_id
-);
-
-create index if not exists event_plays_2026_user_date_idx
-on public.event_plays_2026 (
-    user_id,
-    play_date
-);
-
-create index if not exists event_plays_2026_date_idx
-on public.event_plays_2026 (
-    play_date
-);
-
-
--- ============================================================
--- RLS
--- ============================================================
-
-alter table public.event_config_2026 enable row level security;
-alter table public.event_players_2026 enable row level security;
-alter table public.event_daily_plays_2026 enable row level security;
-alter table public.event_plays_2026 enable row level security;
-alter table public.event_daily_otp_2026 enable row level security;
-alter table public.event_ip_binding_2026 enable row level security;
-
-
-revoke all on public.event_config_2026
-from anon, authenticated;
-
-revoke all on public.event_players_2026
-from anon, authenticated;
-
-revoke all on public.event_daily_plays_2026
-from anon, authenticated;
-
-revoke all on public.event_plays_2026
-from anon, authenticated;
-
-revoke all on public.event_daily_otp_2026
-from anon, authenticated;
-
-revoke all on public.event_ip_binding_2026
-from anon, authenticated;
-
-
--- ============================================================
--- EVENT STATUS
--- ============================================================
-
-create or replace function public.get_event_status()
-returns json
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-    c public.event_config_2026%rowtype;
-
-    today_vn date :=
-        (
-            now() at time zone 'Asia/Ho_Chi_Minh'
-        )::date;
-
-    used integer := 0;
-    pts integer := 0;
-
-begin
-
-    select *
-    into c
-    from public.event_config_2026
-    where id = true;
-
-    if c.id is null then
-        raise exception 'EVENT_CONFIG_NOT_FOUND';
-    end if;
-
-
-    if auth.uid() is not null then
-
-        insert into public.event_players_2026 (
-            user_id,
-            email
-        )
-        values (
-            auth.uid(),
-            (
-                select email
-                from auth.users
-                where id = auth.uid()
-            )
-        )
-        on conflict (user_id)
-        do update set
-            email = excluded.email,
-            updated_at = now();
-
-
-        select coalesce(
-            (
-                select d.plays_used
-                from public.event_daily_plays_2026 d
-                where d.user_id = auth.uid()
-                  and d.play_date = today_vn
-            ),
-            0
-        )
-        into used;
-
-
-        select coalesce(
-            (
-                select p.points
-                from public.event_players_2026 p
-                where p.user_id = auth.uid()
-            ),
-            0
-        )
-        into pts;
-
-    end if;
-
-
-    return json_build_object(
-        'open',
-        now() >= c.start_at
-        and now() <= c.end_at,
-
-        'start_at',
-        c.start_at,
-
-        'end_at',
-        c.end_at,
-
-        'daily_plays',
-        c.daily_plays,
-
-        'plays_used',
-        used,
-
-        'plays_remaining',
-        greatest(c.daily_plays - used, 0),
-
-        'points',
-        pts
-    );
-
-end;
-$$;
-
-
--- ============================================================
--- PLAYER STATE
--- ============================================================
-
-create or replace function public.get_player_state()
-returns json
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-    c public.event_config_2026%rowtype;
-
-    today_vn date :=
-        (
-            now() at time zone 'Asia/Ho_Chi_Minh'
-        )::date;
-
-    used integer := 0;
-    pts integer := 0;
-
-begin
-
-    if auth.uid() is null then
-        raise exception 'UNAUTHORIZED';
-    end if;
-
-
-    select *
-    into c
-    from public.event_config_2026
-    where id = true;
-
-
-    insert into public.event_players_2026 (
-        user_id,
-        email
-    )
-    values (
-        auth.uid(),
-        (
-            select email
-            from auth.users
-            where id = auth.uid()
-        )
-    )
-    on conflict (user_id)
-    do update set
-        email = excluded.email,
-        updated_at = now();
-
-
-    select coalesce(
-        (
-            select d.plays_used
-            from public.event_daily_plays_2026 d
-            where d.user_id = auth.uid()
-              and d.play_date = today_vn
-        ),
-        0
-    )
-    into used;
-
-
-    select coalesce(
-        (
-            select p.points
-            from public.event_players_2026 p
-            where p.user_id = auth.uid()
-        ),
-        0
-    )
-    into pts;
-
-
-    return json_build_object(
-        'plays_used',
-        used,
-
-        'plays_remaining',
-        greatest(c.daily_plays - used, 0),
-
-        'points',
-        pts
-    );
-
-end;
-$$;
-
-
--- ============================================================
--- ADMIN
--- ============================================================
-
-create or replace function public.is_event_admin(
-    p_user_id uuid
-)
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-
-select lower(
-    coalesce(
-        (
-            select email
-            from auth.users
-            where id = p_user_id
-        ),
-        ''
-    )
-) = 'namtruong3333@gmail.com';
-
-$$;
-
-
--- ============================================================
--- MARK OTP VERIFIED
--- ONLY SERVICE ROLE
--- ============================================================
-
-create or replace function public.mark_event_otp_verified(
-    p_user_id uuid,
-    p_email text
-)
-returns json
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-    v_email text;
-
-    today_vn date :=
-        (
-            now() at time zone 'Asia/Ho_Chi_Minh'
-        )::date;
-
-begin
-
-    if auth.role() <> 'service_role' then
-        raise exception 'FORBIDDEN';
-    end if;
-
-
-    select lower(email)
-    into v_email
-    from auth.users
-    where id = p_user_id;
-
-
-    if v_email is null then
-        raise exception 'USER_NOT_FOUND';
-    end if;
-
-
-    if lower(trim(p_email))
-       <> lower(trim(v_email))
-    then
-        raise exception 'EMAIL_MISMATCH';
-    end if;
-
-
-    insert into public.event_daily_otp_2026 (
-        user_id,
-        otp_date,
-        email,
-        verified_at
-    )
-    values (
-        p_user_id,
-        today_vn,
-        v_email,
-        now()
-    )
-    on conflict (user_id, otp_date)
-    do update set
-        email = excluded.email,
-        verified_at = now();
-
-
-    return json_build_object(
-        'ok', true,
-        'otp_date', today_vn
-    );
-
-end;
-$$;
-
-
--- ============================================================
--- CHECK OTP TODAY
--- USER CAN ONLY CHECK OWN ACCOUNT
--- ============================================================
-
-create or replace function public.has_event_otp_today(
-    p_user_id uuid
-)
-returns boolean
-language plpgsql
-stable
-security definer
-set search_path = public
-as $$
-begin
-
-    if auth.uid() is null then
-        raise exception 'UNAUTHORIZED';
-    end if;
-
-
-    if p_user_id <> auth.uid() then
-        raise exception 'FORBIDDEN';
-    end if;
-
-
-    return exists (
-        select 1
-        from public.event_daily_otp_2026
-        where user_id = auth.uid()
-          and otp_date =
-              (
-                  now() at time zone 'Asia/Ho_Chi_Minh'
-              )::date
-    );
-
-end;
-$$;
-
-
--- ============================================================
--- BIND IP
--- ONLY SERVICE ROLE
--- ============================================================
-
-create or replace function public.bind_event_ip(
-    p_user_id uuid,
-    p_email text,
-    p_ip text
-)
-returns json
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-    v_email text;
-    old_user uuid;
-
-begin
-
-    if auth.role() <> 'service_role' then
-        raise exception 'FORBIDDEN';
-    end if;
-
-
-    if p_ip is null
-       or trim(p_ip) = ''
-    then
-        raise exception 'IP_NOT_DETECTED';
-    end if;
-
-
-    select lower(email)
-    into v_email
-    from auth.users
-    where id = p_user_id;
-
-
-    if v_email is null then
-        raise exception 'USER_NOT_FOUND';
-    end if;
-
-
-    if lower(trim(p_email))
-       <> lower(trim(v_email))
-    then
-        raise exception 'EMAIL_MISMATCH';
-    end if;
-
-
-    if v_email = 'namtruong3333@gmail.com' then
-
-        return json_build_object(
-            'ok', true,
-            'admin', true,
-            'ip_bound', false
-        );
-
-    end if;
-
-
-    select user_id
-    into old_user
-    from public.event_ip_binding_2026
-    where ip = trim(p_ip)
-    for update;
-
-
-    if old_user is not null
-       and old_user <> p_user_id
-    then
-        raise exception
-            'IP_ALREADY_BOUND_TO_ANOTHER_ACCOUNT';
-    end if;
-
-
-    insert into public.event_ip_binding_2026 (
-        ip,
-        user_id,
-        email
-    )
-    values (
-        trim(p_ip),
-        p_user_id,
-        v_email
-    )
-    on conflict (ip)
-    do nothing;
-
-
-    select user_id
-    into old_user
-    from public.event_ip_binding_2026
-    where ip = trim(p_ip);
-
-
-    if old_user <> p_user_id then
-        raise exception
-            'IP_ALREADY_BOUND_TO_ANOTHER_ACCOUNT';
-    end if;
-
-
-    return json_build_object(
-        'ok', true,
-        'admin', false,
-        'ip_bound', true
-    );
-
-end;
-$$;
-
-
--- ============================================================
--- REAL FLIP
--- ONLY SERVICE ROLE
--- ============================================================
-
-create or replace function public.process_event_flip_service(
-    p_user_id uuid,
-    p_ip text
-)
-returns json
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-
-    c public.event_config_2026%rowtype;
-
-    v_email text;
-
-    today_vn date :=
-        (
-            now() at time zone 'Asia/Ho_Chi_Minh'
-        )::date;
-
-    used integer;
-
-    won boolean;
-
-    awarded integer := 0;
-
-    total_points integer;
-
-    idx integer;
-
-    admin_user boolean;
-
-begin
-
-    if auth.role() <> 'service_role' then
-        raise exception 'FORBIDDEN';
-    end if;
-
-
-    -- ========================================================
-    -- USER
-    -- ========================================================
-
-    select lower(email)
-    into v_email
-    from auth.users
-    where id = p_user_id;
-
-
-    if v_email is null then
-        raise exception 'USER_NOT_FOUND';
-    end if;
-
-
-    admin_user :=
-        v_email = 'namtruong3333@gmail.com';
-
-
-    -- ========================================================
-    -- CONFIG
-    -- ========================================================
-
-    select *
-    into c
-    from public.event_config_2026
-    where id = true;
-
-
-    if c.id is null then
-        raise exception 'EVENT_CONFIG_NOT_FOUND';
-    end if;
-
-
-    -- ========================================================
-    -- EVENT TIME
-    -- ========================================================
-
-    if now() < c.start_at then
-        raise exception 'EVENT_NOT_STARTED';
-    end if;
-
-
-    if now() > c.end_at then
-        raise exception 'EVENT_ENDED';
-    end if;
-
-
-    -- ========================================================
-    -- CONFIG VALIDATION
-    -- ========================================================
-
-    if c.daily_plays <> 50 then
-        raise exception 'INVALID_DAILY_PLAYS';
-    end if;
-
-
-    if c.point_chance <> 0.5000 then
-        raise exception 'INVALID_POINT_CHANCE';
-    end if;
-
-
-    if c.point_values
-       <> array[10,20,30,40,50,100]
-    then
-        raise exception 'INVALID_POINT_VALUES';
-    end if;
-
-
-    -- ========================================================
-    -- OTP
-    -- ========================================================
-
-    if not admin_user then
-
-        if not exists (
-            select 1
-            from public.event_daily_otp_2026
-            where user_id = p_user_id
-              and otp_date = today_vn
-              and lower(email) = v_email
-        )
-        then
-            raise exception
-                'OTP_CHUA_XAC_NHAN_HOM_NAY';
-        end if;
-
-    end if;
-
-
-    -- ========================================================
-    -- IP
-    -- ========================================================
-
-    if not admin_user then
-
-        if p_ip is null
-           or trim(p_ip) = ''
-        then
-            raise exception 'IP_NOT_DETECTED';
-        end if;
-
-
-        if exists (
-            select 1
-            from public.event_ip_binding_2026
-            where ip = trim(p_ip)
-              and user_id <> p_user_id
-        )
-        then
-            raise exception
-                'IP_ALREADY_USED_BY_ANOTHER_ACCOUNT';
-        end if;
-
-
-        if not exists (
-            select 1
-            from public.event_ip_binding_2026
-            where ip = trim(p_ip)
-              and user_id = p_user_id
-        )
-        then
-            raise exception
-                'IP_NOT_BOUND_TO_THIS_ACCOUNT';
-        end if;
-
-    end if;
-
-
-    -- ========================================================
-    -- PLAYER
-    -- ========================================================
-
-    insert into public.event_players_2026 (
-        user_id,
-        email
-    )
-    values (
-        p_user_id,
-        v_email
-    )
-    on conflict (user_id)
-    do update set
-        email = excluded.email,
-        updated_at = now();
-
-
-    -- ========================================================
-    -- DAILY ROW
-    -- ========================================================
-
-    insert into public.event_daily_plays_2026 (
-        user_id,
-        play_date,
-        plays_used
-    )
-    values (
-        p_user_id,
-        today_vn,
-        0
-    )
-    on conflict (user_id, play_date)
-    do nothing;
-
-
-    -- ========================================================
-    -- LOCK DAILY ROW
-    -- ========================================================
-
-    select plays_used
-    into used
-    from public.event_daily_plays_2026
-    where user_id = p_user_id
-      and play_date = today_vn
-    for update;
-
-
-    -- ========================================================
-    -- HARD 50 LIMIT
-    -- ========================================================
-
-    if used >= 50 then
-        raise exception 'DA_DUNG_HET_50_LUOT';
-    end if;
-
-
-    -- ========================================================
-    -- 50% CHANCE
-    -- ========================================================
-
-    won :=
-        random() < c.point_chance;
-
-
-    -- ========================================================
-    -- RANDOM POINT
-    -- ========================================================
-
-    if won then
-
-        idx :=
-            floor(
-                random() * array_length(
-                    c.point_values,
-                    1
-                )
-            )::integer + 1;
-
-        awarded :=
-            c.point_values[idx];
-
-    else
-
-        awarded := 0;
-
-    end if;
-
-
-    -- ========================================================
-    -- CONSUME PLAY
-    -- ========================================================
-
-    update public.event_daily_plays_2026
-    set plays_used = plays_used + 1
-    where user_id = p_user_id
-      and play_date = today_vn;
-
-
-    -- ========================================================
-    -- ADD POINTS
-    -- ========================================================
-
-    update public.event_players_2026
-    set
-        points = points + awarded,
-        updated_at = now()
-    where user_id = p_user_id
-    returning points
-    into total_points;
-
-
-    -- ========================================================
-    -- LOG
-    -- ========================================================
-
-    insert into public.event_plays_2026 (
-        user_id,
-        play_date,
-        has_point,
-        points_awarded
-    )
-    values (
-        p_user_id,
-        today_vn,
-        won,
-        awarded
-    );
-
-
-    -- ========================================================
-    -- RETURN
-    -- ========================================================
-
-    return json_build_object(
-
-        'ok',
-        true,
-
-        'has_point',
-        won,
-
-        'points_awarded',
-        awarded,
-
-        'points',
-        total_points,
-
-        'plays_used',
-        used + 1,
-
-        'plays_remaining',
-        50 - used - 1
-
-    );
-
-end;
-$$;
-
-
--- ============================================================
--- OLD flip_card
--- NEVER ALLOW DIRECT CLIENT FLIP
--- ============================================================
-
-create or replace function public.flip_card()
-returns json
-language plpgsql
-security definer
-set search_path = public
-as $$
-begin
-
-    raise exception
-        'DIRECT_FLIP_DISABLED_USE_FLIP_EVENT_2026';
-
-end;
-$$;
-
-
--- ============================================================
--- LEADERBOARD
--- ============================================================
-
-create or replace function public.get_leaderboard()
-returns table(
-    display_name text,
-    email text,
-    points integer
-)
-language sql
-stable
-security definer
-set search_path = public
-as $$
-
-select
-    coalesce(
-        nullif(
-            split_part(
-                p.email,
-                '@',
-                1
-            ),
-            ''
-        ),
-        'Người chơi'
-    ) as display_name,
-
-    p.email,
-
-    p.points
-
-from public.event_players_2026 p
-
-where p.points > 0
-
-order by
-    p.points desc,
-    p.updated_at asc,
-    p.user_id asc
-
-limit 10;
-
-$$;
-
-
--- ============================================================
--- PERMISSIONS
--- ============================================================
-
-revoke all on function public.get_event_status()
-from public;
-
-revoke all on function public.get_player_state()
-from public;
-
-revoke all on function public.flip_card()
-from public;
-
-revoke all on function public.get_leaderboard()
-from public;
-
-revoke all on function public.is_event_admin(uuid)
-from public;
-
-revoke all on function public.mark_event_otp_verified(uuid,text)
-from public;
-
-revoke all on function public.has_event_otp_today(uuid)
-from public;
-
-revoke all on function public.bind_event_ip(uuid,text,text)
-from public;
-
-revoke all on function public.process_event_flip_service(uuid,text)
-from public;
-
-
-grant execute
-on function public.get_event_status()
-to anon, authenticated;
-
-
-grant execute
-on function public.get_player_state()
-to authenticated;
-
-
-grant execute
-on function public.has_event_otp_today(uuid)
-to authenticated;
-
-
-grant execute
-on function public.get_leaderboard()
-to anon, authenticated;
-
-
-grant execute
-on function public.is_event_admin(uuid)
-to service_role;
-
-
-grant execute
-on function public.mark_event_otp_verified(uuid,text)
-to service_role;
-
-
-grant execute
-on function public.bind_event_ip(uuid,text,text)
-to service_role;
-
-
-grant execute
-on function public.process_event_flip_service(uuid,text)
-to service_role;
-
-
--- ============================================================
--- FINAL CHECK
--- ============================================================
-
-do $$
-declare
-    c public.event_config_2026%rowtype;
-begin
-
-    select *
-    into c
-    from public.event_config_2026
-    where id = true;
-
-
-    if c.daily_plays <> 50 then
-        raise exception 'CHECK FAILED: daily_plays';
-    end if;
-
-
-    if c.point_chance <> 0.5000 then
-        raise exception 'CHECK FAILED: point_chance';
-    end if;
-
-
-    if c.point_values
-       <> array[10,20,30,40,50,100]
-    then
-        raise exception 'CHECK FAILED: point_values';
-    end if;
-
-
-    if c.start_at
-       <> '2026-10-04 17:00:00+00'::timestamptz
-    then
-        raise exception 'CHECK FAILED: start_at';
-    end if;
-
-
-    if c.end_at
-       <> '2026-10-10 16:59:59+00'::timestamptz
-    then
-        raise exception 'CHECK FAILED: end_at';
-    end if;
-
-
-    raise notice
-        'LẬT THẺ TIÊN ĐẾ 2026: CONFIG OK';
-
-end;
-$$;
-         import { createClient } from "npm:@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods":
-    "POST, OPTIONS",
-};
-
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-const SERVICE_ROLE_KEY = Deno.env.get(
-  "SUPABASE_SERVICE_ROLE_KEY"
-);
-
-if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-  throw new Error("SERVER_CONFIGURATION_ERROR");
-}
-
-const admin = createClient(
-  SUPABASE_URL,
-  SERVICE_ROLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
-
-
-function json(
-  body: unknown,
-  status = 200
-) {
-  return new Response(
-    JSON.stringify(body),
-    {
-      status,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-}
-
-
-function getClientIP(
-  req: Request
-): string {
-
-  const cf =
-    req.headers.get("cf-connecting-ip");
-
-  if (cf?.trim()) {
-    return cf.trim();
-  }
-
-
-  const real =
-    req.headers.get("x-real-ip");
-
-  if (real?.trim()) {
-    return real.trim();
-  }
-
-
-  const forwarded =
-    req.headers.get("x-forwarded-for");
-
-  if (forwarded?.trim()) {
-    return forwarded
-      .split(",")[0]
-      .trim();
-  }
-
-
-  return "";
-}
-
-
-Deno.serve(async (req) => {
-
-  if (req.method === "OPTIONS") {
-    return new Response(
-      "ok",
-      {
-        headers: corsHeaders,
-      }
-    );
-  }
-
-
-  if (req.method !== "POST") {
-    return json(
-      {
-        ok: false,
-        error: "METHOD_NOT_ALLOWED",
-      },
-      405
-    );
-  }
-
-
-  try {
-
-    const authorization =
-      req.headers.get("Authorization");
-
-
-    if (!authorization) {
-      return json(
-        {
-          ok: false,
-          error: "UNAUTHORIZED",
-        },
-        401
-      );
-    }
-
-
-    const token =
-      authorization
-        .replace(/^Bearer\s+/i, "")
-        .trim();
-
-
-    if (!token) {
-      return json(
-        {
-          ok: false,
-          error: "UNAUTHORIZED",
-        },
-        401
-      );
-    }
-
-
-    const {
-      data,
-      error,
-    } =
-      await admin.auth.getUser(token);
-
-
-    if (error || !data.user) {
-      return json(
-        {
-          ok: false,
-          error: "UNAUTHORIZED",
-        },
-        401
-      );
-    }
-
-
-    const user =
-      data.user;
-
-
-    const email =
-      (user.email || "")
-        .trim()
-        .toLowerCase();
-
-
-    if (!email) {
-      return json(
-        {
-          ok: false,
-          error: "EMAIL_NOT_FOUND",
-        },
-        400
-      );
-    }
-
-
-    const isAdmin =
-      email ===
-      "namtruong3333@gmail.com";
-
-
-    const ip =
-      getClientIP(req);
-
-
-    /*
-     * ADMIN:
-     * - không cần IP
-     * - không bind IP
-     *
-     * nhưng vẫn đi vào DB function
-     * và vẫn bị giới hạn 50 lượt/ngày.
-     */
-
-    if (!isAdmin) {
-
-      if (!ip) {
-        return json(
-          {
-            ok: false,
-            error: "IP_NOT_DETECTED",
-          },
-          400
-        );
-      }
-
-
-      const {
-        data: bindResult,
-        error: bindError,
-      } =
-        await admin.rpc(
-          "bind_event_ip",
-          {
-            p_user_id: user.id,
-            p_email: email,
-            p_ip: ip,
-          }
-        );
-
-
-      if (bindError) {
-        throw bindError;
-      }
-
-
-      if (!bindResult?.ok) {
-        throw new Error(
-          "IP_BIND_FAILED"
-        );
-      }
-    }
-
-
-    /*
-     * REAL SCORE
-     */
-
-    const {
-      data: result,
-      error: flipError,
-    } =
-      await admin.rpc(
-        "process_event_flip_service",
-        {
-          p_user_id: user.id,
-          p_ip: isAdmin
-            ? null
-            : ip,
-        }
-      );
-
-
-    if (flipError) {
-      throw flipError;
-    }
-
-
-    return json({
-      ok: true,
-      result,
-    });
-
-  } catch (error) {
-
-    console.error(
-      "flip-event-2026:",
-      error
-    );
-
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : String(error);
-
-
-    return json(
-      {
-        ok: false,
-        error: message,
-      },
-      400
-    );
-  }
-});
-         import { createClient } from "npm:@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods":
-    "POST, OPTIONS",
-};
-
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-const SERVICE_ROLE_KEY = Deno.env.get(
-  "SUPABASE_SERVICE_ROLE_KEY"
-);
-
-if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-  throw new Error("SERVER_CONFIGURATION_ERROR");
-}
-
-const admin = createClient(
-  SUPABASE_URL,
-  SERVICE_ROLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
-
-
-function json(
-  body: unknown,
-  status = 200
-) {
-  return new Response(
-    JSON.stringify(body),
-    {
-      status,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-}
-
-
-Deno.serve(async (req) => {
-
-  if (req.method === "OPTIONS") {
-    return new Response(
-      "ok",
-      {
-        headers: corsHeaders,
-      }
-    );
-  }
-
-
-  if (req.method !== "POST") {
-    return json(
-      {
-        ok: false,
-        error: "METHOD_NOT_ALLOWED",
-      },
-      405
-    );
-  }
-
-
-  try {
-
-    const authorization =
-      req.headers.get(
-        "Authorization"
-      );
-
-
-    if (!authorization) {
-      return json(
-        {
-          ok: false,
-          error: "UNAUTHORIZED",
-        },
-        401
-      );
-    }
-
-
-    const token =
-      authorization
-        .replace(/^Bearer\s+/i, "")
-        .trim();
-
-
-    if (!token) {
-      return json(
-        {
-          ok: false,
-          error: "UNAUTHORIZED",
-        },
-        401
-      );
-    }
-
-
-    const {
-      data,
-      error,
-    } =
-      await admin.auth.getUser(
-        token
-      );
-
-
-    if (error || !data.user) {
-      return json(
-        {
-          ok: false,
-          error: "UNAUTHORIZED",
-        },
-        401
-      );
-    }
-
-
-    const user =
-      data.user;
-
-
-    const email =
-      (user.email || "")
-        .trim()
-        .toLowerCase();
-
-
-    if (!email) {
-      return json(
-        {
-          ok: false,
-          error: "EMAIL_NOT_FOUND",
-        },
-        400
-      );
-    }
-
-
-    const body =
-      await req
-        .json()
-        .catch(() => ({}));
-
-
-    const requestedEmail =
-      String(
-        body.email || ""
-      )
-        .trim()
-        .toLowerCase();
-
-
-    if (
-      requestedEmail &&
-      requestedEmail !== email
-    ) {
-      return json(
-        {
-          ok: false,
-          error: "EMAIL_MISMATCH",
-        },
-        400
-      );
-    }
-
-
-    /*
-     * ADMIN KHÔNG CẦN OTP
-     */
-
-    if (
-      email ===
-      "namtruong3333@gmail.com"
-    ) {
-
-      return json({
-        ok: true,
-        admin: true,
-        otp_required: false,
-      });
-
-    }
-
-
-    /*
-     * KIỂM TRA EVENT
-     */
-
-    const {
-      data: status,
-      error: statusError,
-    } =
-      await admin.rpc(
-        "get_event_status"
-      );
-
-
-    if (statusError) {
-      throw statusError;
-    }
-
-
-    if (!status?.open) {
-
-      const now =
-        Date.now();
-
-
-      const start =
-        new Date(
-          status.start_at
-        ).getTime();
-
-
-      const end =
-        new Date(
-          status.end_at
-        ).getTime();
-
-
-      if (now < start) {
-        throw new Error(
-          "EVENT_NOT_STARTED"
-        );
-      }
-
-
-      if (now > end) {
-        throw new Error(
-          "EVENT_ENDED"
-        );
-      }
-
-
-      throw new Error(
-        "EVENT_NOT_OPEN"
-      );
-    }
-
-
-    /*
-     * GHI NHẬN OTP ĐÃ XÁC MINH
-     *
-     * Việc xác minh mã OTP thực tế phải được
-     * Supabase Auth xử lý trước khi gọi function này.
-     */
-
-    const {
-      data: otp,
-      error: otpError,
-    } =
-      await admin.rpc(
-        "mark_event_otp_verified",
-        {
-          p_user_id: user.id,
-          p_email: email,
-        }
-      );
-
-
-    if (otpError) {
-      throw otpError;
-    }
-
-
-    return json({
-      ok: true,
-      admin: false,
-      otp_required: true,
-      result: otp,
-    });
-
-  } catch (error) {
-
-    console.error(
-      "verify-event-otp-2026:",
-      error
-    );
-
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : String(error);
-
-
-    return json(
-      {
-        ok: false,
-        error: message,
-      },
-      400
-    );
-  }
-});
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
-
 <head>
 
 <meta charset="UTF-8">
@@ -1788,7 +9,7 @@ Deno.serve(async (req) => {
     content="width=device-width, initial-scale=1.0"
 >
 
-<title>LẬT THẺ TIÊN ĐẾ 2026</title>
+<title>🐉 LẬT THẺ TIÊN ĐẾ 2026</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1800,15 +21,17 @@ Deno.serve(async (req) => {
 
 body {
     margin: 0;
+    min-height: 100vh;
     font-family: Arial, sans-serif;
+    color: #fff;
+
     background:
         radial-gradient(
             circle at top,
-            #34205c,
-            #120d20 65%
+            #43216b 0%,
+            #170d29 55%,
+            #08050d 100%
         );
-    color: white;
-    min-height: 100vh;
 }
 
 .container {
@@ -1819,7 +42,7 @@ body {
 
 h1 {
     text-align: center;
-    margin-bottom: 10px;
+    margin: 0 0 8px;
 }
 
 .subtitle {
@@ -1837,68 +60,83 @@ h1 {
     backdrop-filter: blur(10px);
 }
 
+.hidden {
+    display: none !important;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 0;
+    border-radius: 10px;
+    outline: none;
+    font-size: 16px;
+}
+
+.main-btn {
+    width: 100%;
+    padding: 14px;
+    border: 0;
+    border-radius: 10px;
+    background: #ffb300;
+    color: #111;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.main-btn:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.status {
+    text-align: center;
+    min-height: 24px;
+    margin-top: 14px;
+}
+
 .stats {
     display: grid;
-    grid-template-columns:
-        repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+    margin-bottom: 20px;
 }
 
 .stat {
-    padding: 15px;
-    border-radius: 14px;
     background: rgba(0,0,0,.25);
+    border-radius: 14px;
+    padding: 15px;
     text-align: center;
 }
 
 .stat strong {
     display: block;
-    font-size: 25px;
+    font-size: 28px;
     margin-top: 5px;
-}
-
-input {
-    width: 100%;
-    padding: 13px;
-    border: 0;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    outline: none;
-}
-
-button {
-    border: 0;
-    cursor: pointer;
-}
-
-.main-btn {
-    width: 100%;
-    padding: 13px;
-    border-radius: 10px;
-    background: #ffb300;
-    color: #111;
-    font-weight: bold;
 }
 
 .cards {
     display: grid;
-    grid-template-columns:
-        repeat(5, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
 }
 
 .card {
-    position: relative;
     min-height: 150px;
+    border: 0;
     border-radius: 16px;
+
     background:
         linear-gradient(
             145deg,
-            #6f32c9,
-            #261047
+            #7438c8,
+            #251040
         );
+
     color: white;
-    overflow: hidden;
+    cursor: pointer;
+
     transition:
         transform .2s,
         opacity .2s;
@@ -1908,42 +146,39 @@ button {
     transform: translateY(-4px);
 }
 
+.card:disabled {
+    cursor: not-allowed;
+    opacity: .7;
+}
+
 .card.flipped {
     background:
         linear-gradient(
             145deg,
-            #f6a400,
-            #7a3e00
+            #f3a600,
+            #713500
         );
 }
 
-.card:disabled {
-    cursor: not-allowed;
-}
-
-.card .front {
+.card-inner {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    font-size: 38px;
+    min-height: 150px;
 }
 
-.card .result {
-    display: block;
-    font-size: 27px;
+.card-symbol {
+    font-size: 42px;
+}
+
+.result {
+    font-size: 28px;
     font-weight: bold;
 }
 
-.card .note {
-    display: block;
-    margin-top: 8px;
-}
-
-.status {
-    text-align: center;
-    min-height: 24px;
-    margin-top: 15px;
+.note {
+    margin-top: 7px;
 }
 
 .leaderboard {
@@ -1953,34 +188,34 @@ button {
 
 .leaderboard th,
 .leaderboard td {
-    padding: 10px;
+    padding: 11px;
     border-bottom:
         1px solid rgba(255,255,255,.1);
+}
+
+.leaderboard th {
     text-align: left;
 }
 
-.otp-box {
-    display: none;
+.event-closed {
+    text-align: center;
+    padding: 35px 15px;
 }
 
-.otp-box.show {
+.event-closed strong {
     display: block;
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
-.hidden {
-    display: none !important;
-}
-
-@media(max-width: 700px) {
+@media(max-width:700px) {
 
     .cards {
-        grid-template-columns:
-            repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .stats {
-        grid-template-columns:
-            1fr 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 
 }
@@ -1988,7 +223,6 @@ button {
 </style>
 
 </head>
-
 
 <body>
 
@@ -2002,26 +236,44 @@ button {
 
 
 <!-- =========================================================
+     EVENT STATUS
+========================================================= -->
+
+<div
+    id="eventClosed"
+    class="panel event-closed hidden"
+>
+
+<strong id="eventClosedTitle">
+    ⏳ SỰ KIỆN CHƯA BẮT ĐẦU
+</strong>
+
+<div id="eventClosedText"></div>
+
+</div>
+
+
+<!-- =========================================================
      LOGIN
 ========================================================= -->
 
 <div
-    class="panel"
     id="loginPanel"
+    class="panel"
 >
 
-<h2>Đăng nhập</h2>
+<h2>🔐 Đăng nhập</h2>
 
 <input
     id="emailInput"
     type="email"
-    placeholder="Nhập email"
+    placeholder="Nhập email của bạn"
     autocomplete="email"
 >
 
 <button
-    class="main-btn"
     id="sendOtpBtn"
+    class="main-btn"
 >
     GỬI MÃ OTP
 </button>
@@ -2039,11 +291,11 @@ button {
 ========================================================= -->
 
 <div
-    class="panel otp-box"
     id="otpPanel"
+    class="panel hidden"
 >
 
-<h2>Xác nhận OTP</h2>
+<h2>🔢 Xác nhận OTP</h2>
 
 <input
     id="otpInput"
@@ -2054,8 +306,8 @@ button {
 >
 
 <button
-    class="main-btn"
     id="verifyOtpBtn"
+    class="main-btn"
 >
     XÁC NHẬN OTP
 </button>
@@ -2073,73 +325,117 @@ button {
 ========================================================= -->
 
 <div
-    class="panel hidden"
     id="gamePanel"
+    class="panel hidden"
 >
 
 <div class="stats">
 
 <div class="stat">
     Lượt còn lại
-    <strong id="plays">
-        50
-    </strong>
+    <strong id="plays">50</strong>
 </div>
 
 <div class="stat">
     Tổng điểm
-    <strong id="points">
-        0
-    </strong>
+    <strong id="points">0</strong>
 </div>
 
 </div>
 
 
 <div
-    id="status"
+    id="gameStatus"
     class="status"
 >
-    Hãy lật thẻ.
+    Hãy lật một thẻ.
 </div>
 
 
 <div
-    class="cards"
     id="cards"
+    class="cards"
 >
 
-<script>
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-for (
-    let i = 1;
-    i <= 10;
-    i++
-) {
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-    document.write(`
-        <button
-            class="card"
-            type="button"
-            data-card="${i}"
-        >
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-            <span class="front">
-                <span>
-                    🃏
-                </span>
-            </span>
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-            <span class="result"></span>
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-            <span class="note"></span>
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-        </button>
-    `);
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-}
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
-</script>
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
+
+<button class="card" type="button">
+    <span class="card-inner">
+        <span class="card-symbol">🃏</span>
+        <span class="result"></span>
+        <span class="note"></span>
+    </span>
+</button>
 
 </div>
 
@@ -2157,28 +453,25 @@ for (
 <table class="leaderboard">
 
 <thead>
-
 <tr>
     <th>#</th>
     <th>Người chơi</th>
     <th>Điểm</th>
 </tr>
-
 </thead>
 
 <tbody id="leaderboardBody">
-
 <tr>
     <td colspan="3">
         Đang tải...
     </td>
 </tr>
-
 </tbody>
 
 </table>
 
 </div>
+
 
 </div>
 
@@ -2191,6 +484,16 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
     "sb_publishable_SQS8AB9rBORo8KUSL0KtPw_mydlG5aw";
 
+const ADMIN_EMAIL =
+    "namtruong3333@gmail.com";
+
+
+const EVENT_START =
+    new Date("2026-10-04T17:00:00Z");
+
+const EVENT_END =
+    new Date("2026-10-10T16:59:59Z");
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -2199,20 +502,35 @@ const supabaseClient =
     );
 
 
-const ADMIN_EMAIL =
-    "namtruong3333@gmail.com";
-
-
-const EVENT_START =
-    new Date(
-        "2026-10-04T17:00:00Z"
+const loginPanel =
+    document.getElementById(
+        "loginPanel"
     );
 
-const EVENT_END =
-    new Date(
-        "2026-10-10T16:59:59Z"
+const otpPanel =
+    document.getElementById(
+        "otpPanel"
     );
 
+const gamePanel =
+    document.getElementById(
+        "gamePanel"
+    );
+
+const eventClosed =
+    document.getElementById(
+        "eventClosed"
+    );
+
+const eventClosedTitle =
+    document.getElementById(
+        "eventClosedTitle"
+    );
+
+const eventClosedText =
+    document.getElementById(
+        "eventClosedText"
+    );
 
 const emailInput =
     document.getElementById(
@@ -2234,21 +552,6 @@ const verifyOtpBtn =
         "verifyOtpBtn"
     );
 
-const loginPanel =
-    document.getElementById(
-        "loginPanel"
-    );
-
-const otpPanel =
-    document.getElementById(
-        "otpPanel"
-    );
-
-const gamePanel =
-    document.getElementById(
-        "gamePanel"
-    );
-
 const loginStatus =
     document.getElementById(
         "loginStatus"
@@ -2259,9 +562,9 @@ const otpStatus =
         "otpStatus"
     );
 
-const status =
+const gameStatus =
     document.getElementById(
-        "status"
+        "gameStatus"
     );
 
 const playsEl =
@@ -2280,33 +583,220 @@ const leaderboardBody =
     );
 
 
+let currentEmail = "";
+
 let loggedIn = false;
 
 let busy = false;
 
-let currentEmail = "";
-
-let otpVerifiedToday = false;
-
 
 /* ============================================================
-   EVENT
+   EVENT STATUS
 ============================================================ */
 
-function isEventOpen() {
+function updateEventDisplay() {
 
     const now =
         new Date();
 
+
+    if (now < EVENT_START) {
+
+        eventClosed.classList.remove(
+            "hidden"
+        );
+
+        eventClosedTitle.textContent =
+            "⏳ SỰ KIỆN CHƯA BẮT ĐẦU";
+
+        eventClosedText.textContent =
+            "Sự kiện bắt đầu lúc 00:00 ngày 05/10/2026 theo giờ Việt Nam.";
+
+        return false;
+    }
+
+
+    if (now > EVENT_END) {
+
+        eventClosed.classList.remove(
+            "hidden"
+        );
+
+        eventClosedTitle.textContent =
+            "⛔ SỰ KIỆN ĐÃ KẾT THÚC";
+
+        eventClosedText.textContent =
+            "Cảm ơn bạn đã tham gia sự kiện.";
+
+        return false;
+    }
+
+
+    eventClosed.classList.add(
+        "hidden"
+    );
+
+    return true;
+}
+
+
+function isEventOpen() {
     return (
-        now >= EVENT_START &&
-        now <= EVENT_END
+        new Date() >= EVENT_START &&
+        new Date() <= EVENT_END
     );
 }
 
 
 /* ============================================================
-   CARDS
+   LEADERBOARD
+============================================================ */
+
+async function loadLeaderboard() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "get_leaderboard"
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        leaderboardBody.innerHTML = "";
+
+
+        if (!data || data.length === 0) {
+
+            leaderboardBody.innerHTML = `
+                <tr>
+                    <td colspan="3">
+                        Chưa có người chơi có điểm.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        data.forEach(
+            (player, index) => {
+
+                const tr =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                const name =
+                    document.createElement(
+                        "td"
+                    );
+
+                const email =
+                    document.createElement(
+                        "td"
+                    );
+
+                const points =
+                    document.createElement(
+                        "td"
+                    );
+
+
+                name.textContent =
+                    index + 1;
+
+                email.textContent =
+                    player.display_name ||
+                    "Người chơi";
+
+                points.textContent =
+                    Number(
+                        player.points || 0
+                    );
+
+
+                tr.appendChild(name);
+                tr.appendChild(email);
+                tr.appendChild(points);
+
+                leaderboardBody.appendChild(
+                    tr
+                );
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Leaderboard:",
+            error
+        );
+
+    }
+}
+
+
+/* ============================================================
+   PLAYER STATE
+============================================================ */
+
+async function loadPlayerState() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "get_player_state"
+        );
+
+
+    if (error) {
+        throw error;
+    }
+
+
+    playsEl.textContent =
+        String(
+            data?.plays_remaining ?? 0
+        );
+
+
+    pointsEl.textContent =
+        String(
+            data?.points ?? 0
+        );
+
+
+    if (
+        Number(
+            data?.plays_remaining
+        ) <= 0
+    ) {
+
+        disableCards();
+
+        gameStatus.textContent =
+            "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
+
+    }
+
+}
+
+
+/* ============================================================
+   CARD HELPERS
 ============================================================ */
 
 function getCards() {
@@ -2320,25 +810,62 @@ function getCards() {
 }
 
 
-function allCardsFlipped() {
+function disableCards() {
 
-    const cards =
-        getCards();
+    getCards().forEach(
+        card => {
+            card.disabled = true;
+        }
+    );
 
-    return cards.length === 10 &&
-        cards.every(
-            card =>
-                card.classList.contains(
+}
+
+
+function enableCards() {
+
+    if (!loggedIn) {
+        return;
+    }
+
+    if (
+        !isEventOpen()
+    ) {
+        disableCards();
+        return;
+    }
+
+
+    if (
+        Number(
+            playsEl.textContent
+        ) <= 0
+    ) {
+        disableCards();
+        return;
+    }
+
+
+    getCards().forEach(
+        card => {
+
+            if (
+                !card.classList.contains(
                     "flipped"
                 )
-        );
+            ) {
+                card.disabled = false;
+            }
+
+        }
+    );
+
 }
 
 
 function resetCards() {
 
-    getCards()
-        .forEach(card => {
+    getCards().forEach(
+        card => {
 
             card.classList.remove(
                 "flipped"
@@ -2346,6 +873,7 @@ function resetCards() {
 
             card.disabled =
                 false;
+
 
             const result =
                 card.querySelector(
@@ -2365,59 +893,46 @@ function resetCards() {
                 note.textContent = "";
             }
 
-        });
+        }
+    );
 
 }
 
 
-function enableCards() {
+function allCardsFlipped() {
 
-    if (!loggedIn) {
-        return;
-    }
+    const cards =
+        getCards();
 
-    if (
-        Number(
-            playsEl.textContent
-        ) <= 0
-    ) {
-        return;
-    }
-
-    getCards()
-        .forEach(card => {
-
-            if (
-                !card.classList.contains(
+    return (
+        cards.length === 10 &&
+        cards.every(
+            card =>
+                card.classList.contains(
                     "flipped"
                 )
-            ) {
-                card.disabled = false;
-            }
-
-        });
-
-}
-
-
-function disableCards() {
-
-    getCards()
-        .forEach(
-            card =>
-                card.disabled = true
-        );
+        )
+    );
 
 }
 
 
 /* ============================================================
-   LOGIN
+   SEND OTP
 ============================================================ */
 
 sendOtpBtn.addEventListener(
     "click",
     async () => {
+
+        if (!isEventOpen()) {
+
+            loginStatus.textContent =
+                "⏳ Sự kiện chưa bắt đầu.";
+
+            return;
+        }
+
 
         const email =
             emailInput.value
@@ -2453,7 +968,7 @@ sendOtpBtn.addEventListener(
             } =
                 await supabaseClient.auth
                     .signInWithOtp({
-                        email,
+                        email: email,
                         options: {
                             shouldCreateUser: true
                         }
@@ -2465,17 +980,13 @@ sendOtpBtn.addEventListener(
             }
 
 
-            otpPanel.classList.add(
-                "show"
+            otpPanel.classList.remove(
+                "hidden"
             );
 
 
             loginStatus.textContent =
-                "✅ OTP đã được gửi tới email.";
-
-
-            otpStatus.textContent =
-                "Nhập mã OTP được gửi tới email.";
+                "✅ Mã OTP đã được gửi tới email.";
 
         } catch (error) {
 
@@ -2507,6 +1018,15 @@ verifyOtpBtn.addEventListener(
     "click",
     async () => {
 
+        if (!isEventOpen()) {
+
+            otpStatus.textContent =
+                "⏳ Sự kiện chưa bắt đầu.";
+
+            return;
+        }
+
+
         const email =
             currentEmail ||
             emailInput.value
@@ -2514,20 +1034,23 @@ verifyOtpBtn.addEventListener(
                 .toLowerCase();
 
         const token =
-            otpInput.value
-                .trim();
+            otpInput.value.trim();
 
 
         if (!email) {
+
             otpStatus.textContent =
                 "⚠️ Thiếu email.";
+
             return;
         }
 
 
         if (!token) {
+
             otpStatus.textContent =
-                "⚠️ Vui lòng nhập OTP.";
+                "⚠️ Vui lòng nhập mã OTP.";
+
             return;
         }
 
@@ -2548,8 +1071,8 @@ verifyOtpBtn.addEventListener(
             } =
                 await supabaseClient.auth
                     .verifyOtp({
-                        email,
-                        token,
+                        email: email,
+                        token: token,
                         type: "email"
                     });
 
@@ -2566,16 +1089,13 @@ verifyOtpBtn.addEventListener(
             }
 
 
-            const user =
-                data.session.user;
-
-
             const userEmail =
                 (
-                    user.email || ""
+                    data.session.user.email ||
+                    ""
                 )
-                    .trim()
-                    .toLowerCase();
+                .trim()
+                .toLowerCase();
 
 
             if (
@@ -2588,13 +1108,13 @@ verifyOtpBtn.addEventListener(
 
 
             /*
-             * Đánh dấu OTP hôm nay ở DB.
+             * Ghi nhận OTP hôm nay
+             * ở Edge Function.
              */
 
             const {
                 data: verifyResult,
-                error:
-                    verifyError
+                error: verifyError
             } =
                 await supabaseClient
                     .functions
@@ -2602,7 +1122,7 @@ verifyOtpBtn.addEventListener(
                         "verify-event-otp-2026",
                         {
                             body: {
-                                email
+                                email: email
                             }
                         }
                     );
@@ -2614,8 +1134,7 @@ verifyOtpBtn.addEventListener(
 
 
             if (
-                !verifyResult ||
-                verifyResult.ok !== true
+                !verifyResult?.ok
             ) {
                 throw new Error(
                     verifyResult?.error ||
@@ -2624,20 +1143,15 @@ verifyOtpBtn.addEventListener(
             }
 
 
-            otpVerifiedToday =
-                true;
-
-
-            loggedIn =
-                true;
+            loggedIn = true;
 
 
             loginPanel.classList.add(
                 "hidden"
             );
 
-            otpPanel.classList.remove(
-                "show"
+            otpPanel.classList.add(
+                "hidden"
             );
 
             gamePanel.classList.remove(
@@ -2658,7 +1172,11 @@ verifyOtpBtn.addEventListener(
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "OTP:",
+                error
+            );
+
 
             otpStatus.textContent =
                 "❌ " +
@@ -2679,107 +1197,22 @@ verifyOtpBtn.addEventListener(
 
 
 /* ============================================================
-   CHECK OTP TODAY
-============================================================ */
-
-async function checkOtpToday(
-    userId
-) {
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .rpc(
-                "has_event_otp_today",
-                {
-                    p_user_id:
-                        userId
-                }
-            );
-
-
-    if (error) {
-        throw error;
-    }
-
-
-    return data === true;
-}
-
-
-/* ============================================================
-   PLAYER STATE
-============================================================ */
-
-async function loadPlayerState() {
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .rpc(
-                "get_player_state"
-            );
-
-
-    if (error) {
-        throw error;
-    }
-
-
-    if (!data) {
-        return;
-    }
-
-
-    playsEl.textContent =
-        String(
-            data.plays_remaining ?? 0
-        );
-
-
-    pointsEl.textContent =
-        String(
-            data.points ?? 0
-        );
-
-
-    if (
-        Number(
-            data.plays_remaining
-        ) <= 0
-    ) {
-
-        status.textContent =
-            "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
-
-        disableCards();
-
-    }
-
-}
-
-
-/* ============================================================
    FLIP
 ============================================================ */
 
 async function flip(card) {
 
     if (!loggedIn) {
+        return;
+    }
 
-        status.textContent =
-            "⚠️ Bạn phải đăng nhập trước.";
 
+    if (busy) {
         return;
     }
 
 
     if (
-        busy ||
         card.classList.contains(
             "flipped"
         )
@@ -2790,8 +1223,8 @@ async function flip(card) {
 
     if (!isEventOpen()) {
 
-        status.textContent =
-            "⏳ Sự kiện chưa mở hoặc đã kết thúc.";
+        gameStatus.textContent =
+            "⏳ Sự kiện chưa bắt đầu.";
 
         disableCards();
 
@@ -2799,16 +1232,14 @@ async function flip(card) {
     }
 
 
-    const remaining =
+    if (
         Number(
             playsEl.textContent
-        );
+        ) <= 0
+    ) {
 
-
-    if (remaining <= 0) {
-
-        status.textContent =
-            "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
+        gameStatus.textContent =
+            "⏳ Bạn đã hết lượt hôm nay.";
 
         disableCards();
 
@@ -2821,20 +1252,17 @@ async function flip(card) {
     disableCards();
 
 
-    status.textContent =
+    gameStatus.textContent =
         "⏳ Đang lật thẻ...";
 
 
     try {
 
         /*
-         * QUAN TRỌNG:
+         * KHÔNG random ở đây.
+         * KHÔNG cộng điểm ở đây.
          *
-         * Browser KHÔNG random điểm.
-         * Browser KHÔNG cộng điểm.
-         * Browser KHÔNG tự tăng lượt.
-         *
-         * Tất cả được xử lý server.
+         * Server quyết định tất cả.
          */
 
         const {
@@ -2856,10 +1284,7 @@ async function flip(card) {
         }
 
 
-        if (
-            !data ||
-            data.ok !== true
-        ) {
+        if (!data?.ok) {
 
             throw new Error(
                 data?.error ||
@@ -2890,25 +1315,31 @@ async function flip(card) {
             );
 
 
-        /*
-         * HIỂN THỊ THẺ
-         */
-
         card.classList.add(
             "flipped"
         );
 
+
+        const symbol =
+            card.querySelector(
+                ".card-symbol"
+            );
 
         const resultEl =
             card.querySelector(
                 ".result"
             );
 
-
         const noteEl =
             card.querySelector(
                 ".note"
             );
+
+
+        if (symbol) {
+            symbol.textContent =
+                "⭐";
+        }
 
 
         if (resultEl) {
@@ -2931,10 +1362,6 @@ async function flip(card) {
         }
 
 
-        /*
-         * DB RESULT
-         */
-
         playsEl.textContent =
             String(
                 result.plays_remaining
@@ -2947,7 +1374,7 @@ async function flip(card) {
             );
 
 
-        status.textContent =
+        gameStatus.textContent =
             won
                 ? "🎉 Bạn nhận +" +
                   awarded +
@@ -2955,16 +1382,8 @@ async function flip(card) {
                 : "😢 Lần này không có điểm.";
 
 
-        /*
-         * UPDATE LEADERBOARD
-         */
-
         await loadLeaderboard();
 
-
-        /*
-         * HẾT 50
-         */
 
         if (
             Number(
@@ -2972,7 +1391,7 @@ async function flip(card) {
             ) <= 0
         ) {
 
-            status.textContent =
+            gameStatus.textContent =
                 "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
 
             disableCards();
@@ -2984,21 +1403,19 @@ async function flip(card) {
 
 
         /*
-         * ĐỦ 10 THẺ
+         * ĐỦ 10 THẺ:
          *
-         * Chỉ reset giao diện.
+         * CHỈ reset giao diện.
          *
-         * KHÔNG reset database.
-         * KHÔNG reset điểm.
-         * KHÔNG reset 50 lượt.
+         * Database vẫn giữ số lượt thật.
          */
 
         if (
             allCardsFlipped()
         ) {
 
-            status.textContent =
-                "✨ Hoàn thành 10 thẻ! Chuẩn bị vòng tiếp theo...";
+            gameStatus.textContent =
+                "✨ Đã lật đủ 10 thẻ. Vòng mới...";
 
 
             setTimeout(
@@ -3010,8 +1427,8 @@ async function flip(card) {
 
                     enableCards();
 
-                    status.textContent =
-                        "🃏 Vòng mới! Tiếp tục lật thẻ.";
+                    gameStatus.textContent =
+                        "🃏 Tiếp tục lật thẻ.";
 
                 },
                 700
@@ -3029,7 +1446,7 @@ async function flip(card) {
     } catch (error) {
 
         console.error(
-            "FLIP ERROR:",
+            "FLIP:",
             error
         );
 
@@ -3064,12 +1481,12 @@ async function flip(card) {
                 "hidden"
             );
 
-            otpPanel.classList.add(
-                "show"
+            otpPanel.classList.remove(
+                "hidden"
             );
 
-            status.textContent =
-                "🔐 Bạn phải xác minh OTP hôm nay.";
+            otpStatus.textContent =
+                "🔐 Bạn cần xác minh OTP mới hôm nay.";
 
             return;
         }
@@ -3084,34 +1501,8 @@ async function flip(card) {
             )
         ) {
 
-            status.textContent =
+            gameStatus.textContent =
                 "🚫 IP này đã được sử dụng bởi tài khoản khác.";
-
-            return;
-        }
-
-
-        if (
-            message.includes(
-                "IP_NOT_DETECTED"
-            )
-        ) {
-
-            status.textContent =
-                "🚫 Không xác định được IP.";
-
-            return;
-        }
-
-
-        if (
-            message.includes(
-                "IP_NOT_BOUND_TO_THIS_ACCOUNT"
-            )
-        ) {
-
-            status.textContent =
-                "🚫 IP chưa được liên kết với tài khoản.";
 
             return;
         }
@@ -3128,7 +1519,7 @@ async function flip(card) {
 
             disableCards();
 
-            status.textContent =
+            gameStatus.textContent =
                 "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
 
             return;
@@ -3141,8 +1532,10 @@ async function flip(card) {
             )
         ) {
 
-            status.textContent =
+            gameStatus.textContent =
                 "⏳ Sự kiện chưa bắt đầu.";
+
+            disableCards();
 
             return;
         }
@@ -3154,19 +1547,22 @@ async function flip(card) {
             )
         ) {
 
-            status.textContent =
+            gameStatus.textContent =
                 "⛔ Sự kiện đã kết thúc.";
+
+            disableCards();
 
             return;
         }
 
 
-        status.textContent =
+        gameStatus.textContent =
             "❌ " +
             (
                 error?.message ||
-                "Không thể thực hiện lượt lật."
+                "Không thể lật thẻ."
             );
+
 
         enableCards();
 
@@ -3176,127 +1572,23 @@ async function flip(card) {
 
 
 /* ============================================================
-   CARD CLICK
+   CARD EVENTS
 ============================================================ */
 
-document
-    .querySelectorAll(".card")
-    .forEach(card => {
+getCards().forEach(
+    card => {
 
         card.addEventListener(
             "click",
             () => flip(card)
         );
 
-    });
-
-
-/* ============================================================
-   LEADERBOARD
-============================================================ */
-
-async function loadLeaderboard() {
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .rpc(
-                "get_leaderboard"
-            );
-
-
-    if (error) {
-
-        console.error(
-            "LEADERBOARD:",
-            error
-        );
-
-        return;
     }
-
-
-    leaderboardBody.innerHTML =
-        "";
-
-
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        leaderboardBody.innerHTML = `
-            <tr>
-                <td colspan="3">
-                    Chưa có người chơi có điểm.
-                </td>
-            </tr>
-        `;
-
-        return;
-    }
-
-
-    data.forEach(
-        (player, index) => {
-
-            const tr =
-                document.createElement(
-                    "tr"
-                );
-
-
-            tr.innerHTML = `
-                <td>
-                    ${index + 1}
-                </td>
-
-                <td>
-                    ${escapeHtml(
-                        player.display_name
-                    )}
-                </td>
-
-                <td>
-                    ${Number(
-                        player.points || 0
-                    )}
-                </td>
-            `;
-
-
-            leaderboardBody.appendChild(
-                tr
-            );
-
-        }
-    );
-
-}
+);
 
 
 /* ============================================================
-   HTML ESCAPE
-============================================================ */
-
-function escapeHtml(
-    value
-) {
-
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-
-}
-
-
-/* ============================================================
-   SESSION RESTORE
+   SESSION
 ============================================================ */
 
 async function restoreSession() {
@@ -3314,9 +1606,19 @@ async function restoreSession() {
             data?.session;
 
 
+        /*
+         * Chưa đăng nhập
+         */
+
         if (!session?.user) {
 
-            await loadLeaderboard();
+            loginPanel.classList.remove(
+                "hidden"
+            );
+
+            gamePanel.classList.add(
+                "hidden"
+            );
 
             return;
         }
@@ -3327,8 +1629,8 @@ async function restoreSession() {
                 session.user.email ||
                 ""
             )
-                .trim()
-                .toLowerCase();
+            .trim()
+            .toLowerCase();
 
 
         currentEmail =
@@ -3345,14 +1647,12 @@ async function restoreSession() {
 
             loggedIn = true;
 
-            otpVerifiedToday = true;
-
             loginPanel.classList.add(
                 "hidden"
             );
 
-            otpPanel.classList.remove(
-                "show"
+            otpPanel.classList.add(
+                "hidden"
             );
 
             gamePanel.classList.remove(
@@ -3371,31 +1671,45 @@ async function restoreSession() {
 
 
         /*
-         * USER
+         * NGƯỜI CHƠI:
+         * kiểm tra OTP hôm nay.
          */
 
-        const verified =
-            await checkOtpToday(
-                session.user.id
-            );
+        const {
+            data: otpToday,
+            error: otpCheckError
+        } =
+            await supabaseClient
+                .rpc(
+                    "has_event_otp_today",
+                    {
+                        p_user_id:
+                            session.user.id
+                    }
+                );
 
 
-        if (!verified) {
+        if (otpCheckError) {
+            throw otpCheckError;
+        }
+
+
+        if (!otpToday) {
 
             loggedIn = false;
 
             disableCards();
 
-            gamePanel.classList.add(
-                "hidden"
-            );
-
             loginPanel.classList.add(
                 "hidden"
             );
 
-            otpPanel.classList.add(
-                "show"
+            gamePanel.classList.add(
+                "hidden"
+            );
+
+            otpPanel.classList.remove(
+                "hidden"
             );
 
             otpStatus.textContent =
@@ -3407,15 +1721,13 @@ async function restoreSession() {
 
         loggedIn = true;
 
-        otpVerifiedToday = true;
-
 
         loginPanel.classList.add(
             "hidden"
         );
 
-        otpPanel.classList.remove(
-            "show"
+        otpPanel.classList.add(
+            "hidden"
         );
 
         gamePanel.classList.remove(
@@ -3433,7 +1745,7 @@ async function restoreSession() {
     } catch (error) {
 
         console.error(
-            "SESSION RESTORE:",
+            "SESSION:",
             error
         );
 
@@ -3443,33 +1755,10 @@ async function restoreSession() {
 
 
 /* ============================================================
-   AUTH STATE
+   START
 ============================================================ */
 
-supabaseClient.auth.onAuthStateChange(
-    async (
-        event,
-        session
-    ) => {
-
-        if (!session?.user) {
-            return;
-        }
-
-        /*
-         * Không tự động ghi OTP ở đây.
-         *
-         * Chỉ function verify-event-otp-2026
-         * mới ghi nhận OTP hôm nay.
-         */
-
-    }
-);
-
-
-/* ============================================================
-   INITIAL
-============================================================ */
+updateEventDisplay();
 
 loadLeaderboard();
 
