@@ -1,2626 +1,3479 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lật Thẻ Tiên Đế</title>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  min-height:100vh;
-  font-family:Arial,sans-serif;
-  color:#fff;
-  background:radial-gradient(circle at top,#40146b,#150a2d 45%,#06030d)
-}
-
-.wrap{
-  max-width:1050px;
-  margin:auto;
-  padding:18px 14px 45px
-}
-
-.hero{
-  text-align:center;
-  padding:18px 4px
-}
-
-.badge{
-  display:inline-block;
-  padding:7px 14px;
-  border:1px solid #e8c866;
-  border-radius:30px;
-  color:#ffe08a
-}
-
-h1{
-  font-size:clamp(34px,8vw,64px);
-  margin:14px 0 6px;
-  color:#ffd86b;
-  text-shadow:0 0 18px #9b4dff
-}
-
-.sub{
-  color:#d8cdec
-}
-
-.info{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin:18px 0
-}
-
-.box,.panel{
-  background:rgba(10,5,24,.82);
-  border:1px solid #62418c;
-  border-radius:18px
-}
-
-.box{
-  text-align:center;
-  padding:13px
-}
-
-.box b{
-  display:block;
-  color:#ffd86b;
-  font-size:25px;
-  margin-top:5px
-}
-
-.panel{
-  padding:20px
-}
-
-.login{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:10px
-}
-
-input{
-  width:100%;
-  padding:14px;
-  border-radius:11px;
-  border:1px solid #725694;
-  background:#120a25;
-  color:white;
-  font-size:16px;
-  outline:none
-}
-
-input:focus{
-  border-color:#c08cff
-}
-
-button{
-  cursor:pointer;
-  border:0;
-  border-radius:11px;
-  font-weight:700
-}
-
-.login button{
-  padding:14px 20px;
-  background:#ffd15c;
-  color:#241000;
-  min-width:150px
-}
-
-.login button:disabled{
-  opacity:.55;
-  cursor:not-allowed
-}
-
-.otp-row{
-  display:none;
-  grid-column:1/-1
-}
-
-.otp-row input{
-  text-align:center;
-  letter-spacing:8px;
-  font-size:22px;
-  font-weight:700
-}
-
-.status{
-  text-align:center;
-  color:#cfc1e7;
-  margin:13px 0;
-  min-height:22px
-}
-
-.event-closed{
-  color:#ffb4b4;
-  font-weight:700
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:14px;
-  margin-top:20px
-}
-
-.card{
-  height:185px;
-  background:none;
-  padding:0;
-  perspective:900px
-}
-
-.card-inner{
-  width:100%;
-  height:100%;
-  position:relative;
-  transition:.65s;
-  transform-style:preserve-3d
-}
-
-.card.flipped .card-inner{
-  transform:rotateY(180deg)
-}
-
-.face{
-  position:absolute;
-  inset:0;
-  backface-visibility:hidden;
-  border-radius:17px;
-  border:2px solid #a96cff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column
-}
-
-.front{
-  background:linear-gradient(145deg,#2c1048,#12071f);
-  box-shadow:inset 0 0 30px #8d42c522
-}
-
-.symbol{
-  font-size:60px;
-  color:#ffd86b;
-  text-shadow:0 0 16px #a44cff
-}
-
-.front small{
-  color:#cbb9e6
-}
-
-.back{
-  transform:rotateY(180deg);
-  background:linear-gradient(145deg,#64248f,#24103f)
-}
-
-.result{
-  font-size:28px;
-  color:#ffd86b
-}
-
-.note{
-  font-size:13px;
-  margin-top:5px
-}
-
-.leader{
-  margin-top:22px
-}
-
-table{
-  width:100%;
-  border-collapse:collapse
-}
-
-th,td{
-  padding:10px;
-  border-bottom:1px solid #ffffff18;
-  text-align:left
-}
-
-th{
-  color:#ffd86b
-}
-
-.footer{
-  text-align:center;
-  color:#897aa4;
-  margin-top:20px;
-  font-size:13px
-}
-
-.admin-badge{
-  display:none;
-  text-align:center;
-  margin-top:10px;
-  color:#ffe08a;
-  font-weight:700
-}
-
-@media(max-width:700px){
-
-  .info{
-    grid-template-columns:1fr 1fr
-  }
-
-  .login{
-    grid-template-columns:1fr
-  }
-
-  .login button{
-    width:100%
-  }
-
-  .otp-row{
-    grid-column:auto
-  }
-
-  .cards{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .card{
-    height:165px
-  }
-
-}
-</style>
-</head>
-
-<body>
-
-<div class="wrap">
-
-<header class="hero">
-
-  <div class="badge">
-    ⚜️ EVENT TIÊN ĐẾ 2026 ⚜️
-  </div>
-
-  <h1>
-    🃏 LẬT THẺ TIÊN ĐẾ
-  </h1>
-
-  <div class="sub">
-    05/10/2026 00:00 → 10/10/2026 23:59:59 • Việt Nam
-  </div>
-
-</header>
-
-
-<section class="info">
-
-  <div class="box">
-    🎴 Lượt hôm nay
-    <b id="plays">—</b>
-  </div>
-
-  <div class="box">
-    ⭐ Điểm của bạn
-    <b id="points">0</b>
-  </div>
-
-  <div class="box">
-    🏆 Tỷ lệ có điểm
-    <b>50%</b>
-  </div>
-
-</section>
-
-
-<section class="panel">
-
-  <div class="login">
-
-    <input
-      id="email"
-      type="email"
-      autocomplete="email"
-      placeholder="Nhập email của bạn"
-    >
-
-    <button
-      id="loginBtn"
-      onclick="login()"
-    >
-      GỬI MÃ OTP
-    </button>
-
-    <div
-      class="otp-row"
-      id="otpRow"
-    >
+[functions.flip-event-2026]
+verify_jwt = true
 
-      <input
-        id="otp"
-        type="text"
-        inputmode="numeric"
-        autocomplete="one-time-code"
-        maxlength="6"
-        placeholder="MÃ OTP 6 SỐ"
-      >
+[functions.verify-event-otp-2026]
+verify_jwt = true
+-- ============================================================
+-- LẬT THẺ TIÊN ĐẾ 2026
+-- FINAL VERSION
+-- ============================================================
 
-    </div>
+create extension if not exists pgcrypto;
 
-  </div>
 
+-- ============================================================
+-- CONFIG
+-- ============================================================
 
-  <div
-    class="admin-badge"
-    id="adminBadge"
-  >
-    👑 CHẾ ĐỘ TEST ADMIN — Dữ liệu test không vào BXH thật
-  </div>
-
+create table if not exists public.event_config_2026 (
+    id boolean primary key default true,
 
-  <div
-    class="status"
-    id="status"
-  >
-    Nhập email để nhận mã OTP đăng nhập.
-  </div>
+    start_at timestamptz not null
+        default '2026-10-04 17:00:00+00',
 
+    end_at timestamptz not null
+        default '2026-10-10 16:59:59+00',
 
-  <div
-    class="cards"
-    id="cards"
-  ></div>
+    daily_plays integer not null default 50,
 
-</section>
-
+    point_chance numeric(5,4) not null default 0.5000,
 
-<section class="panel leader">
+    point_values integer[] not null
+        default array[10,20,30,40,50,100]
+);
 
-  <h2>
-    🏆 BẢNG XẾP HẠNG TOP 10
-  </h2>
 
-  <table>
+insert into public.event_config_2026 (
+    id,
+    start_at,
+    end_at,
+    daily_plays,
+    point_chance,
+    point_values
+)
+values (
+    true,
+    '2026-10-04 17:00:00+00',
+    '2026-10-10 16:59:59+00',
+    50,
+    0.5000,
+    array[10,20,30,40,50,100]
+)
+on conflict (id) do update
+set
+    start_at = excluded.start_at,
+    end_at = excluded.end_at,
+    daily_plays = excluded.daily_plays,
+    point_chance = excluded.point_chance,
+    point_values = excluded.point_values;
 
-    <thead>
 
-      <tr>
-        <th>Hạng</th>
-        <th>Người chơi</th>
-        <th>Điểm</th>
-      </tr>
+-- ============================================================
+-- PLAYERS
+-- ============================================================
 
-    </thead>
+create table if not exists public.event_players_2026 (
+    user_id uuid primary key
+        references auth.users(id)
+        on delete cascade,
 
-    <tbody id="leaderboard">
+    email text not null,
 
-      <tr>
-        <td colspan="3">
-          Đang tải...
-        </td>
-      </tr>
+    points integer not null default 0
+        check (points >= 0),
 
-    </tbody>
+    created_at timestamptz not null default now(),
 
-  </table>
+    updated_at timestamptz not null default now()
+);
 
-</section>
 
+-- ============================================================
+-- DAILY PLAYS
+-- ============================================================
 
-<div class="footer">
-  Top 1: 100k • Top 2: 70k • Top 3: 50k • Top 4–10: 10k tinh thạch
-</div>
+create table if not exists public.event_daily_plays_2026 (
+    user_id uuid not null
+        references auth.users(id)
+        on delete cascade,
 
-</div>
+    play_date date not null,
 
+    plays_used integer not null default 0
+        check (plays_used >= 0 and plays_used <= 50),
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    primary key (user_id, play_date)
+);
 
-<script>
 
-/* =====================================================
-   SUPABASE
-===================================================== */
+-- ============================================================
+-- PLAY LOG
+-- ============================================================
 
-const SUPABASE_URL =
-  "https://rftnjeozezxgemtrvkce.supabase.co";
+create table if not exists public.event_plays_2026 (
+    id bigint generated always as identity primary key,
 
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_SQS8AB9rBORo8KUSL0KtPw_mydlG5aw";
+    user_id uuid not null
+        references auth.users(id)
+        on delete cascade,
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+    played_at timestamptz not null default now(),
 
+    play_date date not null,
 
-/* =====================================================
-   ADMIN
-===================================================== */
+    has_point boolean not null,
 
-const ADMIN_EMAIL =
-  "namtruong3333@gmail.com";
+    points_awarded integer not null default 0
+        check (points_awarded >= 0)
+);
 
 
-/* =====================================================
-   EVENT
-===================================================== */
+-- ============================================================
+-- DAILY OTP
+-- ============================================================
 
-const EVENT_START =
-  new Date(
-    "2026-10-05T00:00:00+07:00"
-  );
+create table if not exists public.event_daily_otp_2026 (
+    user_id uuid not null
+        references auth.users(id)
+        on delete cascade,
 
-const EVENT_END =
-  new Date(
-    "2026-10-10T23:59:59+07:00"
-  );
+    otp_date date not null,
 
+    email text not null,
 
-/* =====================================================
-   RULES
-===================================================== */
+    verified_at timestamptz not null default now(),
 
-const DAILY_PLAYS = 50;
+    primary key (user_id, otp_date)
+);
 
-const POINT_VALUES = [
-  10,
-  20,
-  30,
-  40,
-  50,
-  100
-];
 
+-- ============================================================
+-- IP BINDING
+-- 1 PUBLIC IP = 1 ACCOUNT
+-- ============================================================
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
+create table if not exists public.event_ip_binding_2026 (
+    ip text primary key,
 
-const status =
-  document.getElementById("status");
+    user_id uuid not null
+        references auth.users(id)
+        on delete cascade,
 
-const cards =
-  document.getElementById("cards");
+    email text not null,
 
-const emailInput =
-  document.getElementById("email");
+    bound_at timestamptz not null default now()
+);
 
-const otpInput =
-  document.getElementById("otp");
 
-const otpRow =
-  document.getElementById("otpRow");
+-- ============================================================
+-- INDEX
+-- ============================================================
 
-const loginBtn =
-  document.getElementById("loginBtn");
+create index if not exists event_players_2026_points_idx
+on public.event_players_2026 (
+    points desc,
+    updated_at asc,
+    user_id
+);
 
-const playsEl =
-  document.getElementById("plays");
+create index if not exists event_plays_2026_user_date_idx
+on public.event_plays_2026 (
+    user_id,
+    play_date
+);
 
-const pointsEl =
-  document.getElementById("points");
+create index if not exists event_plays_2026_date_idx
+on public.event_plays_2026 (
+    play_date
+);
 
-const leaderboardEl =
-  document.getElementById("leaderboard");
 
-const adminBadge =
-  document.getElementById("adminBadge");
+-- ============================================================
+-- RLS
+-- ============================================================
 
+alter table public.event_config_2026 enable row level security;
+alter table public.event_players_2026 enable row level security;
+alter table public.event_daily_plays_2026 enable row level security;
+alter table public.event_plays_2026 enable row level security;
+alter table public.event_daily_otp_2026 enable row level security;
+alter table public.event_ip_binding_2026 enable row level security;
 
-/* =====================================================
-   STATE
-===================================================== */
 
-let loggedIn = false;
+revoke all on public.event_config_2026
+from anon, authenticated;
 
-let otpSent = false;
+revoke all on public.event_players_2026
+from anon, authenticated;
 
-let busy = false;
+revoke all on public.event_daily_plays_2026
+from anon, authenticated;
 
-let eventOpen = false;
+revoke all on public.event_plays_2026
+from anon, authenticated;
 
-let isAdmin = false;
+revoke all on public.event_daily_otp_2026
+from anon, authenticated;
 
-let currentLoginEmail = "";
+revoke all on public.event_ip_binding_2026
+from anon, authenticated;
 
 
-/* =====================================================
-   CREATE 10 CARDS
-===================================================== */
+-- ============================================================
+-- EVENT STATUS
+-- ============================================================
 
-for(
-  let i = 0;
-  i < 10;
-  i++
-){
+create or replace function public.get_event_status()
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+    c public.event_config_2026%rowtype;
 
-  cards.insertAdjacentHTML(
+    today_vn date :=
+        (
+            now() at time zone 'Asia/Ho_Chi_Minh'
+        )::date;
 
-    "beforeend",
+    used integer := 0;
+    pts integer := 0;
 
-    `
-    <button
-      class="card"
-      onclick="flip(this)"
-      disabled
-    >
+begin
 
-      <div class="card-inner">
+    select *
+    into c
+    from public.event_config_2026
+    where id = true;
 
-        <div class="face front">
+    if c.id is null then
+        raise exception 'EVENT_CONFIG_NOT_FOUND';
+    end if;
 
-          <div class="symbol">
-            🃏
-          </div>
 
-          <small>
-            LẬT THẺ
-          </small>
+    if auth.uid() is not null then
 
-        </div>
+        insert into public.event_players_2026 (
+            user_id,
+            email
+        )
+        values (
+            auth.uid(),
+            (
+                select email
+                from auth.users
+                where id = auth.uid()
+            )
+        )
+        on conflict (user_id)
+        do update set
+            email = excluded.email,
+            updated_at = now();
 
-        <div class="face back">
 
-          <div class="result">
-            ?
-          </div>
+        select coalesce(
+            (
+                select d.plays_used
+                from public.event_daily_plays_2026 d
+                where d.user_id = auth.uid()
+                  and d.play_date = today_vn
+            ),
+            0
+        )
+        into used;
 
-          <div class="note">
-            Kết quả
-          </div>
 
-        </div>
+        select coalesce(
+            (
+                select p.points
+                from public.event_players_2026 p
+                where p.user_id = auth.uid()
+            ),
+            0
+        )
+        into pts;
 
-      </div>
+    end if;
 
-    </button>
-    `
 
-  );
+    return json_build_object(
+        'open',
+        now() >= c.start_at
+        and now() <= c.end_at,
 
-}
+        'start_at',
+        c.start_at,
 
+        'end_at',
+        c.end_at,
 
-/* =====================================================
-   VIỆT NAM DATE
-===================================================== */
+        'daily_plays',
+        c.daily_plays,
 
-function vietnamDateKey(){
+        'plays_used',
+        used,
 
-  const parts =
-    new Intl.DateTimeFormat(
-      "en-CA",
-      {
-        timeZone:
-          "Asia/Ho_Chi_Minh",
+        'plays_remaining',
+        greatest(c.daily_plays - used, 0),
 
-        year:"numeric",
-        month:"2-digit",
-        day:"2-digit"
-      }
-    ).formatToParts(
-      new Date()
+        'points',
+        pts
     );
 
-
-  const year =
-    parts.find(
-      p => p.type === "year"
-    ).value;
-
-  const month =
-    parts.find(
-      p => p.type === "month"
-    ).value;
-
-  const day =
-    parts.find(
-      p => p.type === "day"
-    ).value;
+end;
+$$;
 
 
-  return (
-    year +
-    "-" +
-    month +
-    "-" +
-    day
-  );
+-- ============================================================
+-- PLAYER STATE
+-- ============================================================
 
-}
+create or replace function public.get_player_state()
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+    c public.event_config_2026%rowtype;
 
+    today_vn date :=
+        (
+            now() at time zone 'Asia/Ho_Chi_Minh'
+        )::date;
 
-/* =====================================================
-   EVENT OPEN
-===================================================== */
+    used integer := 0;
+    pts integer := 0;
 
-function isEventOpen(){
+begin
 
-  const now =
-    new Date();
-
-  return (
-    now >= EVENT_START &&
-    now <= EVENT_END
-  );
-
-}
-
-
-/* =====================================================
-   DAILY OTP STORAGE
-===================================================== */
-
-/*
-  Mỗi ngày sau khi OTP được xác nhận,
-  lưu ngày đã xác thực.
-
-  Sang ngày mới:
-  dữ liệu ngày cũ không được dùng.
-*/
-
-function otpStorageKey(
-  email
-){
-
-  return (
-    "tien_de_otp_verified_" +
-    String(email)
-      .trim()
-      .toLowerCase()
-  );
-
-}
+    if auth.uid() is null then
+        raise exception 'UNAUTHORIZED';
+    end if;
 
 
-function markOtpVerified(
-  email
-){
-
-  localStorage.setItem(
-
-    otpStorageKey(
-      email
-    ),
-
-    vietnamDateKey()
-
-  );
-
-}
+    select *
+    into c
+    from public.event_config_2026
+    where id = true;
 
 
-function hasOtpVerifiedToday(
-  email
-){
-
-  return (
-    localStorage.getItem(
-      otpStorageKey(
+    insert into public.event_players_2026 (
+        user_id,
         email
-      )
-    ) ===
-    vietnamDateKey()
-  );
-
-}
-
-
-function clearOtpVerified(
-  email
-){
-
-  localStorage.removeItem(
-
-    otpStorageKey(
-      email
     )
-
-  );
-
-}
-
-
-/* =====================================================
-   RESET UI LOGIN
-===================================================== */
-
-function resetLoginUI(){
-
-  loggedIn =
-    false;
-
-  otpSent =
-    false;
-
-  busy =
-    false;
-
-  isAdmin =
-    false;
-
-  currentLoginEmail =
-    "";
-
-
-  emailInput.disabled =
-    false;
-
-  otpInput.disabled =
-    false;
-
-  loginBtn.disabled =
-    false;
-
-  loginBtn.textContent =
-    "GỬI MÃ OTP";
-
-
-  otpInput.value =
-    "";
-
-  otpRow.style.display =
-    "none";
-
-
-  adminBadge.style.display =
-    "none";
-
-
-  playsEl.textContent =
-    "—";
-
-  pointsEl.textContent =
-    "0";
-
-
-  resetCards();
-
-}
-
-
-/* =====================================================
-   RESET CARDS
-===================================================== */
-
-function resetCards(){
-
-  document
-    .querySelectorAll(
-      ".card"
+    values (
+        auth.uid(),
+        (
+            select email
+            from auth.users
+            where id = auth.uid()
+        )
     )
-    .forEach(
+    on conflict (user_id)
+    do update set
+        email = excluded.email,
+        updated_at = now();
 
-      card => {
 
-        card.classList.remove(
-          "flipped"
+    select coalesce(
+        (
+            select d.plays_used
+            from public.event_daily_plays_2026 d
+            where d.user_id = auth.uid()
+              and d.play_date = today_vn
+        ),
+        0
+    )
+    into used;
+
+
+    select coalesce(
+        (
+            select p.points
+            from public.event_players_2026 p
+            where p.user_id = auth.uid()
+        ),
+        0
+    )
+    into pts;
+
+
+    return json_build_object(
+        'plays_used',
+        used,
+
+        'plays_remaining',
+        greatest(c.daily_plays - used, 0),
+
+        'points',
+        pts
+    );
+
+end;
+$$;
+
+
+-- ============================================================
+-- ADMIN
+-- ============================================================
+
+create or replace function public.is_event_admin(
+    p_user_id uuid
+)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+
+select lower(
+    coalesce(
+        (
+            select email
+            from auth.users
+            where id = p_user_id
+        ),
+        ''
+    )
+) = 'namtruong3333@gmail.com';
+
+$$;
+
+
+-- ============================================================
+-- MARK OTP VERIFIED
+-- ONLY SERVICE ROLE
+-- ============================================================
+
+create or replace function public.mark_event_otp_verified(
+    p_user_id uuid,
+    p_email text
+)
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+    v_email text;
+
+    today_vn date :=
+        (
+            now() at time zone 'Asia/Ho_Chi_Minh'
+        )::date;
+
+begin
+
+    if auth.role() <> 'service_role' then
+        raise exception 'FORBIDDEN';
+    end if;
+
+
+    select lower(email)
+    into v_email
+    from auth.users
+    where id = p_user_id;
+
+
+    if v_email is null then
+        raise exception 'USER_NOT_FOUND';
+    end if;
+
+
+    if lower(trim(p_email))
+       <> lower(trim(v_email))
+    then
+        raise exception 'EMAIL_MISMATCH';
+    end if;
+
+
+    insert into public.event_daily_otp_2026 (
+        user_id,
+        otp_date,
+        email,
+        verified_at
+    )
+    values (
+        p_user_id,
+        today_vn,
+        v_email,
+        now()
+    )
+    on conflict (user_id, otp_date)
+    do update set
+        email = excluded.email,
+        verified_at = now();
+
+
+    return json_build_object(
+        'ok', true,
+        'otp_date', today_vn
+    );
+
+end;
+$$;
+
+
+-- ============================================================
+-- CHECK OTP TODAY
+-- USER CAN ONLY CHECK OWN ACCOUNT
+-- ============================================================
+
+create or replace function public.has_event_otp_today(
+    p_user_id uuid
+)
+returns boolean
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+
+    if auth.uid() is null then
+        raise exception 'UNAUTHORIZED';
+    end if;
+
+
+    if p_user_id <> auth.uid() then
+        raise exception 'FORBIDDEN';
+    end if;
+
+
+    return exists (
+        select 1
+        from public.event_daily_otp_2026
+        where user_id = auth.uid()
+          and otp_date =
+              (
+                  now() at time zone 'Asia/Ho_Chi_Minh'
+              )::date
+    );
+
+end;
+$$;
+
+
+-- ============================================================
+-- BIND IP
+-- ONLY SERVICE ROLE
+-- ============================================================
+
+create or replace function public.bind_event_ip(
+    p_user_id uuid,
+    p_email text,
+    p_ip text
+)
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+    v_email text;
+    old_user uuid;
+
+begin
+
+    if auth.role() <> 'service_role' then
+        raise exception 'FORBIDDEN';
+    end if;
+
+
+    if p_ip is null
+       or trim(p_ip) = ''
+    then
+        raise exception 'IP_NOT_DETECTED';
+    end if;
+
+
+    select lower(email)
+    into v_email
+    from auth.users
+    where id = p_user_id;
+
+
+    if v_email is null then
+        raise exception 'USER_NOT_FOUND';
+    end if;
+
+
+    if lower(trim(p_email))
+       <> lower(trim(v_email))
+    then
+        raise exception 'EMAIL_MISMATCH';
+    end if;
+
+
+    if v_email = 'namtruong3333@gmail.com' then
+
+        return json_build_object(
+            'ok', true,
+            'admin', true,
+            'ip_bound', false
         );
 
-        card.disabled =
-          true;
+    end if;
 
-        card.querySelector(
-          ".result"
-        ).textContent =
-          "?";
 
-        card.querySelector(
-          ".note"
-        ).textContent =
-          "Kết quả";
+    select user_id
+    into old_user
+    from public.event_ip_binding_2026
+    where ip = trim(p_ip)
+    for update;
 
-      }
+
+    if old_user is not null
+       and old_user <> p_user_id
+    then
+        raise exception
+            'IP_ALREADY_BOUND_TO_ANOTHER_ACCOUNT';
+    end if;
+
+
+    insert into public.event_ip_binding_2026 (
+        ip,
+        user_id,
+        email
+    )
+    values (
+        trim(p_ip),
+        p_user_id,
+        v_email
+    )
+    on conflict (ip)
+    do nothing;
+
+
+    select user_id
+    into old_user
+    from public.event_ip_binding_2026
+    where ip = trim(p_ip);
+
+
+    if old_user <> p_user_id then
+        raise exception
+            'IP_ALREADY_BOUND_TO_ANOTHER_ACCOUNT';
+    end if;
+
+
+    return json_build_object(
+        'ok', true,
+        'admin', false,
+        'ip_bound', true
+    );
+
+end;
+$$;
+
+
+-- ============================================================
+-- REAL FLIP
+-- ONLY SERVICE ROLE
+-- ============================================================
+
+create or replace function public.process_event_flip_service(
+    p_user_id uuid,
+    p_ip text
+)
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+
+    c public.event_config_2026%rowtype;
+
+    v_email text;
+
+    today_vn date :=
+        (
+            now() at time zone 'Asia/Ho_Chi_Minh'
+        )::date;
+
+    used integer;
+
+    won boolean;
+
+    awarded integer := 0;
+
+    total_points integer;
+
+    idx integer;
+
+    admin_user boolean;
+
+begin
+
+    if auth.role() <> 'service_role' then
+        raise exception 'FORBIDDEN';
+    end if;
+
+
+    -- ========================================================
+    -- USER
+    -- ========================================================
+
+    select lower(email)
+    into v_email
+    from auth.users
+    where id = p_user_id;
+
+
+    if v_email is null then
+        raise exception 'USER_NOT_FOUND';
+    end if;
+
+
+    admin_user :=
+        v_email = 'namtruong3333@gmail.com';
+
+
+    -- ========================================================
+    -- CONFIG
+    -- ========================================================
+
+    select *
+    into c
+    from public.event_config_2026
+    where id = true;
+
+
+    if c.id is null then
+        raise exception 'EVENT_CONFIG_NOT_FOUND';
+    end if;
+
+
+    -- ========================================================
+    -- EVENT TIME
+    -- ========================================================
+
+    if now() < c.start_at then
+        raise exception 'EVENT_NOT_STARTED';
+    end if;
+
+
+    if now() > c.end_at then
+        raise exception 'EVENT_ENDED';
+    end if;
+
+
+    -- ========================================================
+    -- CONFIG VALIDATION
+    -- ========================================================
+
+    if c.daily_plays <> 50 then
+        raise exception 'INVALID_DAILY_PLAYS';
+    end if;
+
+
+    if c.point_chance <> 0.5000 then
+        raise exception 'INVALID_POINT_CHANCE';
+    end if;
+
+
+    if c.point_values
+       <> array[10,20,30,40,50,100]
+    then
+        raise exception 'INVALID_POINT_VALUES';
+    end if;
+
+
+    -- ========================================================
+    -- OTP
+    -- ========================================================
+
+    if not admin_user then
+
+        if not exists (
+            select 1
+            from public.event_daily_otp_2026
+            where user_id = p_user_id
+              and otp_date = today_vn
+              and lower(email) = v_email
+        )
+        then
+            raise exception
+                'OTP_CHUA_XAC_NHAN_HOM_NAY';
+        end if;
+
+    end if;
+
+
+    -- ========================================================
+    -- IP
+    -- ========================================================
+
+    if not admin_user then
+
+        if p_ip is null
+           or trim(p_ip) = ''
+        then
+            raise exception 'IP_NOT_DETECTED';
+        end if;
+
+
+        if exists (
+            select 1
+            from public.event_ip_binding_2026
+            where ip = trim(p_ip)
+              and user_id <> p_user_id
+        )
+        then
+            raise exception
+                'IP_ALREADY_USED_BY_ANOTHER_ACCOUNT';
+        end if;
+
+
+        if not exists (
+            select 1
+            from public.event_ip_binding_2026
+            where ip = trim(p_ip)
+              and user_id = p_user_id
+        )
+        then
+            raise exception
+                'IP_NOT_BOUND_TO_THIS_ACCOUNT';
+        end if;
+
+    end if;
+
+
+    -- ========================================================
+    -- PLAYER
+    -- ========================================================
+
+    insert into public.event_players_2026 (
+        user_id,
+        email
+    )
+    values (
+        p_user_id,
+        v_email
+    )
+    on conflict (user_id)
+    do update set
+        email = excluded.email,
+        updated_at = now();
+
+
+    -- ========================================================
+    -- DAILY ROW
+    -- ========================================================
+
+    insert into public.event_daily_plays_2026 (
+        user_id,
+        play_date,
+        plays_used
+    )
+    values (
+        p_user_id,
+        today_vn,
+        0
+    )
+    on conflict (user_id, play_date)
+    do nothing;
+
+
+    -- ========================================================
+    -- LOCK DAILY ROW
+    -- ========================================================
+
+    select plays_used
+    into used
+    from public.event_daily_plays_2026
+    where user_id = p_user_id
+      and play_date = today_vn
+    for update;
+
+
+    -- ========================================================
+    -- HARD 50 LIMIT
+    -- ========================================================
+
+    if used >= 50 then
+        raise exception 'DA_DUNG_HET_50_LUOT';
+    end if;
+
+
+    -- ========================================================
+    -- 50% CHANCE
+    -- ========================================================
+
+    won :=
+        random() < c.point_chance;
+
+
+    -- ========================================================
+    -- RANDOM POINT
+    -- ========================================================
+
+    if won then
+
+        idx :=
+            floor(
+                random() * array_length(
+                    c.point_values,
+                    1
+                )
+            )::integer + 1;
+
+        awarded :=
+            c.point_values[idx];
+
+    else
+
+        awarded := 0;
+
+    end if;
+
+
+    -- ========================================================
+    -- CONSUME PLAY
+    -- ========================================================
+
+    update public.event_daily_plays_2026
+    set plays_used = plays_used + 1
+    where user_id = p_user_id
+      and play_date = today_vn;
+
+
+    -- ========================================================
+    -- ADD POINTS
+    -- ========================================================
+
+    update public.event_players_2026
+    set
+        points = points + awarded,
+        updated_at = now()
+    where user_id = p_user_id
+    returning points
+    into total_points;
+
+
+    -- ========================================================
+    -- LOG
+    -- ========================================================
+
+    insert into public.event_plays_2026 (
+        user_id,
+        play_date,
+        has_point,
+        points_awarded
+    )
+    values (
+        p_user_id,
+        today_vn,
+        won,
+        awarded
+    );
+
+
+    -- ========================================================
+    -- RETURN
+    -- ========================================================
+
+    return json_build_object(
+
+        'ok',
+        true,
+
+        'has_point',
+        won,
+
+        'points_awarded',
+        awarded,
+
+        'points',
+        total_points,
+
+        'plays_used',
+        used + 1,
+
+        'plays_remaining',
+        50 - used - 1
 
     );
 
+end;
+$$;
+
+
+-- ============================================================
+-- OLD flip_card
+-- NEVER ALLOW DIRECT CLIENT FLIP
+-- ============================================================
+
+create or replace function public.flip_card()
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+
+    raise exception
+        'DIRECT_FLIP_DISABLED_USE_FLIP_EVENT_2026';
+
+end;
+$$;
+
+
+-- ============================================================
+-- LEADERBOARD
+-- ============================================================
+
+create or replace function public.get_leaderboard()
+returns table(
+    display_name text,
+    email text,
+    points integer
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+
+select
+    coalesce(
+        nullif(
+            split_part(
+                p.email,
+                '@',
+                1
+            ),
+            ''
+        ),
+        'Người chơi'
+    ) as display_name,
+
+    p.email,
+
+    p.points
+
+from public.event_players_2026 p
+
+where p.points > 0
+
+order by
+    p.points desc,
+    p.updated_at asc,
+    p.user_id asc
+
+limit 10;
+
+$$;
+
+
+-- ============================================================
+-- PERMISSIONS
+-- ============================================================
+
+revoke all on function public.get_event_status()
+from public;
+
+revoke all on function public.get_player_state()
+from public;
+
+revoke all on function public.flip_card()
+from public;
+
+revoke all on function public.get_leaderboard()
+from public;
+
+revoke all on function public.is_event_admin(uuid)
+from public;
+
+revoke all on function public.mark_event_otp_verified(uuid,text)
+from public;
+
+revoke all on function public.has_event_otp_today(uuid)
+from public;
+
+revoke all on function public.bind_event_ip(uuid,text,text)
+from public;
+
+revoke all on function public.process_event_flip_service(uuid,text)
+from public;
+
+
+grant execute
+on function public.get_event_status()
+to anon, authenticated;
+
+
+grant execute
+on function public.get_player_state()
+to authenticated;
+
+
+grant execute
+on function public.has_event_otp_today(uuid)
+to authenticated;
+
+
+grant execute
+on function public.get_leaderboard()
+to anon, authenticated;
+
+
+grant execute
+on function public.is_event_admin(uuid)
+to service_role;
+
+
+grant execute
+on function public.mark_event_otp_verified(uuid,text)
+to service_role;
+
+
+grant execute
+on function public.bind_event_ip(uuid,text,text)
+to service_role;
+
+
+grant execute
+on function public.process_event_flip_service(uuid,text)
+to service_role;
+
+
+-- ============================================================
+-- FINAL CHECK
+-- ============================================================
+
+do $$
+declare
+    c public.event_config_2026%rowtype;
+begin
+
+    select *
+    into c
+    from public.event_config_2026
+    where id = true;
+
+
+    if c.daily_plays <> 50 then
+        raise exception 'CHECK FAILED: daily_plays';
+    end if;
+
+
+    if c.point_chance <> 0.5000 then
+        raise exception 'CHECK FAILED: point_chance';
+    end if;
+
+
+    if c.point_values
+       <> array[10,20,30,40,50,100]
+    then
+        raise exception 'CHECK FAILED: point_values';
+    end if;
+
+
+    if c.start_at
+       <> '2026-10-04 17:00:00+00'::timestamptz
+    then
+        raise exception 'CHECK FAILED: start_at';
+    end if;
+
+
+    if c.end_at
+       <> '2026-10-10 16:59:59+00'::timestamptz
+    then
+        raise exception 'CHECK FAILED: end_at';
+    end if;
+
+
+    raise notice
+        'LẬT THẺ TIÊN ĐẾ 2026: CONFIG OK';
+
+end;
+$$;
+         import { createClient } from "npm:@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods":
+    "POST, OPTIONS",
+};
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SERVICE_ROLE_KEY = Deno.env.get(
+  "SUPABASE_SERVICE_ROLE_KEY"
+);
+
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  throw new Error("SERVER_CONFIGURATION_ERROR");
 }
 
-
-/* =====================================================
-   ALL 10 CARDS FLIPPED
-===================================================== */
-
-function allCardsFlipped(){
-
-  const all =
-    Array.from(
-      document.querySelectorAll(
-        ".card"
-      )
-    );
-
-
-  return (
-    all.length === 10 &&
-    all.every(
-      card =>
-        card.classList.contains(
-          "flipped"
-        )
-    )
-  );
-
-}
-
-
-/* =====================================================
-   NEXT ROUND
-===================================================== */
-
-function startNextRound(
-  adminMode
-){
-
-  if(
-    busy
-  )
-    return;
-
-
-  if(
-    !allCardsFlipped()
-  )
-    return;
-
-
-  setTimeout(
-
-    () => {
-
-      if(
-        !loggedIn
-      )
-        return;
-
-
-      if(
-        adminMode
-      ){
-
-        if(
-          adminTestPlays <= 0
-        )
-          return;
-
-
-        resetCards();
-
-        enableCards(
-          true
-        );
-
-
-        status.textContent =
-          "🃏 10 thẻ mới đã sẵn sàng. Tiếp tục TEST.";
-
-      }else{
-
-        if(
-          !isEventOpen()
-        )
-          return;
-
-
-        if(
-          Number(
-            playsEl.textContent
-          ) <= 0
-        )
-          return;
-
-
-        resetCards();
-
-        enableCards(
-          false
-        );
-
-
-        status.textContent =
-          "🃏 10 thẻ mới đã sẵn sàng. Tiếp tục chơi.";
-
-      }
-
+const admin = createClient(
+  SUPABASE_URL,
+  SERVICE_ROLE_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
     },
+  }
+);
 
-    800
 
+function json(
+  body: unknown,
+  status = 200
+) {
+  return new Response(
+    JSON.stringify(body),
+    {
+      status,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+    }
   );
-
 }
 
 
-/* =====================================================
-   ADMIN TEST STORAGE
-===================================================== */
+function getClientIP(
+  req: Request
+): string {
 
-let adminTestDate =
-  "";
+  const cf =
+    req.headers.get("cf-connecting-ip");
 
-let adminTestPlays =
-  DAILY_PLAYS;
-
-let adminTestPoints =
-  0;
+  if (cf?.trim()) {
+    return cf.trim();
+  }
 
 
-function adminStorageKey(){
+  const real =
+    req.headers.get("x-real-ip");
 
-  return (
-    "tien_de_admin_test_" +
-    vietnamDateKey()
-  );
+  if (real?.trim()) {
+    return real.trim();
+  }
 
+
+  const forwarded =
+    req.headers.get("x-forwarded-for");
+
+  if (forwarded?.trim()) {
+    return forwarded
+      .split(",")[0]
+      .trim();
+  }
+
+
+  return "";
 }
 
 
-function loadAdminTest(){
+Deno.serve(async (req) => {
 
-  const key =
-    adminStorageKey();
+  if (req.method === "OPTIONS") {
+    return new Response(
+      "ok",
+      {
+        headers: corsHeaders,
+      }
+    );
+  }
 
 
-  try{
+  if (req.method !== "POST") {
+    return json(
+      {
+        ok: false,
+        error: "METHOD_NOT_ALLOWED",
+      },
+      405
+    );
+  }
 
-    const saved =
-      localStorage.getItem(
-        key
+
+  try {
+
+    const authorization =
+      req.headers.get("Authorization");
+
+
+    if (!authorization) {
+      return json(
+        {
+          ok: false,
+          error: "UNAUTHORIZED",
+        },
+        401
       );
-
-
-    if(
-      saved
-    ){
-
-      const data =
-        JSON.parse(
-          saved
-        );
-
-
-      adminTestDate =
-        vietnamDateKey();
-
-
-      adminTestPlays =
-        Number(
-          data.plays
-        );
-
-
-      adminTestPoints =
-        Number(
-          data.points
-        );
-
-
-      if(
-        !Number.isFinite(
-          adminTestPlays
-        )
-      ){
-
-        adminTestPlays =
-          DAILY_PLAYS;
-
-      }
-
-
-      if(
-        !Number.isFinite(
-          adminTestPoints
-        )
-      ){
-
-        adminTestPoints =
-          0;
-
-      }
-
-
-      return;
-
     }
 
-  }catch(e){}
+
+    const token =
+      authorization
+        .replace(/^Bearer\s+/i, "")
+        .trim();
 
 
-  adminTestDate =
-    vietnamDateKey();
-
-  adminTestPlays =
-    DAILY_PLAYS;
-
-  adminTestPoints =
-    0;
-
-
-  saveAdminTest();
-
-}
-
-
-function saveAdminTest(){
-
-  localStorage.setItem(
-
-    adminStorageKey(),
-
-    JSON.stringify({
-
-      plays:
-        adminTestPlays,
-
-      points:
-        adminTestPoints
-
-    })
-
-  );
-
-}
-
-
-function resetAdminTestIfNewDay(){
-
-  const today =
-    vietnamDateKey();
-
-
-  if(
-    adminTestDate !== today
-  ){
-
-    adminTestDate =
-      today;
-
-    adminTestPlays =
-      DAILY_PLAYS;
-
-    adminTestPoints =
-      0;
-
-    saveAdminTest();
-
-    resetCards();
-
-  }
-
-}
-
-
-/* =====================================================
-   EVENT STATE
-===================================================== */
-
-function setEventState(){
-
-  eventOpen =
-    isEventOpen();
-
-
-  if(
-    !eventOpen
-  ){
-
-    document
-      .querySelectorAll(
-        ".card"
-      )
-      .forEach(
-        c =>
-          c.disabled = true
+    if (!token) {
+      return json(
+        {
+          ok: false,
+          error: "UNAUTHORIZED",
+        },
+        401
       );
-
-
-    status.classList.add(
-      "event-closed"
-    );
-
-
-    if(
-      new Date() <
-      EVENT_START
-    ){
-
-      status.textContent =
-        "⏳ Sự kiện chưa bắt đầu. Người chơi chỉ có thể tham gia từ 05/10/2026.";
-
-    }else{
-
-      status.textContent =
-        "⛔ Sự kiện đã kết thúc. BXH đã được chốt.";
-
     }
-
-  }else{
-
-    status.classList.remove(
-      "event-closed"
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-async function login(){
-
-  if(
-    busy
-  )
-    return;
-
-
-  const email =
-    emailInput.value
-      .trim()
-      .toLowerCase();
-
-
-  if(
-    !email
-  ){
-
-    status.textContent =
-      "⚠️ Vui lòng nhập email.";
-
-    emailInput.focus();
-
-    return;
-
-  }
-
-
-  isAdmin =
-    email ===
-    ADMIN_EMAIL;
-
-
-  currentLoginEmail =
-    email;
-
-
-  /*
-    ADMIN được test trước event.
-
-    NGƯỜI CHƠI thật chỉ được
-    bắt đầu đăng nhập khi event mở.
-  */
-
-  if(
-    !isAdmin &&
-    !isEventOpen()
-  ){
-
-    setEventState();
-
-    return;
-
-  }
-
-
-  busy =
-    true;
-
-
-  /* =================================================
-     GỬI OTP
-  ================================================= */
-
-  if(
-    !otpSent
-  ){
-
-    status.textContent =
-      "⏳ Đang gửi mã OTP...";
-
-
-    loginBtn.disabled =
-      true;
 
 
     const {
-      error
+      data,
+      error,
     } =
-      await supabaseClient.auth
-        .signInWithOtp({
-
-          email,
-
-          options:{
-            shouldCreateUser:true
-          }
-
-        });
+      await admin.auth.getUser(token);
 
 
-    loginBtn.disabled =
-      false;
-
-    busy =
-      false;
-
-
-    if(
-      error
-    ){
-
-      status.textContent =
-        "❌ Không gửi được OTP: " +
-        error.message;
-
-      return;
-
+    if (error || !data.user) {
+      return json(
+        {
+          ok: false,
+          error: "UNAUTHORIZED",
+        },
+        401
+      );
     }
 
 
-    otpSent =
-      true;
-
-
-    otpRow.style.display =
-      "block";
-
-
-    loginBtn.textContent =
-      "XÁC NHẬN OTP";
-
-
-    status.textContent =
-      "✅ OTP đã được gửi vào email. Nhập mã 6 số để vào event.";
-
-
-    otpInput.focus();
-
-    return;
-
-  }
-
-
-  /* =================================================
-     XÁC NHẬN OTP
-  ================================================= */
-
-  const token =
-    otpInput.value.trim();
-
-
-  if(
-    !/^\d{6}$/.test(
-      token
-    )
-  ){
-
-    busy =
-      false;
-
-
-    status.textContent =
-      "⚠️ Vui lòng nhập đúng OTP 6 số.";
-
-    otpInput.focus();
-
-    return;
-
-  }
-
-
-  status.textContent =
-    "⏳ Đang xác nhận OTP...";
-
-
-  loginBtn.disabled =
-    true;
-
-
-  const {
-    error
-  } =
-    await supabaseClient.auth
-      .verifyOtp({
-
-        email,
-
-        token,
-
-        type:"email"
-
-      });
-
-
-  if(
-    error
-  ){
-
-    loginBtn.disabled =
-      false;
-
-    busy =
-      false;
-
-
-    status.textContent =
-      "❌ OTP không đúng hoặc đã hết hạn.";
-
-    return;
-
-  }
-
-
-  /*
-    OTP đã được xác nhận
-    cho ngày Việt Nam hiện tại.
-  */
-
-  markOtpVerified(
-    email
-  );
-
-
-  loggedIn =
-    true;
-
-
-  busy =
-    false;
-
-
-  emailInput.disabled =
-    true;
-
-  otpInput.disabled =
-    true;
-
-  loginBtn.disabled =
-    true;
-
-  loginBtn.textContent =
-    "ĐÃ ĐĂNG NHẬP";
-
-
-  /* =================================================
-     ADMIN
-  ================================================= */
-
-  if(
-    isAdmin
-  ){
-
-    adminBadge.style.display =
-      "block";
-
-
-    loadAdminTest();
-
-
-    playsEl.textContent =
-      adminTestPlays;
-
-
-    pointsEl.textContent =
-      adminTestPoints;
-
-
-    resetCards();
-
-
-    status.classList.remove(
-      "event-closed"
-    );
-
-
-    status.textContent =
-      "👑 Admin đã đăng nhập. CHẾ ĐỘ TEST — không ảnh hưởng BXH thật.";
-
-
-    enableCards(
-      true
-    );
-
-
-    return;
-
-  }
-
-
-  /* =================================================
-     PLAYER
-  ================================================= */
-
-  await loadPlayer();
-
-  await loadLeaderboard();
-
-
-  if(
-    isEventOpen()
-  ){
-
-    status.classList.remove(
-      "event-closed"
-    );
-
-
-    status.textContent =
-      "✅ Đăng nhập thành công. Bạn có 50 lượt hôm nay.";
-
-
-    enableCards(
-      false
-    );
-
-  }else{
-
-    setEventState();
-
-  }
-
-}
-
-
-/* =====================================================
-   LOAD PLAYER
-===================================================== */
-
-async function loadPlayer(){
-
-  if(
-    isAdmin
-  ){
-
-    loadAdminTest();
-
-
-    playsEl.textContent =
-      adminTestPlays;
-
-
-    pointsEl.textContent =
-      adminTestPoints;
-
-
-    return;
-
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.rpc(
-      "get_player_state"
-    );
-
-
-  if(
-    error
-  ){
-
-    status.textContent =
-      "❌ Không tải được dữ liệu: " +
-      error.message;
-
-    return;
-
-  }
-
-
-  const player =
-    Array.isArray(data)
-      ? data[0]
-      : data;
-
-
-  if(
-    player
-  ){
-
-    playsEl.textContent =
-      player.plays_remaining ??
-      DAILY_PLAYS;
-
-
-    pointsEl.textContent =
-      player.points ??
-      0;
-
-  }
-
-}
-
-
-/* =====================================================
-   LEADERBOARD
-===================================================== */
-
-async function loadLeaderboard(){
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.rpc(
-      "get_leaderboard"
-    );
-
-
-  if(
-    error ||
-    !data ||
-    !data.length
-  ){
-
-    leaderboardEl.innerHTML =
-      `
-      <tr>
-        <td colspan="3">
-          Chưa có dữ liệu
-        </td>
-      </tr>
-      `;
-
-    return;
-
-  }
-
-
-  leaderboardEl.innerHTML =
-
-    data
-      .slice(
-        0,
-        10
-      )
-      .map(
-
-        (p,i) => `
-
-        <tr>
-
-          <td>
-            ${i + 1}
-          </td>
-
-          <td>
-            ${
-              escapeHtml(
-                p.display_name ||
-                p.email ||
-                "Người chơi"
-              )
-            }
-          </td>
-
-          <td>
-            ${Number(
-              p.points || 0
-            )}
-          </td>
-
-        </tr>
-
-        `
-
-      )
-      .join("");
-
-}
-
-
-/* =====================================================
-   ENABLE CARDS
-===================================================== */
-
-function enableCards(
-  adminMode = false
-){
-
-  if(
-    !loggedIn
-  )
-    return;
-
-
-  if(
-    adminMode
-  ){
-
-    if(
-      adminTestPlays <= 0
-    ){
-
-      document
-        .querySelectorAll(
-          ".card"
-        )
-        .forEach(
-          c =>
-            c.disabled = true
-        );
-
-      return;
-
+    const user =
+      data.user;
+
+
+    const email =
+      (user.email || "")
+        .trim()
+        .toLowerCase();
+
+
+    if (!email) {
+      return json(
+        {
+          ok: false,
+          error: "EMAIL_NOT_FOUND",
+        },
+        400
+      );
     }
 
 
-    document
-      .querySelectorAll(
-        ".card:not(.flipped)"
-      )
-      .forEach(
-        c =>
-          c.disabled = false
-      );
+    const isAdmin =
+      email ===
+      "namtruong3333@gmail.com";
 
 
-    return;
-
-  }
-
-
-  if(
-    !eventOpen
-  )
-    return;
-
-
-  if(
-    Number(
-      playsEl.textContent
-    ) <= 0
-  )
-    return;
-
-
-  document
-    .querySelectorAll(
-      ".card:not(.flipped)"
-    )
-    .forEach(
-      c =>
-        c.disabled = false
-    );
-
-}
-
-
-/* =====================================================
-   RANDOM POINT
-===================================================== */
-
-function randomPoint(){
-
-  return POINT_VALUES[
-    Math.floor(
-      Math.random() *
-      POINT_VALUES.length
-    )
-  ];
-
-}
-
-
-/* =====================================================
-   ADMIN TEST FLIP
-===================================================== */
-
-function adminTestFlip(
-  card
-){
-
-  resetAdminTestIfNewDay();
-
-
-  if(
-    adminTestPlays <= 0
-  ){
-
-    busy =
-      false;
-
-
-    status.textContent =
-      "⏳ Admin đã dùng hết 50 lượt test hôm nay. Ngày mai sẽ có 50 lượt mới.";
-
-    return;
-
-  }
-
-
-  adminTestPlays--;
-
-
-  /*
-    50% có điểm.
-  */
-
-  const won =
-    Math.random() <
-    0.50;
-
-
-  const value =
-    won
-      ? randomPoint()
-      : 0;
-
-
-  if(
-    won
-  ){
-
-    adminTestPoints +=
-      value;
-
-  }
-
-
-  saveAdminTest();
-
-
-  playsEl.textContent =
-    adminTestPlays;
-
-
-  pointsEl.textContent =
-    adminTestPoints;
-
-
-  card.classList.add(
-    "flipped"
-  );
-
-
-  if(
-    won
-  ){
-
-    card.querySelector(
-      ".result"
-    ).textContent =
-      "⭐ +" + value;
-
-
-    card.querySelector(
-      ".note"
-    ).textContent =
-      "Có điểm!";
-
-
-    status.textContent =
-      "🎉 TEST ADMIN: +" +
-      value +
-      " điểm. Không vào BXH thật.";
-
-  }else{
-
-    card.querySelector(
-      ".result"
-    ).textContent =
-      "0";
-
-
-    card.querySelector(
-      ".note"
-    ).textContent =
-      "Không có điểm";
-
-
-    status.textContent =
-      "😢 TEST ADMIN: Lần này không có điểm.";
-
-  }
-
-
-  busy =
-    false;
-
-
-  if(
-    adminTestPlays <= 0
-  ){
-
-    document
-      .querySelectorAll(
-        ".card"
-      )
-      .forEach(
-        c =>
-          c.disabled = true
-      );
-
-
-    status.textContent =
-      "⏳ Admin đã dùng hết 50 lượt test hôm nay. Ngày mai sẽ có 50 lượt mới.";
-
-    return;
-
-  }
-
-
-  if(
-    allCardsFlipped()
-  ){
-
-    startNextRound(
-      true
-    );
-
-  }else{
-
-    enableCards(
-      true
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   REAL PLAYER FLIP
-===================================================== */
-
-async function flip(
-  card
-){
-
-  if(
-    !loggedIn
-  ){
-
-    status.textContent =
-      "⚠️ Bạn phải đăng nhập và xác nhận OTP trước.";
-
-    return;
-
-  }
-
-
-  if(
-    busy ||
-    card.classList.contains(
-      "flipped"
-    )
-  )
-    return;
-
-
-  /* =================================================
-     ADMIN
-  ================================================= */
-
-  if(
-    isAdmin
-  ){
-
-    busy =
-      true;
-
-
-    document
-      .querySelectorAll(
-        ".card"
-      )
-      .forEach(
-        c =>
-          c.disabled = true
-      );
-
-
-    adminTestFlip(
-      card
-    );
-
-
-    return;
-
-  }
-
-
-  /* =================================================
-     EVENT
-  ================================================= */
-
-  if(
-    !isEventOpen()
-  ){
-
-    setEventState();
-
-    return;
-
-  }
-
-
-  /*
-    Kiểm tra OTP của ngày hiện tại.
-  */
-
-  if(
-    !hasOtpVerifiedToday(
-      currentLoginEmail
-    )
-  ){
-
-    await supabaseClient.auth
-      .signOut();
-
-
-    resetLoginUI();
-
-
-    status.textContent =
-      "🔐 Sang ngày mới. Bạn cần nhận và xác nhận OTP mới để tiếp tục.";
-
-    return;
-
-  }
-
-
-  const remaining =
-    Number(
-      playsEl.textContent
-    );
-
-
-  if(
-    remaining <= 0
-  ){
-
-    status.textContent =
-      "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ có 50 lượt mới.";
-
-    return;
-
-  }
-
-
-  busy =
-    true;
-
-
-  document
-    .querySelectorAll(
-      ".card"
-    )
-    .forEach(
-      c =>
-        c.disabled = true
-    );
-
-
-  status.textContent =
-    "⏳ Đang lật thẻ...";
-
-
-  /* =================================================
-     BACKEND
-  ================================================= */
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.rpc(
-      "flip_card"
-    );
-
-
-  if(
-    error
-  ){
-
-    busy =
-      false;
-
-
-    await loadPlayer();
-
-
-    enableCards(
-      false
-    );
-
-
-    status.textContent =
-      "❌ Không thực hiện được lượt lật: " +
-      error.message;
-
-    return;
-
-  }
-
-
-  const result =
-    Array.isArray(data)
-      ? data[0]
-      : data || {};
-
-
-  const won =
-    Boolean(
-      result.has_point
-    );
-
-
-  const value =
-    Number(
-      result.awarded_points ??
-      result.points_awarded ??
-      0
-    );
-
-
-  card.classList.add(
-    "flipped"
-  );
-
-
-  card.querySelector(
-    ".result"
-  ).textContent =
-    won
-      ? "⭐ +" + value
-      : "0";
-
-
-  card.querySelector(
-    ".note"
-  ).textContent =
-    won
-      ? "Có điểm!"
-      : "Không có điểm";
-
-
-  /*
-    Lượt còn lại lấy từ SERVER.
-  */
-
-  playsEl.textContent =
-    result.plays_remaining ??
-    Math.max(
-      0,
-      remaining - 1
-    );
-
-
-  /*
-    Điểm tổng lấy từ SERVER.
-    Đây chính là điểm dùng cho BXH.
-  */
-
-  pointsEl.textContent =
-    result.points ??
-    result.total_points ??
-    pointsEl.textContent;
-
-
-  if(
-    won
-  ){
-
-    status.textContent =
-      "🎉 Chúc mừng! Bạn nhận được +" +
-      value +
-      " điểm.";
-
-  }else{
-
-    status.textContent =
-      "😢 Lần này không có điểm.";
-
-  }
-
-
-  /*
-    BXH cập nhật ngay sau lượt lật.
-  */
-
-  await loadLeaderboard();
-
-
-  busy =
-    false;
-
-
-  /*
-    HẾT 50 LƯỢT.
-  */
-
-  if(
-    Number(
-      playsEl.textContent
-    ) <= 0
-  ){
-
-    document
-      .querySelectorAll(
-        ".card"
-      )
-      .forEach(
-        c =>
-          c.disabled = true
-      );
-
-
-    status.textContent =
-      "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ có 50 lượt mới.";
-
-    return;
-
-  }
-
-
-  /*
-    ĐỦ 10 THẺ:
-    tự động tạo 10 thẻ mới.
-  */
-
-  if(
-    allCardsFlipped()
-  ){
-
-    startNextRound(
-      false
-    );
-
-  }else{
-
-    enableCards(
-      false
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHtml(
-  value
-){
-
-  return String(
-    value
-  ).replace(
-
-    /[&<>"']/g,
-
-    m => ({
-
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-
-    }[m])
-
-  );
-
-}
-
-
-/* =====================================================
-   OTP INPUT
-===================================================== */
-
-otpInput.addEventListener(
-
-  "input",
-
-  function(){
-
-    this.value =
-      this.value
-        .replace(
-          /\D/g,
-          ""
-        )
-        .slice(
-          0,
-          6
-        );
-
-
-    if(
-      this.value.length === 6 &&
-      otpSent &&
-      !loggedIn
-    ){
-
-      login();
-
-    }
-
-  }
-
-);
-
-
-/* =====================================================
-   INITIAL
-===================================================== */
-
-setEventState();
-
-
-/* =====================================================
-   EXISTING SESSION
-===================================================== */
-
-supabaseClient.auth
-  .getSession()
-  .then(
-
-    async ({
-      data
-    }) => {
-
-      if(
-        !data.session
-      )
-        return;
-
-
-      const sessionEmail =
-        (
-          data.session.user.email ||
-          ""
-        ).toLowerCase();
-
-
-      const sessionIsAdmin =
-        sessionEmail ===
-        ADMIN_EMAIL;
-
-
-      /*
-        ADMIN:
-        cho phép giữ session.
-
-        PLAYER:
-        bắt buộc phải có OTP
-        của ngày hiện tại.
-      */
-
-      if(
-        !sessionIsAdmin
-      ){
-
-        if(
-          !isEventOpen()
-        ){
-
-          await supabaseClient.auth
-            .signOut();
-
-          resetLoginUI();
-
-          setEventState();
-
-          return;
-
-        }
-
-
-        if(
-          !hasOtpVerifiedToday(
-            sessionEmail
-          )
-        ){
-
-          /*
-            Session cũ nhưng chưa
-            xác nhận OTP ngày hôm nay.
-
-            Bắt đăng nhập OTP mới.
-          */
-
-          await supabaseClient.auth
-            .signOut();
-
-          resetLoginUI();
-
-
-          status.classList.remove(
-            "event-closed"
-          );
-
-
-          status.textContent =
-            "🔐 Vui lòng nhập email và nhận OTP mới cho ngày hôm nay.";
-
-          return;
-
-        }
-
-      }
-
-
-      /* =================================================
-         RESTORE LOGIN
-      ================================================= */
-
-      loggedIn =
-        true;
-
-      isAdmin =
-        sessionIsAdmin;
-
-      currentLoginEmail =
-        sessionEmail;
-
-
-      emailInput.value =
-        sessionEmail;
-
-
-      emailInput.disabled =
-        true;
-
-      otpInput.disabled =
-        true;
-
-      loginBtn.disabled =
-        true;
-
-      loginBtn.textContent =
-        "ĐÃ ĐĂNG NHẬP";
-
-
-      /* =================================================
-         ADMIN
-      ================================================= */
-
-      if(
-        isAdmin
-      ){
-
-        adminBadge.style.display =
-          "block";
-
-
-        loadAdminTest();
-
-
-        playsEl.textContent =
-          adminTestPlays;
-
-
-        pointsEl.textContent =
-          adminTestPoints;
-
-
-        resetCards();
-
-
-        status.classList.remove(
-          "event-closed"
-        );
-
-
-        status.textContent =
-          "👑 Admin đã đăng nhập — CHẾ ĐỘ TEST, không ảnh hưởng BXH thật.";
-
-
-        enableCards(
-          true
-        );
-
-
-        return;
-
-      }
-
-
-      /* =================================================
-         PLAYER
-      ================================================= */
-
-      await loadPlayer();
-
-      await loadLeaderboard();
-
-
-      if(
-        isEventOpen()
-      ){
-
-        status.classList.remove(
-          "event-closed"
-        );
-
-
-        status.textContent =
-          "✅ Đã xác nhận OTP hôm nay. Bạn có thể chơi.";
-
-
-        enableCards(
-          false
-        );
-
-      }else{
-
-        setEventState();
-
-      }
-
-    }
-
-  );
-
-
-/* =====================================================
-   LOAD BXH BAN ĐẦU
-===================================================== */
-
-loadLeaderboard();
-
-
-/* =====================================================
-   AUTO CHECK
-===================================================== */
-
-let lastKnownVietnamDate =
-  vietnamDateKey();
-
-
-setInterval(
-
-  async () => {
-
-    const today =
-      vietnamDateKey();
+    const ip =
+      getClientIP(req);
 
 
     /*
-      Sang ngày mới:
-      player phải OTP lại.
-    */
+     * ADMIN:
+     * - không cần IP
+     * - không bind IP
+     *
+     * nhưng vẫn đi vào DB function
+     * và vẫn bị giới hạn 50 lượt/ngày.
+     */
 
-    if(
-      today !==
-      lastKnownVietnamDate
-    ){
+    if (!isAdmin) {
 
-      lastKnownVietnamDate =
-        today;
-
-
-      if(
-        loggedIn &&
-        !isAdmin
-      ){
-
-        await supabaseClient.auth
-          .signOut();
-
-
-        resetLoginUI();
-
-
-        status.classList.remove(
-          "event-closed"
+      if (!ip) {
+        return json(
+          {
+            ok: false,
+            error: "IP_NOT_DETECTED",
+          },
+          400
         );
+      }
+
+
+      const {
+        data: bindResult,
+        error: bindError,
+      } =
+        await admin.rpc(
+          "bind_event_ip",
+          {
+            p_user_id: user.id,
+            p_email: email,
+            p_ip: ip,
+          }
+        );
+
+
+      if (bindError) {
+        throw bindError;
+      }
+
+
+      if (!bindResult?.ok) {
+        throw new Error(
+          "IP_BIND_FAILED"
+        );
+      }
+    }
+
+
+    /*
+     * REAL SCORE
+     */
+
+    const {
+      data: result,
+      error: flipError,
+    } =
+      await admin.rpc(
+        "process_event_flip_service",
+        {
+          p_user_id: user.id,
+          p_ip: isAdmin
+            ? null
+            : ip,
+        }
+      );
+
+
+    if (flipError) {
+      throw flipError;
+    }
+
+
+    return json({
+      ok: true,
+      result,
+    });
+
+  } catch (error) {
+
+    console.error(
+      "flip-event-2026:",
+      error
+    );
+
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : String(error);
+
+
+    return json(
+      {
+        ok: false,
+        error: message,
+      },
+      400
+    );
+  }
+});
+         import { createClient } from "npm:@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods":
+    "POST, OPTIONS",
+};
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SERVICE_ROLE_KEY = Deno.env.get(
+  "SUPABASE_SERVICE_ROLE_KEY"
+);
+
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  throw new Error("SERVER_CONFIGURATION_ERROR");
+}
+
+const admin = createClient(
+  SUPABASE_URL,
+  SERVICE_ROLE_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
+);
+
+
+function json(
+  body: unknown,
+  status = 200
+) {
+  return new Response(
+    JSON.stringify(body),
+    {
+      status,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
+
+
+Deno.serve(async (req) => {
+
+  if (req.method === "OPTIONS") {
+    return new Response(
+      "ok",
+      {
+        headers: corsHeaders,
+      }
+    );
+  }
+
+
+  if (req.method !== "POST") {
+    return json(
+      {
+        ok: false,
+        error: "METHOD_NOT_ALLOWED",
+      },
+      405
+    );
+  }
+
+
+  try {
+
+    const authorization =
+      req.headers.get(
+        "Authorization"
+      );
+
+
+    if (!authorization) {
+      return json(
+        {
+          ok: false,
+          error: "UNAUTHORIZED",
+        },
+        401
+      );
+    }
+
+
+    const token =
+      authorization
+        .replace(/^Bearer\s+/i, "")
+        .trim();
+
+
+    if (!token) {
+      return json(
+        {
+          ok: false,
+          error: "UNAUTHORIZED",
+        },
+        401
+      );
+    }
+
+
+    const {
+      data,
+      error,
+    } =
+      await admin.auth.getUser(
+        token
+      );
+
+
+    if (error || !data.user) {
+      return json(
+        {
+          ok: false,
+          error: "UNAUTHORIZED",
+        },
+        401
+      );
+    }
+
+
+    const user =
+      data.user;
+
+
+    const email =
+      (user.email || "")
+        .trim()
+        .toLowerCase();
+
+
+    if (!email) {
+      return json(
+        {
+          ok: false,
+          error: "EMAIL_NOT_FOUND",
+        },
+        400
+      );
+    }
+
+
+    const body =
+      await req
+        .json()
+        .catch(() => ({}));
+
+
+    const requestedEmail =
+      String(
+        body.email || ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+      requestedEmail &&
+      requestedEmail !== email
+    ) {
+      return json(
+        {
+          ok: false,
+          error: "EMAIL_MISMATCH",
+        },
+        400
+      );
+    }
+
+
+    /*
+     * ADMIN KHÔNG CẦN OTP
+     */
+
+    if (
+      email ===
+      "namtruong3333@gmail.com"
+    ) {
+
+      return json({
+        ok: true,
+        admin: true,
+        otp_required: false,
+      });
+
+    }
+
+
+    /*
+     * KIỂM TRA EVENT
+     */
+
+    const {
+      data: status,
+      error: statusError,
+    } =
+      await admin.rpc(
+        "get_event_status"
+      );
+
+
+    if (statusError) {
+      throw statusError;
+    }
+
+
+    if (!status?.open) {
+
+      const now =
+        Date.now();
+
+
+      const start =
+        new Date(
+          status.start_at
+        ).getTime();
+
+
+      const end =
+        new Date(
+          status.end_at
+        ).getTime();
+
+
+      if (now < start) {
+        throw new Error(
+          "EVENT_NOT_STARTED"
+        );
+      }
+
+
+      if (now > end) {
+        throw new Error(
+          "EVENT_ENDED"
+        );
+      }
+
+
+      throw new Error(
+        "EVENT_NOT_OPEN"
+      );
+    }
+
+
+    /*
+     * GHI NHẬN OTP ĐÃ XÁC MINH
+     *
+     * Việc xác minh mã OTP thực tế phải được
+     * Supabase Auth xử lý trước khi gọi function này.
+     */
+
+    const {
+      data: otp,
+      error: otpError,
+    } =
+      await admin.rpc(
+        "mark_event_otp_verified",
+        {
+          p_user_id: user.id,
+          p_email: email,
+        }
+      );
+
+
+    if (otpError) {
+      throw otpError;
+    }
+
+
+    return json({
+      ok: true,
+      admin: false,
+      otp_required: true,
+      result: otp,
+    });
+
+  } catch (error) {
+
+    console.error(
+      "verify-event-otp-2026:",
+      error
+    );
+
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : String(error);
+
+
+    return json(
+      {
+        ok: false,
+        error: message,
+      },
+      400
+    );
+  }
+});
+        <!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>LẬT THẺ TIÊN ĐẾ 2026</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(
+            circle at top,
+            #34205c,
+            #120d20 65%
+        );
+    color: white;
+    min-height: 100vh;
+}
+
+.container {
+    width: min(1100px, 94%);
+    margin: auto;
+    padding: 30px 0 60px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    opacity: .8;
+    margin-bottom: 25px;
+}
+
+.panel {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.stats {
+    display: grid;
+    grid-template-columns:
+        repeat(2, 1fr);
+    gap: 12px;
+}
+
+.stat {
+    padding: 15px;
+    border-radius: 14px;
+    background: rgba(0,0,0,.25);
+    text-align: center;
+}
+
+.stat strong {
+    display: block;
+    font-size: 25px;
+    margin-top: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 0;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    outline: none;
+}
+
+button {
+    border: 0;
+    cursor: pointer;
+}
+
+.main-btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    background: #ffb300;
+    color: #111;
+    font-weight: bold;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns:
+        repeat(5, 1fr);
+    gap: 15px;
+}
+
+.card {
+    position: relative;
+    min-height: 150px;
+    border-radius: 16px;
+    background:
+        linear-gradient(
+            145deg,
+            #6f32c9,
+            #261047
+        );
+    color: white;
+    overflow: hidden;
+    transition:
+        transform .2s,
+        opacity .2s;
+}
+
+.card:hover:not(:disabled) {
+    transform: translateY(-4px);
+}
+
+.card.flipped {
+    background:
+        linear-gradient(
+            145deg,
+            #f6a400,
+            #7a3e00
+        );
+}
+
+.card:disabled {
+    cursor: not-allowed;
+}
+
+.card .front {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 38px;
+}
+
+.card .result {
+    display: block;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.card .note {
+    display: block;
+    margin-top: 8px;
+}
+
+.status {
+    text-align: center;
+    min-height: 24px;
+    margin-top: 15px;
+}
+
+.leaderboard {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard th,
+.leaderboard td {
+    padding: 10px;
+    border-bottom:
+        1px solid rgba(255,255,255,.1);
+    text-align: left;
+}
+
+.otp-box {
+    display: none;
+}
+
+.otp-box.show {
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media(max-width: 700px) {
+
+    .cards {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .stats {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h1>🐉 LẬT THẺ TIÊN ĐẾ</h1>
+
+<div class="subtitle">
+    SỰ KIỆN 05/10/2026 → 10/10/2026
+</div>
+
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<div
+    class="panel"
+    id="loginPanel"
+>
+
+<h2>Đăng nhập</h2>
+
+<input
+    id="emailInput"
+    type="email"
+    placeholder="Nhập email"
+    autocomplete="email"
+>
+
+<button
+    class="main-btn"
+    id="sendOtpBtn"
+>
+    GỬI MÃ OTP
+</button>
+
+<div
+    id="loginStatus"
+    class="status"
+></div>
+
+</div>
+
+
+<!-- =========================================================
+     OTP
+========================================================= -->
+
+<div
+    class="panel otp-box"
+    id="otpPanel"
+>
+
+<h2>Xác nhận OTP</h2>
+
+<input
+    id="otpInput"
+    type="text"
+    inputmode="numeric"
+    maxlength="6"
+    placeholder="Nhập mã OTP"
+>
+
+<button
+    class="main-btn"
+    id="verifyOtpBtn"
+>
+    XÁC NHẬN OTP
+</button>
+
+<div
+    id="otpStatus"
+    class="status"
+></div>
+
+</div>
+
+
+<!-- =========================================================
+     GAME
+========================================================= -->
+
+<div
+    class="panel hidden"
+    id="gamePanel"
+>
+
+<div class="stats">
+
+<div class="stat">
+    Lượt còn lại
+    <strong id="plays">
+        50
+    </strong>
+</div>
+
+<div class="stat">
+    Tổng điểm
+    <strong id="points">
+        0
+    </strong>
+</div>
+
+</div>
+
+
+<div
+    id="status"
+    class="status"
+>
+    Hãy lật thẻ.
+</div>
+
+
+<div
+    class="cards"
+    id="cards"
+>
+
+<script>
+
+for (
+    let i = 1;
+    i <= 10;
+    i++
+) {
+
+    document.write(`
+        <button
+            class="card"
+            type="button"
+            data-card="${i}"
+        >
+
+            <span class="front">
+                <span>
+                    🃏
+                </span>
+            </span>
+
+            <span class="result"></span>
+
+            <span class="note"></span>
+
+        </button>
+    `);
+
+}
+
+</script>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     LEADERBOARD
+========================================================= -->
+
+<div class="panel">
+
+<h2>🏆 TOP 10</h2>
+
+<table class="leaderboard">
+
+<thead>
+
+<tr>
+    <th>#</th>
+    <th>Người chơi</th>
+    <th>Điểm</th>
+</tr>
+
+</thead>
+
+<tbody id="leaderboardBody">
+
+<tr>
+    <td colspan="3">
+        Đang tải...
+    </td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+    "https://rftnjeozezxgemtrvkce.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_SQS8AB9rBORo8KUSL0KtPw_mydlG5aw";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+const ADMIN_EMAIL =
+    "namtruong3333@gmail.com";
+
+
+const EVENT_START =
+    new Date(
+        "2026-10-04T17:00:00Z"
+    );
+
+const EVENT_END =
+    new Date(
+        "2026-10-10T16:59:59Z"
+    );
+
+
+const emailInput =
+    document.getElementById(
+        "emailInput"
+    );
+
+const otpInput =
+    document.getElementById(
+        "otpInput"
+    );
+
+const sendOtpBtn =
+    document.getElementById(
+        "sendOtpBtn"
+    );
+
+const verifyOtpBtn =
+    document.getElementById(
+        "verifyOtpBtn"
+    );
+
+const loginPanel =
+    document.getElementById(
+        "loginPanel"
+    );
+
+const otpPanel =
+    document.getElementById(
+        "otpPanel"
+    );
+
+const gamePanel =
+    document.getElementById(
+        "gamePanel"
+    );
+
+const loginStatus =
+    document.getElementById(
+        "loginStatus"
+    );
+
+const otpStatus =
+    document.getElementById(
+        "otpStatus"
+    );
+
+const status =
+    document.getElementById(
+        "status"
+    );
+
+const playsEl =
+    document.getElementById(
+        "plays"
+    );
+
+const pointsEl =
+    document.getElementById(
+        "points"
+    );
+
+const leaderboardBody =
+    document.getElementById(
+        "leaderboardBody"
+    );
+
+
+let loggedIn = false;
+
+let busy = false;
+
+let currentEmail = "";
+
+let otpVerifiedToday = false;
+
+
+/* ============================================================
+   EVENT
+============================================================ */
+
+function isEventOpen() {
+
+    const now =
+        new Date();
+
+    return (
+        now >= EVENT_START &&
+        now <= EVENT_END
+    );
+}
+
+
+/* ============================================================
+   CARDS
+============================================================ */
+
+function getCards() {
+
+    return [
+        ...document.querySelectorAll(
+            ".card"
+        )
+    ];
+
+}
+
+
+function allCardsFlipped() {
+
+    const cards =
+        getCards();
+
+    return cards.length === 10 &&
+        cards.every(
+            card =>
+                card.classList.contains(
+                    "flipped"
+                )
+        );
+}
+
+
+function resetCards() {
+
+    getCards()
+        .forEach(card => {
+
+            card.classList.remove(
+                "flipped"
+            );
+
+            card.disabled =
+                false;
+
+            const result =
+                card.querySelector(
+                    ".result"
+                );
+
+            const note =
+                card.querySelector(
+                    ".note"
+                );
+
+            if (result) {
+                result.textContent = "";
+            }
+
+            if (note) {
+                note.textContent = "";
+            }
+
+        });
+
+}
+
+
+function enableCards() {
+
+    if (!loggedIn) {
+        return;
+    }
+
+    if (
+        Number(
+            playsEl.textContent
+        ) <= 0
+    ) {
+        return;
+    }
+
+    getCards()
+        .forEach(card => {
+
+            if (
+                !card.classList.contains(
+                    "flipped"
+                )
+            ) {
+                card.disabled = false;
+            }
+
+        });
+
+}
+
+
+function disableCards() {
+
+    getCards()
+        .forEach(
+            card =>
+                card.disabled = true
+        );
+
+}
+
+
+/* ============================================================
+   LOGIN
+============================================================ */
+
+sendOtpBtn.addEventListener(
+    "click",
+    async () => {
+
+        const email =
+            emailInput.value
+                .trim()
+                .toLowerCase();
+
+
+        if (!email) {
+
+            loginStatus.textContent =
+                "⚠️ Vui lòng nhập email.";
+
+            return;
+        }
+
+
+        currentEmail =
+            email;
+
+
+        sendOtpBtn.disabled =
+            true;
+
+
+        loginStatus.textContent =
+            "⏳ Đang gửi OTP...";
+
+
+        try {
+
+            const {
+                error
+            } =
+                await supabaseClient.auth
+                    .signInWithOtp({
+                        email,
+                        options: {
+                            shouldCreateUser: true
+                        }
+                    });
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            otpPanel.classList.add(
+                "show"
+            );
+
+
+            loginStatus.textContent =
+                "✅ OTP đã được gửi tới email.";
+
+
+            otpStatus.textContent =
+                "Nhập mã OTP được gửi tới email.";
+
+        } catch (error) {
+
+            console.error(error);
+
+            loginStatus.textContent =
+                "❌ " +
+                (
+                    error?.message ||
+                    "Không thể gửi OTP."
+                );
+
+        } finally {
+
+            sendOtpBtn.disabled =
+                false;
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   VERIFY OTP
+============================================================ */
+
+verifyOtpBtn.addEventListener(
+    "click",
+    async () => {
+
+        const email =
+            currentEmail ||
+            emailInput.value
+                .trim()
+                .toLowerCase();
+
+        const token =
+            otpInput.value
+                .trim();
+
+
+        if (!email) {
+            otpStatus.textContent =
+                "⚠️ Thiếu email.";
+            return;
+        }
+
+
+        if (!token) {
+            otpStatus.textContent =
+                "⚠️ Vui lòng nhập OTP.";
+            return;
+        }
+
+
+        verifyOtpBtn.disabled =
+            true;
+
+
+        otpStatus.textContent =
+            "⏳ Đang xác minh...";
+
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth
+                    .verifyOtp({
+                        email,
+                        token,
+                        type: "email"
+                    });
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            if (!data?.session) {
+                throw new Error(
+                    "NO_SESSION"
+                );
+            }
+
+
+            const user =
+                data.session.user;
+
+
+            const userEmail =
+                (
+                    user.email || ""
+                )
+                    .trim()
+                    .toLowerCase();
+
+
+            if (
+                userEmail !== email
+            ) {
+                throw new Error(
+                    "EMAIL_MISMATCH"
+                );
+            }
+
+
+            /*
+             * Đánh dấu OTP hôm nay ở DB.
+             */
+
+            const {
+                data: verifyResult,
+                error:
+                    verifyError
+            } =
+                await supabaseClient
+                    .functions
+                    .invoke(
+                        "verify-event-otp-2026",
+                        {
+                            body: {
+                                email
+                            }
+                        }
+                    );
+
+
+            if (verifyError) {
+                throw verifyError;
+            }
+
+
+            if (
+                !verifyResult ||
+                verifyResult.ok !== true
+            ) {
+                throw new Error(
+                    verifyResult?.error ||
+                    "OTP_VERIFY_FAILED"
+                );
+            }
+
+
+            otpVerifiedToday =
+                true;
+
+
+            loggedIn =
+                true;
+
+
+            loginPanel.classList.add(
+                "hidden"
+            );
+
+            otpPanel.classList.remove(
+                "show"
+            );
+
+            gamePanel.classList.remove(
+                "hidden"
+            );
+
+
+            otpStatus.textContent =
+                "✅ Xác minh thành công.";
+
+
+            await loadPlayerState();
+
+            await loadLeaderboard();
+
+            enableCards();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            otpStatus.textContent =
+                "❌ " +
+                (
+                    error?.message ||
+                    "OTP không hợp lệ."
+                );
+
+        } finally {
+
+            verifyOtpBtn.disabled =
+                false;
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   CHECK OTP TODAY
+============================================================ */
+
+async function checkOtpToday(
+    userId
+) {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .rpc(
+                "has_event_otp_today",
+                {
+                    p_user_id:
+                        userId
+                }
+            );
+
+
+    if (error) {
+        throw error;
+    }
+
+
+    return data === true;
+}
+
+
+/* ============================================================
+   PLAYER STATE
+============================================================ */
+
+async function loadPlayerState() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .rpc(
+                "get_player_state"
+            );
+
+
+    if (error) {
+        throw error;
+    }
+
+
+    if (!data) {
+        return;
+    }
+
+
+    playsEl.textContent =
+        String(
+            data.plays_remaining ?? 0
+        );
+
+
+    pointsEl.textContent =
+        String(
+            data.points ?? 0
+        );
+
+
+    if (
+        Number(
+            data.plays_remaining
+        ) <= 0
+    ) {
+
+        status.textContent =
+            "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
+
+        disableCards();
+
+    }
+
+}
+
+
+/* ============================================================
+   FLIP
+============================================================ */
+
+async function flip(card) {
+
+    if (!loggedIn) {
+
+        status.textContent =
+            "⚠️ Bạn phải đăng nhập trước.";
+
+        return;
+    }
+
+
+    if (
+        busy ||
+        card.classList.contains(
+            "flipped"
+        )
+    ) {
+        return;
+    }
+
+
+    if (!isEventOpen()) {
+
+        status.textContent =
+            "⏳ Sự kiện chưa mở hoặc đã kết thúc.";
+
+        disableCards();
+
+        return;
+    }
+
+
+    const remaining =
+        Number(
+            playsEl.textContent
+        );
+
+
+    if (remaining <= 0) {
+
+        status.textContent =
+            "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
+
+        disableCards();
+
+        return;
+    }
+
+
+    busy = true;
+
+    disableCards();
+
+
+    status.textContent =
+        "⏳ Đang lật thẻ...";
+
+
+    try {
+
+        /*
+         * QUAN TRỌNG:
+         *
+         * Browser KHÔNG random điểm.
+         * Browser KHÔNG cộng điểm.
+         * Browser KHÔNG tự tăng lượt.
+         *
+         * Tất cả được xử lý server.
+         */
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .functions
+                .invoke(
+                    "flip-event-2026",
+                    {
+                        body: {}
+                    }
+                );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            !data ||
+            data.ok !== true
+        ) {
+
+            throw new Error(
+                data?.error ||
+                "FLIP_FAILED"
+            );
+
+        }
+
+
+        const result =
+            data.result;
+
+
+        if (!result) {
+            throw new Error(
+                "SERVER_NO_RESULT"
+            );
+        }
+
+
+        const won =
+            result.has_point === true;
+
+
+        const awarded =
+            Number(
+                result.points_awarded || 0
+            );
+
+
+        /*
+         * HIỂN THỊ THẺ
+         */
+
+        card.classList.add(
+            "flipped"
+        );
+
+
+        const resultEl =
+            card.querySelector(
+                ".result"
+            );
+
+
+        const noteEl =
+            card.querySelector(
+                ".note"
+            );
+
+
+        if (resultEl) {
+
+            resultEl.textContent =
+                won
+                    ? "+" + awarded
+                    : "0";
+
+        }
+
+
+        if (noteEl) {
+
+            noteEl.textContent =
+                won
+                    ? "🎉 Có điểm!"
+                    : "😢 Không có điểm";
+
+        }
+
+
+        /*
+         * DB RESULT
+         */
+
+        playsEl.textContent =
+            String(
+                result.plays_remaining
+            );
+
+
+        pointsEl.textContent =
+            String(
+                result.points
+            );
 
 
         status.textContent =
-          "🌅 Ngày mới đã bắt đầu. Vui lòng nhập email và nhận OTP mới để nhận 50 lượt hôm nay.";
+            won
+                ? "🎉 Bạn nhận +" +
+                  awarded +
+                  " điểm!"
+                : "😢 Lần này không có điểm.";
 
-      }
+
+        /*
+         * UPDATE LEADERBOARD
+         */
+
+        await loadLeaderboard();
 
 
-      if(
-        isAdmin
-      ){
+        /*
+         * HẾT 50
+         */
 
-        resetAdminTestIfNewDay();
+        if (
+            Number(
+                result.plays_remaining
+            ) <= 0
+        ) {
 
-        playsEl.textContent =
-          adminTestPlays;
+            status.textContent =
+                "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
 
-        pointsEl.textContent =
-          adminTestPoints;
+            disableCards();
 
-        resetCards();
+            busy = false;
 
-        enableCards(
-          true
+            return;
+        }
+
+
+        /*
+         * ĐỦ 10 THẺ
+         *
+         * Chỉ reset giao diện.
+         *
+         * KHÔNG reset database.
+         * KHÔNG reset điểm.
+         * KHÔNG reset 50 lượt.
+         */
+
+        if (
+            allCardsFlipped()
+        ) {
+
+            status.textContent =
+                "✨ Hoàn thành 10 thẻ! Chuẩn bị vòng tiếp theo...";
+
+
+            setTimeout(
+                () => {
+
+                    resetCards();
+
+                    busy = false;
+
+                    enableCards();
+
+                    status.textContent =
+                        "🃏 Vòng mới! Tiếp tục lật thẻ.";
+
+                },
+                700
+            );
+
+        } else {
+
+            busy = false;
+
+            enableCards();
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "FLIP ERROR:",
+            error
         );
 
-      }
+
+        busy = false;
+
+
+        const message =
+            String(
+                error?.message || ""
+            );
+
+
+        if (
+            message.includes(
+                "OTP_CHUA_XAC_NHAN_HOM_NAY"
+            )
+        ) {
+
+            loggedIn = false;
+
+            disableCards();
+
+            await supabaseClient.auth
+                .signOut();
+
+            gamePanel.classList.add(
+                "hidden"
+            );
+
+            loginPanel.classList.remove(
+                "hidden"
+            );
+
+            otpPanel.classList.add(
+                "show"
+            );
+
+            status.textContent =
+                "🔐 Bạn phải xác minh OTP hôm nay.";
+
+            return;
+        }
+
+
+        if (
+            message.includes(
+                "IP_ALREADY_USED_BY_ANOTHER_ACCOUNT"
+            ) ||
+            message.includes(
+                "IP_ALREADY_BOUND_TO_ANOTHER_ACCOUNT"
+            )
+        ) {
+
+            status.textContent =
+                "🚫 IP này đã được sử dụng bởi tài khoản khác.";
+
+            return;
+        }
+
+
+        if (
+            message.includes(
+                "IP_NOT_DETECTED"
+            )
+        ) {
+
+            status.textContent =
+                "🚫 Không xác định được IP.";
+
+            return;
+        }
+
+
+        if (
+            message.includes(
+                "IP_NOT_BOUND_TO_THIS_ACCOUNT"
+            )
+        ) {
+
+            status.textContent =
+                "🚫 IP chưa được liên kết với tài khoản.";
+
+            return;
+        }
+
+
+        if (
+            message.includes(
+                "DA_DUNG_HET_50_LUOT"
+            )
+        ) {
+
+            playsEl.textContent =
+                "0";
+
+            disableCards();
+
+            status.textContent =
+                "⏳ Bạn đã dùng hết 50 lượt hôm nay.";
+
+            return;
+        }
+
+
+        if (
+            message.includes(
+                "EVENT_NOT_STARTED"
+            )
+        ) {
+
+            status.textContent =
+                "⏳ Sự kiện chưa bắt đầu.";
+
+            return;
+        }
+
+
+        if (
+            message.includes(
+                "EVENT_ENDED"
+            )
+        ) {
+
+            status.textContent =
+                "⛔ Sự kiện đã kết thúc.";
+
+            return;
+        }
+
+
+        status.textContent =
+            "❌ " +
+            (
+                error?.message ||
+                "Không thể thực hiện lượt lật."
+            );
+
+        enableCards();
 
     }
 
-
-    /* =================================================
-       EVENT STATUS
-    ================================================= */
-
-    const oldOpen =
-      eventOpen;
-
-    const open =
-      isEventOpen();
+}
 
 
-    if(
-      open !== oldOpen
-    ){
+/* ============================================================
+   CARD CLICK
+============================================================ */
 
-      eventOpen =
-        open;
+document
+    .querySelectorAll(".card")
+    .forEach(card => {
 
-
-      setEventState();
-
-    }
-
-
-    /* =================================================
-       BXH
-    ================================================= */
-
-    if(
-      open
-    ){
-
-      await loadLeaderboard();
-
-    }
-
-
-    /* =================================================
-       ADMIN
-    ================================================= */
-
-    if(
-      isAdmin &&
-      loggedIn
-    ){
-
-      resetAdminTestIfNewDay();
-
-
-      playsEl.textContent =
-        adminTestPlays;
-
-
-      pointsEl.textContent =
-        adminTestPoints;
-
-
-      if(
-        !busy &&
-        adminTestPlays > 0
-      ){
-
-        enableCards(
-          true
+        card.addEventListener(
+            "click",
+            () => flip(card)
         );
 
-      }
+    });
+
+
+/* ============================================================
+   LEADERBOARD
+============================================================ */
+
+async function loadLeaderboard() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .rpc(
+                "get_leaderboard"
+            );
+
+
+    if (error) {
+
+        console.error(
+            "LEADERBOARD:",
+            error
+        );
+
+        return;
+    }
+
+
+    leaderboardBody.innerHTML =
+        "";
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        leaderboardBody.innerHTML = `
+            <tr>
+                <td colspan="3">
+                    Chưa có người chơi có điểm.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    data.forEach(
+        (player, index) => {
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            tr.innerHTML = `
+                <td>
+                    ${index + 1}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        player.display_name
+                    )}
+                </td>
+
+                <td>
+                    ${Number(
+                        player.points || 0
+                    )}
+                </td>
+            `;
+
+
+            leaderboardBody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   HTML ESCAPE
+============================================================ */
+
+function escapeHtml(
+    value
+) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* ============================================================
+   SESSION RESTORE
+============================================================ */
+
+async function restoreSession() {
+
+    try {
+
+        const {
+            data
+        } =
+            await supabaseClient.auth
+                .getSession();
+
+
+        const session =
+            data?.session;
+
+
+        if (!session?.user) {
+
+            await loadLeaderboard();
+
+            return;
+        }
+
+
+        const email =
+            (
+                session.user.email ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        currentEmail =
+            email;
+
+
+        /*
+         * ADMIN
+         */
+
+        if (
+            email === ADMIN_EMAIL
+        ) {
+
+            loggedIn = true;
+
+            otpVerifiedToday = true;
+
+            loginPanel.classList.add(
+                "hidden"
+            );
+
+            otpPanel.classList.remove(
+                "show"
+            );
+
+            gamePanel.classList.remove(
+                "hidden"
+            );
+
+
+            await loadPlayerState();
+
+            await loadLeaderboard();
+
+            enableCards();
+
+            return;
+        }
+
+
+        /*
+         * USER
+         */
+
+        const verified =
+            await checkOtpToday(
+                session.user.id
+            );
+
+
+        if (!verified) {
+
+            loggedIn = false;
+
+            disableCards();
+
+            gamePanel.classList.add(
+                "hidden"
+            );
+
+            loginPanel.classList.add(
+                "hidden"
+            );
+
+            otpPanel.classList.add(
+                "show"
+            );
+
+            otpStatus.textContent =
+                "🔐 Sang ngày mới. Bạn cần xác minh OTP mới.";
+
+            return;
+        }
+
+
+        loggedIn = true;
+
+        otpVerifiedToday = true;
+
+
+        loginPanel.classList.add(
+            "hidden"
+        );
+
+        otpPanel.classList.remove(
+            "show"
+        );
+
+        gamePanel.classList.remove(
+            "hidden"
+        );
+
+
+        await loadPlayerState();
+
+        await loadLeaderboard();
+
+        enableCards();
+
+
+    } catch (error) {
+
+        console.error(
+            "SESSION RESTORE:",
+            error
+        );
 
     }
 
-  },
+}
 
-  5000
 
+/* ============================================================
+   AUTH STATE
+============================================================ */
+
+supabaseClient.auth.onAuthStateChange(
+    async (
+        event,
+        session
+    ) => {
+
+        if (!session?.user) {
+            return;
+        }
+
+        /*
+         * Không tự động ghi OTP ở đây.
+         *
+         * Chỉ function verify-event-otp-2026
+         * mới ghi nhận OTP hôm nay.
+         */
+
+    }
 );
+
+
+/* ============================================================
+   INITIAL
+============================================================ */
+
+loadLeaderboard();
+
+restoreSession();
 
 </script>
 
