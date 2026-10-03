@@ -2,1779 +2,543 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>🐉 LẬT THẺ TIÊN ĐẾ 2026</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lật Thẻ Tiên Đế</title>
 <style>
-*{
-    box-sizing:border-box;
-}
-
-body{
-    margin:0;
-    min-height:100vh;
-    background:
-        radial-gradient(circle at top,#402060 0,#160b22 45%,#0b0610 100%);
-    color:#fff;
-    font-family:Arial,sans-serif;
-}
-
-.container{
-    width:min(720px,100%);
-    margin:auto;
-    padding:25px 15px 50px;
-}
-
-.header{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.title{
-    font-size:clamp(30px,8vw,52px);
-    font-weight:900;
-    margin:0;
-}
-
-.subtitle{
-    margin-top:10px;
-    color:#ddd;
-    font-size:20px;
-    font-weight:700;
-}
-
-.panel{
-    background:rgba(38,21,55,.95);
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:22px;
-    padding:22px;
-    margin-bottom:20px;
-    box-shadow:0 15px 40px rgba(0,0,0,.3);
-}
-
-.hidden{
-    display:none!important;
-}
-
-.login-title{
-    text-align:center;
-    font-size:28px;
-    font-weight:900;
-    margin-bottom:10px;
-}
-
-.login-text{
-    text-align:center;
-    color:#d9cce4;
-    line-height:1.5;
-    margin-bottom:20px;
-}
-
-label{
-    display:block;
-    font-weight:700;
-    margin-bottom:8px;
-}
-
-input{
-    width:100%;
-    padding:15px;
-    border-radius:13px;
-    border:1px solid #6d4b85;
-    background:#130a1b;
-    color:#fff;
-    font-size:17px;
-    outline:none;
-}
-
-button{
-    border:0;
-    border-radius:14px;
-    padding:14px 18px;
-    background:linear-gradient(135deg,#873ee0,#4b1e83);
-    color:white;
-    font-size:17px;
-    font-weight:800;
-    cursor:pointer;
-}
-
-button:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-}
-
-.full{
-    width:100%;
-    margin-top:14px;
-}
-
-.message{
-    min-height:24px;
-    text-align:center;
-    margin-top:14px;
-    line-height:1.45;
-}
-
-.error{
-    color:#ff8c8c;
-}
-
-.success{
-    color:#72efaa;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.stat{
-    text-align:center;
-    background:#160c20;
-    border-radius:18px;
-    padding:17px;
-}
-
-.stat-title{
-    color:#d8cde0;
-    font-size:17px;
-}
-
-.stat-value{
-    font-size:38px;
-    font-weight:900;
-    margin-top:5px;
-}
-
-.instruction{
-    text-align:center;
-    font-size:20px;
-    margin:15px 0 20px;
-}
-
-.cards{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-}
-
-.card{
-    min-height:160px;
-    border-radius:22px;
-    background:
-        linear-gradient(145deg,#7b3bd0,#32145d);
-    border:2px solid rgba(255,255,255,.12);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:55px;
-    transition:.15s;
-}
-
-.card:active{
-    transform:scale(.96);
-}
-
-.card.revealed{
-    background:linear-gradient(145deg,#a15dea,#51277f);
-}
-
-.points{
-    font-size:32px;
-    font-weight:900;
-}
-
-.win{
-    color:#ffd84d;
-}
-
-.zero{
-    color:#ddd;
-}
-
-.top-title{
-    font-size:28px;
-    font-weight:900;
-    margin-bottom:15px;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px 7px;
-    border-bottom:1px solid rgba(255,255,255,.1);
-}
-
-th:last-child,
-td:last-child{
-    text-align:right;
-}
-
-.logout{
-    width:100%;
-    margin-top:15px;
-    background:transparent;
-    border:1px solid rgba(255,255,255,.2);
-}
-
-@media(max-width:430px){
-
-    .container{
-        padding:20px 12px 40px;
-    }
-
-    .panel{
-        padding:18px;
-    }
-
-    .card{
-        min-height:140px;
-    }
-}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at top,#40146b,#150a2d 45%,#06030d)}
+.wrap{max-width:1050px;margin:auto;padding:18px 14px 45px}
+.hero{text-align:center;padding:18px 4px}.badge{display:inline-block;padding:7px 14px;border:1px solid #e8c866;border-radius:30px;color:#ffe08a}
+h1{font-size:clamp(34px,8vw,64px);margin:14px 0 6px;color:#ffd86b;text-shadow:0 0 18px #9b4dff}.sub{color:#d8cdec}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.box,.panel{background:rgba(10,5,24,.82);border:1px solid #62418c;border-radius:18px}.box{text-align:center;padding:13px}.box b{display:block;color:#ffd86b;font-size:25px;margin-top:5px}.panel{padding:20px}
+.login{display:grid;grid-template-columns:1fr auto;gap:10px}
+input{width:100%;padding:14px;border-radius:11px;border:1px solid #725694;background:#120a25;color:white;font-size:16px;outline:none}input:focus{border-color:#c08cff}
+button{cursor:pointer;border:0;border-radius:11px;font-weight:700}.login button{padding:14px 20px;background:#ffd15c;color:#241000;min-width:150px}.login button:disabled{opacity:.55;cursor:not-allowed}
+.otp-row{display:none;grid-column:1/-1}.otp-row input{text-align:center;letter-spacing:8px;font-size:22px;font-weight:700}
+.status{text-align:center;color:#cfc1e7;margin:13px 0;min-height:22px}.event-closed{color:#ffb4b4;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px}
+.card{height:185px;background:none;padding:0;perspective:900px}.card-inner{width:100%;height:100%;position:relative;transition:.65s;transform-style:preserve-3d}.card.flipped .card-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:17px;border:2px solid #a96cff;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.front{background:linear-gradient(145deg,#2c1048,#12071f);box-shadow:inset 0 0 30px #8d42c522}.symbol{font-size:60px;color:#ffd86b;text-shadow:0 0 16px #a44cff}.front small{color:#cbb9e6}
+.back{transform:rotateY(180deg);background:linear-gradient(145deg,#64248f,#24103f)}.result{font-size:28px;color:#ffd86b}.note{font-size:13px;margin-top:5px}
+.leader{margin-top:22px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ffffff18;text-align:left}th{color:#ffd86b}
+.footer{text-align:center;color:#897aa4;margin-top:20px;font-size:13px}.admin-badge{display:none;text-align:center;margin-top:10px;color:#ffe08a;font-weight:700}
+@media(max-width:700px){.info{grid-template-columns:1fr 1fr}.login{grid-template-columns:1fr}.login button{width:100%}.otp-row{grid-column:auto}.cards{grid-template-columns:repeat(2,1fr)}.card{height:165px}}
 </style>
 </head>
-
 <body>
-
-<div class="container">
-
-<header class="header">
-
-<h1 class="title">
-🐉 LẬT THẺ TIÊN ĐẾ
-</h1>
-
-<div class="subtitle">
-SỰ KIỆN 05/10/2026 → 10/10/2026
-</div>
-
+<div class="wrap">
+<header class="hero">
+<div class="badge">⚜️ EVENT TIÊN ĐẾ 2026 ⚜️</div>
+<h1>🃏 LẬT THẺ TIÊN ĐẾ</h1>
+<div class="sub">05/10/2026 00:00 → 10/10/2026 23:59:59 • Việt Nam</div>
 </header>
 
-
-<!-- =====================================================
-     LOGIN
-===================================================== -->
-
-<section id="loginPanel" class="panel">
-
-<div class="login-title">
-🔐 ĐĂNG NHẬP SỰ KIỆN
-</div>
-
-<div class="login-text">
-Nhập email của bạn để nhận mã OTP.
-<br>
-Xác thực OTP xong mới được tham gia sự kiện.
-</div>
-
-<label>Email</label>
-
-<input
-    id="emailInput"
-    type="email"
-    autocomplete="email"
-    placeholder="Nhập email của bạn"
->
-
-<button
-    id="sendOtpBtn"
-    class="full"
->
-📩 GỬI MÃ OTP
-</button>
-
-<div
-    id="loginMessage"
-    class="message"
-></div>
-
+<section class="info">
+<div class="box">🎴 Lượt hôm nay<b id="plays">—</b></div>
+<div class="box">⭐ Điểm của bạn<b id="points">0</b></div>
+<div class="box">🏆 Tỷ lệ có điểm<b>50%</b></div>
 </section>
 
-
-<!-- =====================================================
-     OTP
-===================================================== -->
-
-<section
-    id="otpPanel"
-    class="panel hidden"
->
-
-<div class="login-title">
-🔢 NHẬP MÃ OTP
+<section class="panel">
+<div class="login">
+<input id="email" type="email" autocomplete="email" placeholder="Nhập email của bạn">
+<button id="loginBtn" onclick="login()">GỬI MÃ OTP</button>
+<div class="otp-row" id="otpRow"><input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="MÃ OTP 6 SỐ"></div>
 </div>
-
-<div class="login-text">
-Mã OTP đã được gửi tới email của bạn.
-</div>
-
-<label>Mã OTP</label>
-
-<input
-    id="otpInput"
-    inputmode="numeric"
-    autocomplete="one-time-code"
-    maxlength="6"
-    placeholder="Nhập 6 số"
->
-
-<button
-    id="verifyOtpBtn"
-    class="full"
->
-✅ XÁC NHẬN OTP
-</button>
-
-<button
-    id="backBtn"
-    class="full"
-    style="
-        background:transparent;
-        border:1px solid rgba(255,255,255,.2);
-    "
->
-← QUAY LẠI
-</button>
-
-<div
-    id="otpMessage"
-    class="message"
-></div>
-
+<div class="admin-badge" id="adminBadge">👑 ADMIN — Lượt và điểm ghi vào DB thật, xuất hiện trên BXH</div>
+<div class="status" id="status">Nhập email để nhận mã OTP đăng nhập.</div>
+<div class="cards" id="cards"></div>
 </section>
 
-
-<!-- =====================================================
-     EVENT STATUS
-===================================================== -->
-
-<section
-    id="statusPanel"
-    class="panel hidden"
->
-
-<div
-    id="statusText"
-    style="
-        text-align:center;
-        font-size:20px;
-        line-height:1.6;
-    "
-></div>
-
+<section class="panel leader">
+<h2>🏆 BẢNG XẾP HẠNG TOP 10</h2>
+<table><thead><tr><th>Hạng</th><th>Người chơi</th><th>Điểm</th></tr></thead>
+<tbody id="leaderboard"><tr><td colspan="3">Đang tải...</td></tr></tbody></table>
 </section>
 
-
-<!-- =====================================================
-     GAME
-===================================================== -->
-
-<section
-    id="gamePanel"
-    class="panel hidden"
->
-
-<div class="stats">
-
-<div class="stat">
-
-<div class="stat-title">
-Lượt còn lại
+<div class="footer">Top 1: 100k • Top 2: 70k • Top 3: 50k • Top 4–10: 10k tinh thạch</div>
 </div>
 
-<div
-    id="playsRemaining"
-    class="stat-value"
->
-50
-</div>
-
-</div>
-
-
-<div class="stat">
-
-<div class="stat-title">
-Tổng điểm
-</div>
-
-<div
-    id="totalPoints"
-    class="stat-value"
->
-0
-</div>
-
-</div>
-
-</div>
-
-
-<div
-    id="instruction"
-    class="instruction"
->
-Hãy lật thẻ.
-</div>
-
-
-<div
-    id="cards"
-    class="cards"
-></div>
-
-
-<div
-    id="gameMessage"
-    class="message"
-></div>
-
-
-<button
-    id="logoutBtn"
-    class="logout"
->
-ĐĂNG XUẤT
-</button>
-
-</section>
-
-
-<!-- =====================================================
-     TOP 10
-===================================================== -->
-
-<section
-    id="leaderboardPanel"
-    class="panel hidden"
->
-
-<div class="top-title">
-🏆 TOP 10
-</div>
-
-<div id="leaderboard">
-Đang tải...
-</div>
-
-</section>
-
-</div>
-
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL="https://rftnjeozezxgemtrvkce.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_SQS8AB9rBORo8KUSL0KtPw_mydlG5aw";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 
-/* =====================================================
-   SUPABASE
-===================================================== */
+const ADMIN_EMAIL="namtruong3333@gmail.com";
+const EVENT_START=new Date("2026-10-05T00:00:00+07:00");
+const EVENT_END=new Date("2026-10-10T23:59:59+07:00");
+const DAILY_PLAYS=50;
+const POINT_VALUES=[10,20,30,40,50,100];
 
-const SUPABASE_URL =
-"https://rftnjeozezxgemtrvkce.supabase.co";
+const status=document.getElementById("status");
+const cards=document.getElementById("cards");
+const emailInput=document.getElementById("email");
+const otpInput=document.getElementById("otp");
+const otpRow=document.getElementById("otpRow");
+const loginBtn=document.getElementById("loginBtn");
+const playsEl=document.getElementById("plays");
+const pointsEl=document.getElementById("points");
+const leaderboardEl=document.getElementById("leaderboard");
+const adminBadge=document.getElementById("adminBadge");
 
-const SUPABASE_ANON_KEY =
-"sb_publishable_SQS8AB9rBORo8KUSL0KtPw_mydlG5aw";
+let loggedIn=false;
+let otpSent=false;
+let busy=false;
+let eventOpen=false;
+let isAdmin=false;
 
-const supabase =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
-
-/* =====================================================
-   EVENT
-===================================================== */
-
-const ADMIN_EMAIL =
-"namtruong3333@gmail.com";
-
-const EVENT_START =
-"2026-10-04T17:00:00Z";
-
-const EVENT_END =
-"2026-10-10T16:59:59Z";
-
-
-const FLIP_FUNCTION =
-"flip-event-2026";
-
-const VERIFY_FUNCTION =
-"verify-event-otp-2026";
-
-
-/* =====================================================
-   STATE
-===================================================== */
-
-let currentUser = null;
-
-let pendingEmail = "";
-
-let isAdmin = false;
-
-let flippedCards = 0;
-
-let processing = false;
-
-
-/* =====================================================
-   ELEMENT
-===================================================== */
-
-const loginPanel =
-document.getElementById("loginPanel");
-
-const otpPanel =
-document.getElementById("otpPanel");
-
-const statusPanel =
-document.getElementById("statusPanel");
-
-const gamePanel =
-document.getElementById("gamePanel");
-
-const leaderboardPanel =
-document.getElementById("leaderboardPanel");
-
-
-/* =====================================================
-   MESSAGE
-===================================================== */
-
-function message(
-    id,
-    text,
-    type=""
-){
-
-    const el =
-    document.getElementById(id);
-
-    el.className =
-    "message " + type;
-
-    el.textContent =
-    text || "";
+/* =========================
+   TẠO 10 THẺ
+========================= */
+for(let i=0;i<10;i++){
+  cards.insertAdjacentHTML("beforeend",`
+    <button class="card" onclick="flip(this)" disabled>
+      <div class="card-inner">
+        <div class="face front">
+          <div class="symbol">🃏</div>
+          <small>LẬT THẺ</small>
+        </div>
+        <div class="face back">
+          <div class="result">?</div>
+          <div class="note">Kết quả</div>
+        </div>
+      </div>
+    </button>
+  `);
 }
 
+/* =========================
+   THỜI GIAN
+========================= */
+function vietnamDateKey(){
+  const parts=new Intl.DateTimeFormat("en-CA",{
+    timeZone:"Asia/Ho_Chi_Minh",
+    year:"numeric",month:"2-digit",day:"2-digit"
+  }).formatToParts(new Date());
 
-/* =====================================================
-   EVENT TIME
-===================================================== */
-
-function eventOpen(){
-
-    const now =
-    Date.now();
-
-    return (
-        now >= Date.parse(EVENT_START)
-        &&
-        now <= Date.parse(EVENT_END)
-    );
+  const y=parts.find(x=>x.type==="year").value;
+  const m=parts.find(x=>x.type==="month").value;
+  const d=parts.find(x=>x.type==="day").value;
+  return `${y}-${m}-${d}`;
 }
 
+function isEventOpen(){
+  const now=new Date();
+  return now>=EVENT_START && now<=EVENT_END;
+}
 
-function showEventStatus(){
+/* =========================
+   RESET THẺ
+========================= */
+function resetCards(){
+  document.querySelectorAll(".card").forEach(card=>{
+    card.classList.remove("flipped");
+    card.disabled=true;
+    card.querySelector(".result").textContent="?";
+    card.querySelector(".note").textContent="Kết quả";
+  });
+}
 
-    const now =
-    Date.now();
+function allCardsFlipped(){
+  const all=[...document.querySelectorAll(".card")];
+  return all.length===10 && all.every(c=>c.classList.contains("flipped"));
+}
 
-    statusPanel.classList.remove("hidden");
+/*
+   Sau lá thứ 10:
+   chờ hiệu ứng lật xong rồi tạo
+   một vòng 10 lá mới.
+*/
+function nextCardRound(adminMode){
+  if(!allCardsFlipped()) return;
 
-    if(
-        now <
-        Date.parse(EVENT_START)
-    ){
+  setTimeout(()=>{
+    if(!loggedIn) return;
+    if(!adminMode && !isEventOpen()) return;
+    if(Number(playsEl.textContent)<=0) return;
+    resetCards();
+    enableCards(adminMode);
+  },800);
+}
 
-        document.getElementById(
-            "statusText"
-        ).innerHTML = `
-            ⏳ <b>SỰ KIỆN CHƯA BẮT ĐẦU</b>
-            <br><br>
-            Sự kiện bắt đầu lúc
-            <b>00:00 ngày 05/10/2026</b>
-            theo giờ Việt Nam.
-        `;
+/* =========================
+   TRẠNG THÁI EVENT
+========================= */
+function setEventState(){
+  eventOpen=isEventOpen();
 
+  if(!eventOpen){
+    document.querySelectorAll(".card").forEach(c=>c.disabled=true);
+    status.classList.add("event-closed");
+
+    if(new Date()<EVENT_START){
+      status.textContent="⏳ Sự kiện chưa bắt đầu. Người chơi chỉ có thể chơi từ 05/10/2026.";
     }else{
-
-        document.getElementById(
-            "statusText"
-        ).innerHTML = `
-            🔒 <b>SỰ KIỆN ĐÃ KẾT THÚC</b>
-            <br><br>
-            Sự kiện kết thúc lúc
-            <b>23:59:59 ngày 10/10/2026</b>
-            theo giờ Việt Nam.
-        `;
+      status.textContent="⛔ Sự kiện đã kết thúc. BXH đã được chốt.";
     }
+  }else{
+    status.classList.remove("event-closed");
+  }
 }
 
-
-/* =====================================================
-   SHOW LOGIN
-===================================================== */
-
-function showLogin(){
-
-    loginPanel.classList.remove("hidden");
-
-    otpPanel.classList.add("hidden");
-
-    statusPanel.classList.add("hidden");
-
-    gamePanel.classList.add("hidden");
-
-    leaderboardPanel.classList.add("hidden");
-}
-
-
-/* =====================================================
-   SHOW OTP
-===================================================== */
-
-function showOtp(){
-
-    loginPanel.classList.add("hidden");
-
-    otpPanel.classList.remove("hidden");
-
-    statusPanel.classList.add("hidden");
-
-    gamePanel.classList.add("hidden");
-
-    leaderboardPanel.classList.add("hidden");
-}
-
-
-/* =====================================================
-   SHOW GAME
-===================================================== */
-
-function showGame(){
-
-    loginPanel.classList.add("hidden");
-
-    otpPanel.classList.add("hidden");
-
-    statusPanel.classList.add("hidden");
-
-    gamePanel.classList.remove("hidden");
-
-    leaderboardPanel.classList.remove("hidden");
-}
-
-
-/* =====================================================
-   SEND OTP
-===================================================== */
-
-async function sendOtp(){
-
-    const email =
-    document
-    .getElementById("emailInput")
-    .value
-    .trim()
-    .toLowerCase();
-
-
-    if(!email){
-
-        message(
-            "loginMessage",
-            "Vui lòng nhập email.",
-            "error"
-        );
-
-        return;
-    }
-
-
-    document
-    .getElementById("sendOtpBtn")
-    .disabled = true;
-
-
-    message(
-        "loginMessage",
-        "Đang gửi mã OTP..."
-    );
-
-
-    try{
-
-        const {
-            error
-        } =
-        await supabase.auth.signInWithOtp({
-
-            email:email,
-
-            options:{
-                shouldCreateUser:true,
-
-                emailRedirectTo:
-                window.location.href
-            }
-
-        });
-
-
-        if(error)
-            throw error;
-
-
-        pendingEmail =
-        email;
-
-
-        document
-        .getElementById("otpInput")
-        .value = "";
-
-
-        showOtp();
-
-
-        message(
-            "otpMessage",
-            "Mã OTP đã được gửi tới " + email,
-            "success"
-        );
-
-
-    }catch(error){
-
-        message(
-            "loginMessage",
-            error.message ||
-            "Không thể gửi OTP.",
-            "error"
-        );
-
-    }finally{
-
-        document
-        .getElementById("sendOtpBtn")
-        .disabled = false;
-    }
-}
-
-
-/* =====================================================
-   VERIFY OTP
-===================================================== */
-
-async function verifyOtp(){
-
-    const token =
-    document
-    .getElementById("otpInput")
-    .value
-    .trim();
-
-
-    if(!pendingEmail){
-
-        message(
-            "otpMessage",
-            "Thiếu email.",
-            "error"
-        );
-
-        return;
-    }
-
-
-    if(!/^\d{6}$/.test(token)){
-
-        message(
-            "otpMessage",
-            "Mã OTP phải gồm 6 chữ số.",
-            "error"
-        );
-
-        return;
-    }
-
-
-    document
-    .getElementById("verifyOtpBtn")
-    .disabled = true;
-
-
-    message(
-        "otpMessage",
-        "Đang xác thực..."
-    );
-
-
-    try{
-
-        /*
-         * XÁC THỰC SUPABASE OTP
-         */
-
-        const {
-            data,
-            error
-        } =
-        await supabase.auth.verifyOtp({
-
-            email:pendingEmail,
-
-            token:token,
-
-            type:"email"
-
-        });
-
-
-        if(error)
-            throw error;
-
-
-        if(!data.session)
-            throw new Error(
-                "Không tạo được phiên đăng nhập."
-            );
-
-
-        currentUser =
-        data.user;
-
-
-        const email =
-        (
-            currentUser.email || ""
-        ).toLowerCase();
-
-
-        isAdmin =
-        email === ADMIN_EMAIL;
-
-
-        /*
-         * ADMIN:
-         * bỏ qua OTP sự kiện
-         */
-
-        if(!isAdmin){
-
-            /*
-             * ĐƯA OTP ĐÃ XÁC THỰC
-             * QUA EDGE FUNCTION
-             */
-
-            const {
-                data:verifyData,
-                error:verifyError
-            } =
-            await supabase.functions.invoke(
-                VERIFY_FUNCTION,
-                {
-                    body:{
-                        email:pendingEmail,
-                        otp:token
-                    }
-                }
-            );
-
-
-            if(verifyError)
-                throw verifyError;
-
-
-            if(
-                verifyData &&
-                verifyData.ok === false
-            ){
-
-                throw new Error(
-                    verifyData.error ||
-                    "OTP sự kiện không hợp lệ."
-                );
-            }
-        }
-
-
-        await enterGame();
-
-
-    }catch(error){
-
-        message(
-            "otpMessage",
-            error.message ||
-            "OTP không hợp lệ.",
-            "error"
-        );
-
-    }finally{
-
-        document
-        .getElementById("verifyOtpBtn")
-        .disabled = false;
-    }
-}
-
-
-/* =====================================================
-   ENTER GAME
-===================================================== */
-
-async function enterGame(){
-
-    if(!currentUser)
-        return;
-
-
-    /*
-     * KHÔNG CHO VÀO GAME TRƯỚC NGÀY SỰ KIỆN
-     */
-
-    if(!eventOpen()){
-
-        showLogin();
-
-        showEventStatus();
-
-        await loadLeaderboard();
-
-        return;
-    }
-
-
-    /*
-     * NGƯỜI CHƠI BÌNH THƯỜNG
-     * PHẢI CÓ OTP HÔM NAY
-     */
-
-    if(!isAdmin){
-
-        const {
-            data,
-            error
-        } =
-        await supabase.rpc(
-            "has_event_otp_today",
-            {
-                p_user_id:
-                currentUser.id
-            }
-        );
-
-
-        if(error)
-            throw error;
-
-
-        if(!data){
-
-            showLogin();
-
-            message(
-                "loginMessage",
-                "Bạn chưa xác thực OTP hôm nay.",
-                "error"
-            );
-
-            return;
-        }
-    }
-
-
-    await loadPlayerState();
-
-    createCards();
-
-    showGame();
-
-    await loadLeaderboard();
-
-
-    if(isAdmin){
-
-        message(
-            "gameMessage",
-            "👑 ADMIN — OTP sự kiện và giới hạn IP được bỏ qua. Lượt chơi và điểm vẫn ghi thật.",
-            "success"
-        );
-
-    }else{
-
-        message(
-            "gameMessage",
-            "✅ Xác thực thành công. Bạn có 50 lượt mỗi ngày.",
-            "success"
-        );
-    }
-}
-
-
-/* =====================================================
-   PLAYER STATE
-===================================================== */
-
-async function loadPlayerState(){
-
-    const {
-        data,
-        error
-    } =
-    await supabase.rpc(
-        "get_player_state"
-    );
-
-
-    if(error)
-        throw error;
-
-
-    const state =
-    typeof data === "string"
-    ? JSON.parse(data)
-    : data;
-
-
-    document
-    .getElementById("playsRemaining")
-    .textContent =
-    state.plays_remaining ?? 50;
-
-
-    document
-    .getElementById("totalPoints")
-    .textContent =
-    state.points ?? 0;
-}
-
-
-/* =====================================================
-   CREATE 10 CARDS
-===================================================== */
-
-function createCards(){
-
-    const container =
-    document.getElementById("cards");
-
-    container.innerHTML = "";
-
-    flippedCards = 0;
-
-
-    for(
-        let i = 0;
-        i < 10;
-        i++
-    ){
-
-        const card =
-        document.createElement("button");
-
-
-        card.type =
-        "button";
-
-
-        card.className =
-        "card";
-
-
-        card.innerHTML =
-        "🃏";
-
-
-        card.addEventListener(
-            "click",
-            () => flipCard(card)
-        );
-
-
-        container.appendChild(card);
-    }
-
-
-    document
-    .getElementById("instruction")
-    .textContent =
-    "Hãy lật thẻ.";
-}
-
-
-/* =====================================================
-   FLIP CARD
-===================================================== */
-
-async function flipCard(card){
-
-    if(
-        processing ||
-        !currentUser ||
-        !eventOpen()
-    )
-        return;
-
-
-    processing = true;
-
-
-    document
-    .querySelectorAll(".card")
-    .forEach(
-        c => c.disabled = true
-    );
-
-
-    message(
-        "gameMessage",
-        "Đang xử lý lượt chơi..."
-    );
-
-
-    try{
-
-        /*
-         * QUAN TRỌNG:
-         *
-         * KHÔNG gọi flip_card()
-         *
-         * Browser chỉ gọi:
-         *
-         * flip-event-2026
-         *
-         * Edge Function mới gọi
-         * process_event_flip_service()
-         */
-
-        const {
-            data,
-            error
-        } =
-        await supabase.functions.invoke(
-            FLIP_FUNCTION,
-            {
-                body:{}
-            }
-        );
-
-
-        if(error)
-            throw error;
-
-
-        const result =
-        typeof data === "string"
-        ? JSON.parse(data)
-        : data;
-
-
-        if(result.error)
-            throw new Error(
-                result.error
-            );
-
-
-        /*
-         * HIỂN THỊ KẾT QUẢ
-         */
-
-        card.classList.add(
-            "revealed"
-        );
-
-
-        if(result.has_point){
-
-            card.innerHTML = `
-                <span class="points win">
-                    +${result.points_awarded}
-                </span>
-            `;
-
-
-            message(
-                "gameMessage",
-                "🎉 Bạn nhận được " +
-                result.points_awarded +
-                " điểm!",
-                "success"
-            );
-
-        }else{
-
-            card.innerHTML = `
-                <span class="points zero">
-                    0
-                </span>
-            `;
-
-
-            message(
-                "gameMessage",
-                "😢 Lá này không có điểm."
-            );
-        }
-
-
-        flippedCards++;
-
-
-        /*
-         * CẬP NHẬT LƯỢT
-         */
-
-        document
-        .getElementById(
-            "playsRemaining"
-        )
-        .textContent =
-        result.plays_remaining;
-
-
-        /*
-         * CẬP NHẬT ĐIỂM
-         */
-
-        document
-        .getElementById(
-            "totalPoints"
-        )
-        .textContent =
-        result.points;
-
-
-        /*
-         * CẬP NHẬT TOP
-         */
-
-        await loadLeaderboard();
-
-
-        /*
-         * HẾT 50 LƯỢT
-         */
-
-        if(
-            Number(result.plays_remaining)
-            <= 0
-        ){
-
-            document
-            .getElementById(
-                "instruction"
-            )
-            .textContent =
-            "Bạn đã dùng hết 50 lượt hôm nay.";
-
-            return;
-        }
-
-
-        /*
-         * ĐỦ 10 THẺ
-         *
-         * Chỉ reset 10 thẻ.
-         *
-         * KHÔNG reset lượt.
-         */
-
-        if(flippedCards >= 10){
-
-            document
-            .getElementById(
-                "instruction"
-            )
-            .textContent =
-            "🔄 Chuẩn bị 10 thẻ mới...";
-
-
-            setTimeout(
-                () => {
-
-                    createCards();
-
-                    message(
-                        "gameMessage",
-                        "🔄 10 thẻ mới. Tiếp tục lật."
-                    );
-
-                },
-                700
-            );
-
-            return;
-        }
-
-
-        /*
-         * Cho phép lật thẻ tiếp theo
-         */
-
-        document
-        .querySelectorAll(".card")
-        .forEach(
-            c => {
-
-                if(
-                    !c.classList.contains(
-                        "revealed"
-                    )
-                ){
-
-                    c.disabled =
-                    false;
-                }
-            }
-        );
-
-
-    }catch(error){
-
-        const text =
-        error.message ||
-        String(error);
-
-
-        if(
-            text.includes(
-                "DA_DUNG_HET_50_LUOT"
-            )
-        ){
-
-            document
-            .getElementById(
-                "playsRemaining"
-            )
-            .textContent =
-            "0";
-
-
-            message(
-                "gameMessage",
-                "Bạn đã dùng hết 50 lượt hôm nay.",
-                "error"
-            );
-
-
-        }else if(
-            text.includes(
-                "OTP_CHUA_XAC_NHAN_HOM_NAY"
-            )
-        ){
-
-            showLogin();
-
-            message(
-                "loginMessage",
-                "Bạn chưa xác thực OTP hôm nay.",
-                "error"
-            );
-
-
-        }else if(
-            text.includes(
-                "IP_ALREADY_USED"
-            )
-        ){
-
-            message(
-                "gameMessage",
-                "❌ IP này đã được sử dụng cho tài khoản khác.",
-                "error"
-            );
-
-
-        }else{
-
-            message(
-                "gameMessage",
-                "❌ Không thể lật thẻ: " +
-                text,
-                "error"
-            );
-        }
-
-
-        document
-        .querySelectorAll(".card")
-        .forEach(
-            c => c.disabled = false
-        );
-
-    }finally{
-
-        processing = false;
-    }
-}
-
-
-/* =====================================================
-   LEADERBOARD
-===================================================== */
-
-async function loadLeaderboard(){
-
-    const {
-        data,
-        error
-    } =
-    await supabase.rpc(
-        "get_leaderboard"
-    );
-
-
-    const box =
-    document.getElementById(
-        "leaderboard"
-    );
-
+/* =========================
+   ĐĂNG NHẬP
+========================= */
+async function login(){
+  if(busy)return;
+
+  const email=emailInput.value.trim().toLowerCase();
+
+  if(!email){
+    status.textContent="⚠️ Vui lòng nhập email.";
+    emailInput.focus();
+    return;
+  }
+
+  isAdmin=email===ADMIN_EMAIL;
+
+  if(!isAdmin && !isEventOpen()){
+    setEventState();
+    return;
+  }
+
+  busy=true;
+
+  if(!otpSent){
+    status.textContent="⏳ Đang gửi mã OTP...";
+    loginBtn.disabled=true;
+
+    const {error}=await supabaseClient.auth.signInWithOtp({
+      email,
+      options:{shouldCreateUser:true}
+    });
+
+    loginBtn.disabled=false;
+    busy=false;
 
     if(error){
-
-        box.innerHTML =
-        `<div class="error">
-            ${error.message}
-        </div>`;
-
-        return;
+      status.textContent="❌ Không gửi được mã OTP: "+error.message;
+      return;
     }
 
+    otpSent=true;
+    otpRow.style.display="block";
+    loginBtn.textContent="XÁC NHẬN OTP";
+    status.textContent="✅ Mã OTP 6 số đã được gửi. Kiểm tra email.";
+    otpInput.focus();
+    return;
+  }
 
-    if(
-        !data ||
-        data.length === 0
-    ){
+  const token=otpInput.value.trim();
 
-        box.innerHTML =
-        "Chưa có người chơi có điểm.";
+  if(!/^\d{6}$/.test(token)){
+    busy=false;
+    status.textContent="⚠️ Vui lòng nhập đúng OTP 6 số.";
+    otpInput.focus();
+    return;
+  }
 
-        return;
+  status.textContent="⏳ Đang xác nhận OTP...";
+  loginBtn.disabled=true;
+
+  const {data,error}=await supabaseClient.auth.verifyOtp({
+    email,
+    token,
+    type:"email"
+  });
+
+  if(error){
+    loginBtn.disabled=false;
+    busy=false;
+    status.textContent="❌ Mã OTP không đúng hoặc đã hết hạn.";
+    return;
+  }
+
+  loggedIn=true;
+  busy=false;
+  emailInput.disabled=true;
+  otpInput.disabled=true;
+  loginBtn.disabled=true;
+  loginBtn.textContent="ĐÃ ĐĂNG NHẬP";
+
+  if(isAdmin){
+    adminBadge.style.display="block";
+  }
+
+  // OTP hợp lệ xong mới đánh dấu OTP ngày VN ở backend.
+  // Admin được miễn kiểm tra OTP ngày/IP ở backend, nhưng vẫn dùng tài khoản Supabase thật.
+  if(!isAdmin){
+    const {error:verifyEventError}=await supabaseClient.functions.invoke("verify-event-otp-2026",{body:{}});
+    if(verifyEventError){
+      await supabaseClient.auth.signOut();
+      loggedIn=false;
+      loginBtn.disabled=false;
+      emailInput.disabled=false;
+      otpInput.disabled=false;
+      status.textContent="❌ Không xác nhận được OTP cho sự kiện: "+verifyEventError.message;
+      return;
     }
+  }
 
+  await loadPlayer();
+  await loadLeaderboard();
 
-    let html = `
-        <table>
-
-        <thead>
-
-        <tr>
-            <th>#</th>
-            <th>Người chơi</th>
-            <th>Điểm</th>
-        </tr>
-
-        </thead>
-
-        <tbody>
-    `;
-
-
-    data.forEach(
-        (row,index) => {
-
-            html += `
-
-                <tr>
-
-                    <td>
-                        ${index + 1}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(
-                            row.display_name ||
-                            row.email ||
-                            "Người chơi"
-                        )}
-                    </td>
-
-                    <td>
-                        <b>
-                            ${Number(
-                                row.points || 0
-                            ).toLocaleString(
-                                "vi-VN"
-                            )}
-                        </b>
-                    </td>
-
-                </tr>
-            `;
-        }
-    );
-
-
-    html += `
-        </tbody>
-        </table>
-    `;
-
-
-    box.innerHTML =
-    html;
+  if(isEventOpen()){
+    status.classList.remove("event-closed");
+    status.textContent="✅ Đăng nhập thành công. Bạn có thể lật thẻ.";
+    enableCards(false);
+  }else{
+    setEventState();
+  }
 }
 
+/* =========================
+   PLAYER THẬT
+========================= */
+async function loadPlayer(){
+  const {data,error}=await supabaseClient.rpc("get_player_state");
 
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
+  if(error){
+    status.textContent="❌ Không tải được dữ liệu người chơi: "+error.message;
+    return;
+  }
 
+  const p=Array.isArray(data)?data[0]:data;
+
+  if(p){
+    playsEl.textContent=p.plays_remaining??50;
+    pointsEl.textContent=p.points??0;
+  }
+}
+
+/* =========================
+   BXH
+========================= */
+async function loadLeaderboard(){
+  const {data,error}=await supabaseClient.rpc("get_leaderboard");
+
+  if(error || !data || !data.length){
+    leaderboardEl.innerHTML="<tr><td colspan='3'>Chưa có dữ liệu</td></tr>";
+    return;
+  }
+
+  leaderboardEl.innerHTML=data.slice(0,10).map((p,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${escapeHtml(p.display_name||p.email||"Người chơi")}</td>
+      <td>${Number(p.points||0)}</td>
+    </tr>
+  `).join("");
+}
+
+/* =========================
+   MỞ THẺ
+========================= */
+function enableCards(adminMode=false){
+  if(!loggedIn)return;
+
+  if(!adminMode && !eventOpen)return;
+  if(Number(playsEl.textContent)<=0)return;
+
+  document.querySelectorAll(".card:not(.flipped)")
+    .forEach(c=>c.disabled=false);
+}
+
+/* =========================
+   LẬT THẺ
+   Browser -> Edge Function -> DB
+   KHÔNG gọi flip_card() trực tiếp.
+========================= */
+async function flip(card){
+  if(!loggedIn){
+    status.textContent="⚠️ Bạn phải đăng nhập trước khi lật thẻ.";
+    return;
+  }
+
+  if(busy || card.classList.contains("flipped"))return;
+
+  if(!isAdmin && !isEventOpen()){
+    setEventState();
+    return;
+  }
+
+  const remaining=Number(playsEl.textContent);
+  if(remaining<=0){
+    status.textContent="⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
+    return;
+  }
+
+  busy=true;
+  document.querySelectorAll(".card").forEach(c=>c.disabled=true);
+  status.textContent="⏳ Đang lật thẻ...";
+
+  const {data,error}=await supabaseClient.functions.invoke("flip-event-2026",{
+    body:{}
+  });
+
+  if(error){
+    busy=false;
+    await loadPlayer();
+    enableCards(isAdmin);
+    status.textContent="❌ Không thực hiện được lượt lật: "+error.message;
+    return;
+  }
+
+  const result=Array.isArray(data)?data[0]:(data||{});
+  const won=Boolean(result.has_point);
+  const value=Number(result.points_awarded ?? result.awarded_points ?? 0);
+
+  card.classList.add("flipped");
+  card.querySelector(".result").textContent=won?"⭐ +"+value:"0";
+  card.querySelector(".note").textContent=won?"Có điểm!":"Không có điểm";
+
+  if(result.plays_remaining!==undefined){
+    playsEl.textContent=Number(result.plays_remaining);
+  }else{
+    playsEl.textContent=Math.max(0,remaining-1);
+  }
+
+  if(result.total_points!==undefined){
+    pointsEl.textContent=Number(result.total_points);
+  }else{
+    await loadPlayer();
+  }
+
+  status.textContent=won
+    ? ("🎉 Chúc mừng! Bạn nhận được +"+value+" điểm." + (isAdmin?" Admin: điểm đã ghi DB thật.":""))
+    : ("😢 Lần này không có điểm.");
+
+  await loadLeaderboard();
+  busy=false;
+
+  if(Number(playsEl.textContent)<=0){
+    document.querySelectorAll(".card").forEach(c=>c.disabled=true);
+    status.textContent=isAdmin
+      ? "⏳ Admin đã dùng hết 50 lượt hôm nay."
+      : "⏳ Bạn đã dùng hết 50 lượt hôm nay. Ngày mai sẽ được nhận lại 50 lượt.";
+    return;
+  }
+
+  if(allCardsFlipped()){
+    nextCardRound(isAdmin);
+  }else{
+    enableCards(isAdmin);
+  }
+}
+
+/* =========================
+   ESCAPE
+========================= */
 function escapeHtml(value){
-
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+  return String(value).replace(/[&<>"']/g,m=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[m]));
 }
 
+/* =========================
+   OTP
+========================= */
+otpInput.addEventListener("input",function(){
+  this.value=this.value.replace(/\D/g,"").slice(0,6);
 
-/* =====================================================
-   LOGOUT
-===================================================== */
+  if(
+    this.value.length===6 &&
+    otpSent &&
+    !loggedIn
+  ){
+    login();
+  }
+});
 
-async function logout(){
+/* =========================
+   KHỞI ĐỘNG
+========================= */
+setEventState();
 
-    await supabase.auth.signOut();
+supabaseClient.auth.getSession().then(async({data})=>{
+  if(!data.session)return;
 
-    currentUser = null;
+  const sessionEmail=(data.session.user.email||"").toLowerCase();
+  const sessionIsAdmin=sessionEmail===ADMIN_EMAIL;
 
-    pendingEmail = "";
+  /*
+    Player thường trước event:
+    sign out.
+  */
+  if(!sessionIsAdmin && !isEventOpen()){
+    await supabaseClient.auth.signOut();
+    setEventState();
+    return;
+  }
 
-    isAdmin = false;
+  loggedIn=true;
+  isAdmin=sessionIsAdmin;
 
-    flippedCards = 0;
+  emailInput.value=data.session.user.email||"";
+  emailInput.disabled=true;
+  otpInput.disabled=true;
+  loginBtn.disabled=true;
+  loginBtn.textContent="ĐÃ ĐĂNG NHẬP";
 
-    document
-    .getElementById("emailInput")
-    .value = "";
+  if(isAdmin){
+    adminBadge.style.display="block";
+    await loadPlayer();
+    await loadLeaderboard();
+    status.classList.remove("event-closed");
+    status.textContent="👑 Admin đã đăng nhập — OTP/IP được miễn, lượt và điểm ghi DB thật.";
+    enableCards(true);
+    return;
+  }
 
-    document
-    .getElementById("otpInput")
-    .value = "";
+  await loadPlayer();
+  await loadLeaderboard();
 
-    showLogin();
-}
+  if(isEventOpen()){
+    status.classList.remove("event-closed");
+    status.textContent="✅ Đã đăng nhập.";
+    enableCards(false);
+  }else{
+    setEventState();
+  }
+});
 
+loadLeaderboard();
 
-/* =====================================================
-   EVENTS
-===================================================== */
+/* =========================
+   TỰ ĐỘNG CẬP NHẬT
+========================= */
+setInterval(async()=>{
+  const open=isEventOpen();
 
-document
-.getElementById("sendOtpBtn")
-.addEventListener(
-    "click",
-    sendOtp
-);
+  if(open!==eventOpen){
+    eventOpen=open;
+    setEventState();
 
-
-document
-.getElementById("verifyOtpBtn")
-.addEventListener(
-    "click",
-    verifyOtp
-);
-
-
-document
-.getElementById("logoutBtn")
-.addEventListener(
-    "click",
-    logout
-);
-
-
-document
-.getElementById("backBtn")
-.addEventListener(
-    "click",
-    () => {
-
-        otpPanel.classList.add(
-            "hidden"
-        );
-
-        loginPanel.classList.remove(
-            "hidden"
-        );
+    if(open && loggedIn && !isAdmin){
+      await loadPlayer();
+      await loadLeaderboard();
+      enableCards(false);
     }
-);
+  }
 
+  if(open){
+    await loadLeaderboard();
+  }
 
-document
-.getElementById("otpInput")
-.addEventListener(
-    "input",
-    event => {
-
-        event.target.value =
-        event.target.value
-        .replace(/\D/g,"")
-        .slice(0,6);
+  if(isAdmin && loggedIn){
+    if(!busy && !allCardsFlipped() && Number(playsEl.textContent)>0){
+      enableCards(true);
     }
-);
-
-
-/* =====================================================
-   RESTORE SESSION
-===================================================== */
-
-supabase.auth.onAuthStateChange(
-    async (
-        event,
-        session
-    ) => {
-
-        if(
-            session &&
-            (
-                event ===
-                "INITIAL_SESSION" ||
-
-                event ===
-                "SIGNED_IN"
-            )
-        ){
-
-            try{
-
-                currentUser =
-                session.user;
-
-
-                isAdmin =
-                (
-                    currentUser.email ||
-                    ""
-                ).toLowerCase()
-                ===
-                ADMIN_EMAIL;
-
-
-                /*
-                 * Admin:
-                 * bỏ qua OTP sự kiện.
-                 */
-
-                if(!isAdmin){
-
-                    const {
-                        data,
-                        error
-                    } =
-                    await supabase.rpc(
-                        "has_event_otp_today",
-                        {
-                            p_user_id:
-                            currentUser.id
-                        }
-                    );
-
-
-                    if(
-                        error ||
-                        !data
-                    ){
-
-                        showLogin();
-
-                        return;
-                    }
-                }
-
-
-                await enterGame();
-
-
-            }catch(error){
-
-                showLogin();
-
-                message(
-                    "loginMessage",
-                    error.message ||
-                    "Không thể khôi phục phiên.",
-                    "error"
-                );
-            }
-        }
-    }
-);
-
-
-/* =====================================================
-   INIT
-===================================================== */
-
-(async function(){
-
-    /*
-     * CỰC KỲ QUAN TRỌNG:
-     *
-     * Khi mở web lần đầu,
-     * KHÔNG HIỆN GAME.
-     *
-     * Chỉ hiện LOGIN.
-     */
-
-    showLogin();
-
-
-    const {
-        data
-    } =
-    await supabase.auth.getSession();
-
-
-    if(data.session){
-
-        currentUser =
-        data.session.user;
-
-
-        isAdmin =
-        (
-            currentUser.email ||
-            ""
-        ).toLowerCase()
-        ===
-        ADMIN_EMAIL;
-
-
-        try{
-
-            await enterGame();
-
-        }catch(error){
-
-            showLogin();
-
-            message(
-                "loginMessage",
-                error.message ||
-                "Không thể đăng nhập.",
-                "error"
-            );
-        }
-    }
-
-})();
+  }
+},5000);
 
 </script>
-
 </body>
 </html>
